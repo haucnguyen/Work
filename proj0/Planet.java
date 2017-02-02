@@ -10,12 +10,12 @@ public class Planet {
 
   /** constructor that can initialized an instance of the planet class */
   public Planet(double xP, double yP, double xV, double yV, double m, String img) {
-    this.xxPos = xxPos;
-    this.yyPos = yyPos;
-    this.xxVel = xxVel;
-    this.yyVel = yyVel;
-    this.mass = mass;
-    this.imgFileName = imgFileName;
+    xxPos = xP;
+    yyPos = yP;
+    xxVel = xV;
+    yyVel = yV;
+    mass = m;
+    imgFileName = img;
 }
 
   /** second constructor that takes in a planet object and make an identical Planet instance */
@@ -26,51 +26,82 @@ public class Planet {
   this.yyVel = p.yyVel;
   this.mass = p.mass;
   this.imgFileName = p.imgFileName;
-}
-
-  public double calcDX(Planet p) {
-    return this.xxPos - p.xxPos;
-  }
-
-  public double calcDY(Planet p) {
-    return this.yyPos - p.yyPos;
   }
 
   public double calcDistance(Planet p) {
-    return Math.sqrt((this.calcDX(p) * this.calcDX(p)) + (this.calcDY(p) * this.calcDY(p)));
-  }
-  public double calcForceExertedBy(Planet p) {
-    double r = this.calcDistance(p);
-    if (r == 0.0) {
-      return 0.0;
-    }
-    return G * this.mass * p.mass / (r * r);
-  }
+    double dX;
+    double dY;
+    double distance;
 
-  public double calcForceExertedBy(Planet p) {
-    if (this.calcDistance(p) == 0.0) {
-      return 0.0;
-    }
-    return this.calcForceExertedBy(p) * p.calcDX(this) / this.calcDistance(p);
+    dX = p.xxPos - this.xxPos;
+    dY = p.yyPos - this.yyPos;
+    distance = ((dX *= dX) + (dY *= dY));
+    return Math.sqrt(distance);
   }
+    public double calcForceExertedBy(Planet p) {
+      double G = 6.67 * Math.pow(10, -11);
+      double m1 = this.mass;
+      double m2 = p.mass;
+      double distance;
 
-  public double calcNetForceExertedByX(Planet[] allPlanets) {
-    int i = 0;
-    double netForceX = 0.0;
-    while (i < allPlanets.length) {
-        netForceX = netForceX + this.calcNetForceExertedByX(allPlanets[i]);
-        i = i + 1;
+      distance = calcDistance(p);
+      return G * m1 * m2 / (distance *= distance);
     }
-    return netForceX;
-  }
 
-  public double calcNetForceExertedByY(Planet[] allPlanets) {
-    int i = 0;
-    double netForceX = 0.0;
-    while (i < allPlanets.length) {
-      netForceY = netForceY + this.calcNetForceExertedByY(allPlanets[i]);
-      i = i + 1;
+
+    public double calcForceExertedByX(Planet p) {
+      double totalForce = calcForceExertedBy(p);
+      double dX;
+      double r = calcDistance(p);
+
+      dX = p.xxPos - this.xxPos;
+      return totalForce * dX / r;
     }
-    return netForceY;
-  }
+
+    public double calcForceExertedByY(Planet p) {
+      double totalForce = calcForceExertedBy(p);
+      double dY;
+      double r = calcDistance(p);
+
+      dY = p.yyPos - this.yyPos;
+      return totalForce * dY / r;
+    }
+
+    public double calcNetForceExertedByX(Planet[] allPlanets) {
+      double k = allPlanets.length;
+      double netForceX = 0;
+
+      for (int i = 0; i < k; i++) {
+        if (!allPlanets[i].equals(this)) {
+          netForceX += calcNetForceExertedByX(allPlanets[i]);
+        }
+      }
+      return netForceX;
+    }
+
+    public double calcNetForceExertedByY(Planet[] allPlanets) {
+      double k = allPlanets.length;
+      double netForceY = 0;
+
+      for (int i = 0; i < k; i++) {
+        if (!allPlanets[i].equals(this)) {
+          netForceY += calcNetForceExertedByY(allPlanets[i]);
+        }
+      }
+      return netForceY;
+    }
+
+    public void update(double dt, double fX, double fY) {
+      double netXAccerleration = fX / this.mass;
+      double netYAccerleration = fY / this.mass;
+
+      this.xxVel += dt * netXAccerleration;
+      this.yyVel += dt * netYAccerleration;
+      this.xxPos += dt * this.xxVel;
+      this.yyPos += dt * this.yyVel;
+    }
+
+    public void draw() {
+      StdDraw.picture(this.xxPos, this.yyPos, this.imgFileName);
+    }
 }
