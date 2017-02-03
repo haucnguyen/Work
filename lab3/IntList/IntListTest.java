@@ -20,10 +20,21 @@ public class IntListTest {
         assertEquals(threeTwoOne, x);
     }
     @Test
-    public void testReverse() {
+    public void Reverse() {
+        IntList one = new IntList(1, null);
+        IntList twoOne = new IntList(2, one);
+        IntList threeTwoOne = new IntList(3, twoOne);
 
+        IntList three = new IntList(3, null);
+        IntList twoThree = new IntList(2, three);
+        IntList oneTwothree = new IntList(1, twoThree);
 
+        assertEquals(oneTwothree, IntList.Reserve(threeTwoOne));
+
+        IntList none = new IntList(null);
     }
+
+
 
     @Test
     public void testdSquareList() {
