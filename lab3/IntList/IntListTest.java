@@ -19,15 +19,10 @@ public class IntListTest {
         IntList x = IntList.list(3, 2, 1);
         assertEquals(threeTwoOne, x);
     }
-
     @Test
-    public void testreverse() {
-        IntList one = new IntList(1, null);
-        IntList twoOne = new IntList(2, one);
-        IntList threeTwoOne = new IntList(3, twoOne);
+    public void testReverse() {
 
-        IntList x = IntList.reverse(threeTwoOne);
-        assertEquals(threeTwoOne, x);
+
     }
 
     @Test

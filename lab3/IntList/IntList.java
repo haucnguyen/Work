@@ -112,6 +112,10 @@ public class IntList {
         return new IntList(A.first, catenate(A.rest, B));
     }
 
+    public static int Reserve(IntList A){
+        return null;
+    }
+
 
     /**
      * DO NOT MODIFY ANYTHING BELOW THIS LINE! Many of the concepts below here
