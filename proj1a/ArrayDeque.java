@@ -17,8 +17,8 @@ public class ArrayDeque <item> {
 
     /** Adds an item to the front of the Deque. */
     public void addFirst(int x) {
-        array[nextFirst] = x;
-        nextLast++;
+        nextFirst = x;
+        nextFirst++;
         size++;
     }
 
@@ -52,23 +52,21 @@ public class ArrayDeque <item> {
     }
 
    /** Removes and returns the item at the front of the Deque. If no such item exists, returns null. */
-    public int removeFirst() {
+    public item removeFirst() {
         if (this.isEmpty()) {
             return null;
         }
-        return array[nextFirst + 1];
+        return null;
     }
 
-    /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
-    public int removeLast(){
+
+        /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
+
+    public item removeLast() {
         if (this.isEmpty()) {
             return null;
         }
-        return array[nextLast + 1];
+        return null;
     }
 
-    /** Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth. */
-    public int get(int index){
-        return array[index];
-    }
 }
