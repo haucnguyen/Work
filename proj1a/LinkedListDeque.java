@@ -99,10 +99,9 @@ public class LinkedListDeque <item> {
     public void printDeque() {
         Node placeholder = sentinel;
         while (placeholder.next != sentinel) {
-            System.out.print(placeholder.value + " ");
+            System.out.print(placeholder.next.value + " ");
             placeholder = placeholder.next;
         }
-        System.out.print(sentinel.previous.value + " ");
     }
     /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
     public item removeFirst() {
@@ -131,13 +130,25 @@ public class LinkedListDeque <item> {
     }
     /** Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth. If no such item exists, returns null. Must not alter the deque! */
     public item get(int index) {
+        if (index >= size){
+            return null;
+        }
         int counter = 0;
         Node placeholder = sentinel.next;
-        if (counter < index) {
-            counter++;
+        while (counter < index) {
             placeholder = placeholder.next;
+            counter++;
         }
         return placeholder.value;
     }
+    /**  Same as get, but uses recursion. */
+    public item getRecursive(int index) {
+        if (index >= size){
+            return null;
+        }
+        int x = 0;
+        return getRecursive()
+    }
+
 
 }

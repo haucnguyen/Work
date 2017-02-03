@@ -58,6 +58,14 @@ public class LinkedListDequeTest {
 
 		printTestStatus(passed);
 
+		System.out.println("Running get/getRecursive test.");
+
+		System.out.println(lld1.get(0));
+		System.out.println(lld1.get(1));
+		System.out.println(lld1.get(2));
+
+		printTestStatus(passed);
+
 	}
 
 	/** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
