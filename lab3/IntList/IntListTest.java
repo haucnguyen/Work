@@ -21,17 +21,13 @@ public class IntListTest {
     }
     @Test
     public void reverse() {
-        IntList one = new IntList(1, null);
-        IntList twoOne = new IntList(2, one);
-        IntList threeTwoOne = new IntList(3, twoOne);
+        IntList X = IntList.list(1, 2, 3);
+        IntList test = IntList.reverse(X);
+        assertEquals(IntList.list(3, 2, 1), test);
 
-        IntList three = new IntList(3, null);
-        IntList twoThree = new IntList(2, three);
-        IntList oneTwothree = new IntList(1, twoThree);
-
-        assertEquals(oneTwothree, IntList.reverse(threeTwoOne));
-
-        assertEquals(null, IntList.reverse(null));
+        IntList test2 = null;
+        IntList.reverse(test2);
+        assertEquals(null, test2);
 
     }
 
