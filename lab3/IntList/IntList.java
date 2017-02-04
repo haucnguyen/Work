@@ -112,7 +112,7 @@ public class IntList {
         return new IntList(A.first, catenate(A.rest, B));
     }
 
-    public static IntList Reserve(IntList A){
+    public static IntList Reverse(IntList A){
         return null;
     }
 

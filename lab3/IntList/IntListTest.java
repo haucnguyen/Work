@@ -29,10 +29,10 @@ public class IntListTest {
         IntList twoThree = new IntList(2, three);
         IntList oneTwothree = new IntList(1, twoThree);
 
-        assertEquals(oneTwothree, IntList.Reserve(threeTwoOne));
+        assertEquals(oneTwothree, IntList.Reverse(threeTwoOne));
 
-        assertEquals(null, IntList.Reserve(null));
-        
+        assertEquals(null, IntList.Reverse(null));
+
     }
 
 
