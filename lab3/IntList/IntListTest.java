@@ -31,7 +31,8 @@ public class IntListTest {
 
         assertEquals(oneTwothree, IntList.Reserve(threeTwoOne));
 
-        IntList none = new IntList(null);
+        assertEquals(null, IntList.Reserve(null));
+        
     }
 
 

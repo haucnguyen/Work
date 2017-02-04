@@ -16,7 +16,7 @@ public class ArrayDeque <item> {
     /** Adds an item to the front of the Deque. */
     public void addFirst(item x) {
         nextFirst = x;
-        
+
         size++;
     }
 

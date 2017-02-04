@@ -1,11 +1,11 @@
-public class LinkedListDeque <item> {
+public class LinkedListDeque <Item> {
 
     private class Node {
-        private item value;
+        private Item value;
         private Node next;
         private Node previous;
 
-        private Node(item i, Node n, Node p) {
+        private Node(Item i, Node n, Node p) {
             value = i;
             next = n;
             previous = p;
@@ -13,7 +13,7 @@ public class LinkedListDeque <item> {
     }
 
     /**
-     * The first item (if it exists) is at sentinel.next.
+     * The first Item (if it exists) is at sentinel.next.
      */
     private Node sentinel;
     private int size;
@@ -27,11 +27,11 @@ public class LinkedListDeque <item> {
         sentinel.previous = sentinel;
     }
 
-    public LinkedListDeque(item x) {
+    public LinkedListDeque(Item x) {
         sentinel = new Node(x, null, null);
-        Node item = new Node(x, sentinel, sentinel);
-        sentinel.previous = item;
-        sentinel.next = item;
+        Node Item = new Node(x, sentinel, sentinel);
+        sentinel.previous = Item;
+        sentinel.next = Item;
     }
 
     /**
@@ -48,7 +48,7 @@ public class LinkedListDeque <item> {
     /**
      * Adds an Int to the front of the Deque
      */
-    public void addFirst(item x) {
+    public void addFirst(Item x) {
         Node num = new Node(x, sentinel.next, sentinel);
         sentinel.next = num;
         num.next.previous = num;
@@ -69,7 +69,7 @@ public class LinkedListDeque <item> {
     /**
      * Adds an Int to the front of the Deque.
      */
-    public void addLast(item x) {
+    public void addLast(Item x) {
         Node num = new Node(x, sentinel, sentinel.previous);
         num.previous.next = num;
         sentinel.previous = num;
@@ -87,14 +87,14 @@ public class LinkedListDeque <item> {
     }
 
     /**
-     * Returns the number of items in the Deque.
+     * Returns the number of Items in the Deque.
      */
     public int size() {
         return size;
     }
 
     /**
-     * Prints the items in the Deque from first to last, separated by a space.
+     * Prints the Items in the Deque from first to last, separated by a space.
      */
     public void printDeque() {
         Node placeholder = sentinel;
@@ -103,34 +103,34 @@ public class LinkedListDeque <item> {
             placeholder = placeholder.next;
         }
     }
-    /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
-    public item removeFirst() {
+    /** Removes and returns the Item at the back of the Deque. If no such Item exists, returns null. */
+    public Item removeFirst() {
         if (this.isEmpty()) {
             return null;
-        }
-        else {
-        item placeholder = sentinel.next.value;
-        sentinel.next.next.previous = sentinel;
-        sentinel.next = sentinel.next.next;
-        size--;
-        return placeholder;
+        } else {
+            Item placeholder = sentinel.next.value;
+            sentinel.next.next.previous = sentinel;
+            sentinel.next = sentinel.next.next;
+            size--;
+            return placeholder;
         }
     }
 
-    /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
-    public item removeLast() {
+    /** Removes and returns the Item at the back of the Deque. */
+    public Item removeLast() {
         if (this.isEmpty()) {
             return null;
+        } else {
+            Item placeholder = sentinel.previous.value;
+            sentinel.previous.previous.next = sentinel;
+            sentinel.previous = sentinel.previous.previous;
+            size--;
+            return placeholder;
         }
-        item placeholder = sentinel.previous.value;
-        sentinel.previous.previous.next = sentinel;
-        sentinel.previous = sentinel.previous.previous;
-        size--;
-        return placeholder;
     }
-    /** Gets the item at the given index, where 0 is the front, 1 is the next item, and so forth. If no such item exists, returns null. Must not alter the deque! */
-    public item get(int index) {
-        if (index >= size){
+    /** Gets the Item at the given index */
+    public Item get(int index) {
+        if (index >= size) {
             return null;
         }
         int counter = 0;
@@ -142,8 +142,8 @@ public class LinkedListDeque <item> {
         return placeholder.value;
     }
     /**  Same as get, but uses recursion. */
-    public item getRecursive(int index) {
-        if (index >= size){
+    public Item getRecursive(int index) {
+        if (index >= size) {
             return null;
         }
         if (index == 0) {
@@ -154,7 +154,7 @@ public class LinkedListDeque <item> {
 
     }
 
-    public item getRecursiveHelper(int index, Node n) {
+    public Item getRecursiveHelper(int index, Node n) {
         if (index == 0) {
             return n.value;
         }
