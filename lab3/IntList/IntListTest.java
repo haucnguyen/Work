@@ -20,7 +20,7 @@ public class IntListTest {
         assertEquals(threeTwoOne, x);
     }
     @Test
-    public void Reverse() {
+    public void reverse() {
         IntList one = new IntList(1, null);
         IntList twoOne = new IntList(2, one);
         IntList threeTwoOne = new IntList(3, twoOne);
@@ -29,9 +29,9 @@ public class IntListTest {
         IntList twoThree = new IntList(2, three);
         IntList oneTwothree = new IntList(1, twoThree);
 
-        assertEquals(oneTwothree, IntList.Reverse(threeTwoOne));
+        assertEquals(oneTwothree, IntList.reverse(threeTwoOne));
 
-        assertEquals(null, IntList.Reverse(null));
+        assertEquals(null, IntList.reverse(null));
 
     }
 

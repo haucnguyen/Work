@@ -112,9 +112,10 @@ public class IntList {
         return new IntList(A.first, catenate(A.rest, B));
     }
 
-    public static IntList Reverse(IntList A){
+    public static IntList reverse(IntList A){
         return null;
     }
+
 
 
     /**
