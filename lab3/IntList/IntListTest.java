@@ -31,8 +31,6 @@ public class IntListTest {
 
     }
 
-
-
     @Test
     public void testdSquareList() {
         IntList L = IntList.list(1, 2, 3);

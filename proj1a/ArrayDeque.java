@@ -1,44 +1,72 @@
-public class ArrayDeque <item> {
+import java.lang.reflect.Array;
 
-    private static int ArraySize = 8;
-    private item nextFirst;
-    private item nextLast;
-    private int[] array;
+public class ArrayDeque <Item> {
+
+    private int nextFirst;
+    private int nextLast;
+    private Item[] array;
     private int size;
 
 
     /** Creates an empty Array Deque */
     public ArrayDeque() {
-        array = new int[ArraySize];
+        array =  (Item[]) new Object[8];
         size = 0;
+        nextFirst = 1;
+        nextLast = 2;
     }
 
-    /** Adds an item to the front of the Deque. */
-    public void addFirst(item x) {
-        nextFirst = x;
+    /** */
+    public void Upsize() {
+        Item[] a = (Item[]) new Object[size * 2];
+        System.arraycopy(array, size - nextFirst, a, 0, size);
+        System.arraycopy(array, nextLast, a, size - nextFirst, size);
+        nextFirst = array.length - 1;
+        nextLast = size;
+        array = a;
+    }
 
+    /** Adds an Item to the front of the Deque. */
+    public void addFirst(Item x) {
+        if (nextFirst == 0) {
+            nextFirst = size - 1;
+        }
+        if (size == array.length) {
+            Upsize();
+        }
+        array[nextFirst] = x;
+        nextFirst--;
         size++;
     }
 
-    /** Adds an item to the back of the Deque. */
-    public void addLast(int x) {
+    /** Adds an Item to the back of the Deque. */
+    public void addLast(Item x) {
+        if (nextLast == array.length) {
+            nextLast = 0;
+        }
+        if (size == array.length) {
+            Upsize();
+        }
+        array[nextLast] = x;
+        nextLast--;
         size++;
+
     }
 
     /** Returns true if deque is empty, false otherwise. */
     public boolean isEmpty() {
-        if (nextFirst == nextLast) {
+        if (size == 0) {
             return true;
         }
         return false;
     }
 
-    /** Returns the number of items in the Deque. */
+    /** Returns the number of Items in the Deque. */
     public int size(){
         return size;
     }
 
-    /** Prints the items in the Deque from first to last, separated by a space. */
+    /** Prints the Items in the Deque from first to last, separated by a space. */
     public void printDeque() {
         int x = 0;
         while (x < size) {
@@ -47,8 +75,8 @@ public class ArrayDeque <item> {
         }
     }
 
-   /** Removes and returns the item at the front of the Deque. If no such item exists, returns null. */
-    public item removeFirst() {
+   /** Removes and returns the Item at the front of the Deque. If no such Item exists, returns null. */
+    public Item removeFirst() {
         if (this.isEmpty()) {
             return null;
         }
@@ -56,17 +84,26 @@ public class ArrayDeque <item> {
     }
 
 
-        /** Removes and returns the item at the back of the Deque. If no such item exists, returns null. */
+        /** Removes and returns the Item at the back of the Deque. If no such Item exists, returns null. */
 
-    public item removeLast() {
+    public Item removeLast() {
         if (this.isEmpty()) {
             return null;
         }
         return null;
     }
 
-    public item get(int index) {
+    public Item get(int index) {
         return null;
     }
 
-}
+
+    }
+/**
+    public void Downsize() {
+        Item[] a = (Item[]) new Object[size / 2];
+        System.arraycopy(array, 0, a, 0, size);
+        array = a;
+    }
+ */
+
