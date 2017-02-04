@@ -1,8 +1,8 @@
 public class ArrayDeque <item> {
 
     private static int ArraySize = 8;
-    private int nextFirst;
-    private int nextLast;
+    private item nextFirst;
+    private item nextLast;
     private int[] array;
     private int size;
 
@@ -10,22 +10,18 @@ public class ArrayDeque <item> {
     /** Creates an empty Array Deque */
     public ArrayDeque() {
         array = new int[ArraySize];
-        nextFirst = 1;
-        nextLast= 0;
         size = 0;
     }
 
     /** Adds an item to the front of the Deque. */
-    public void addFirst(int x) {
+    public void addFirst(item x) {
         nextFirst = x;
-        nextFirst++;
+        
         size++;
     }
 
     /** Adds an item to the back of the Deque. */
     public void addLast(int x) {
-        array[nextLast] = x;
-        nextLast--;
         size++;
     }
 
@@ -66,6 +62,10 @@ public class ArrayDeque <item> {
         if (this.isEmpty()) {
             return null;
         }
+        return null;
+    }
+
+    public item get(int index) {
         return null;
     }
 
