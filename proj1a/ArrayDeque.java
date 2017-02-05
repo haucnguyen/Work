@@ -18,10 +18,25 @@ public class ArrayDeque<Item> {
         midDistance = 13;
     }
 
+    private int minusOne(int index) {
+        if (index == 0) {
+            return array.length - 1;
+        }
+        return index - 1;
+    }
+
+    private int plusOne(int index) {
+        if (index == array.length) {
+            return 0;
+        }
+        return index + 1;
+    }
+
     private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
-        System.arraycopy(array, nextFirst + 1, a, 0, array.length - (nextFirst + 1));
-        System.arraycopy(array, 0, a, a.length - (nextFirst + 1), nextFirst + 1);
+        int x = plusOne(nextFirst);
+        System.arraycopy(array, x, a, 0, array.length - x);
+        System.arraycopy(array, 0, a, a.length - x, x);
         array = a;
         nextFirst = (array.length / 2) - 1;
         nextLast = 0;
@@ -29,16 +44,17 @@ public class ArrayDeque<Item> {
 
     private void downSize() {
         Item[] a = (Item[]) new Object[array.length / 4];
+        int x = plusOne(nextFirst)
         int halfLength = a.length / 2;
-        System.arraycopy(array, nextFirst + 1, a, halfLength, halfLength);
-        System.arraycopy(array, nextFirst + 1 + halfLength, a, 0, size - halfLength);
+        System.arraycopy(array, x, a, halfLength, halfLength);
+        System.arraycopy(array, x + halfLength, a, 0, size - halfLength);
         array = a;
         nextFirst = halfLength - 1;
         nextLast = size - halfLength;
         if (midDistance == array.length + 1) {
             midDistance = array.length;
         }
-            midDistance -= array.length;
+        midDistance -= array.length;
     }
 
 
@@ -53,7 +69,7 @@ public class ArrayDeque<Item> {
         if (midDistance == array.length + 1) {
             midDistance = array.length * 2;
         }
-            midDistance--;
+        midDistance--;
         if (size == array.length) {
             upSize();
         }
@@ -69,7 +85,7 @@ public class ArrayDeque<Item> {
         if (midDistance == array.length * 2) {
             midDistance = array.length + 1;
         }
-            midDistance++;
+        midDistance++;
         if (size == array.length) {
             upSize();
         }
@@ -115,8 +131,8 @@ public class ArrayDeque<Item> {
         if (midDistance == array.length * 2) {
             midDistance = array.length + 1;
         }
-            midDistance++;
-        if (size % 4 < array.length) {
+        midDistance++;
+        if (array.length > 16 && (size / array.length) < .25) {
             downSize();
         }
         return a;
@@ -138,7 +154,7 @@ public class ArrayDeque<Item> {
             midDistance = array.length * 2;
         }
         midDistance--;
-        if (size % 4 < array.length) {
+        if (array.length > 16 && (size / array.length) < .25) {
             downSize();
         }
         return a;
