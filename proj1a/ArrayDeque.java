@@ -98,7 +98,7 @@ public class ArrayDeque<Item> {
         if (size == array.length) {
             upSize();
         }
-        if ( size == 0) {
+        if (size == 0) {
             array[nextLast] = x;
         }
         if (nextLast == array.length - 1) {
