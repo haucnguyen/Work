@@ -143,10 +143,6 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        if (nextFirst == nextLast) {
-            size--;
-            return array[nextFirst];
-        }
         int x = plusOne(nextFirst);
         Item a = array[x];
         array[x] = null;
@@ -174,10 +170,6 @@ public class ArrayDeque<Item> {
         if ((size / array.length) < .25 && array.length > 14) {
             downSize();
         }
-        if (nextFirst == nextLast) {
-            size--;
-            return array[nextLast];
-        }
         if (nextLast == 0) {
             nextLast = array.length - 1;
             size--;
@@ -194,7 +186,7 @@ public class ArrayDeque<Item> {
 
     public Item get(int index) {
         if (nextFirst < nextLast) {
-            return array[nextFirst + 1];
+            return array[nextFirst + index + 1];
         }
         if (index < array.length - nextFirst) {
             return array[nextFirst + index];
@@ -205,13 +197,17 @@ public class ArrayDeque<Item> {
         return array[index - (array.length - nextFirst)];
     }
 
-    private static void main(String[] args) {
-        ArrayDeque<Integer> L = new ArrayDeque<Integer>();
-        L.addLast(0);
-        L.addLast(1);
-        L.addLast(2);
-        L.removeFirst();
-        System.out.print(L.removeFirst());
+    public static void main(String[] args) {
+        ArrayDeque<Integer> A = new ArrayDeque<Integer>();
+        A.addFirst(0);
+        A.addFirst(1);
+        A.isEmpty();
+        A.addFirst(3);
+        A.addFirst(4);
+        A.addFirst(5);
+        A.addFirst(6);
+        A.addFirst(7);
+        System.out.print(A.removeLast());
 
     }
 }
