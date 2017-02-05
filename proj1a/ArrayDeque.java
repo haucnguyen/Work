@@ -150,12 +150,14 @@ public class ArrayDeque<Item> {
             size--;
             return array[nextFirst];
         }
-        int x = plusOne(nextFirst);
-        Item a = array[x];
-        array[x] = null;
-        nextFirst++;
+        if (nextFirst == array.length - 1) {
+            nextFirst = 0;
+            size--;
+            return array[array.length - 1];
+        }
         size--;
-        return a;
+        nextFirst++;
+        return array[nextFirst - 1];
     }
 
 
@@ -174,12 +176,18 @@ public class ArrayDeque<Item> {
         if ((size / array.length) < .25 && array.length > 16) {
             downSize();
         }
-        int x = minusOne(nextLast);
-        Item a = array[x];
-        array[x] = null;
-        nextLast--;
+        if (nextLast == 0) {
+            nextLast = array.length - 1;
+            size--;
+            return array[0];
+        }
+        if (size == 1) {
+            size--;
+            return array[nextFirst];
+        }
         size--;
-        return a;
+        nextLast--;
+        return array[nextLast + 1];
     }
 
     public Item get(int index) {
