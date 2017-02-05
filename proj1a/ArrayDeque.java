@@ -101,9 +101,6 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             array[nextLast] = x;
         }
-        if (nextLast == nextFirst - 1) {
-            upSize();
-        }
         if (nextLast == array.length - 1) {
             array[nextLast] = x;
             nextLast = 0;
@@ -202,28 +199,20 @@ public class ArrayDeque<Item> {
         return array[index - (array.length - nextFirst) + 1];
     }
 
-    public static void main(String[] args) {
+    private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
         A.addFirst(0);
-        A.get(0);
-        A.get(0);
+        A.removeFirst();
+        A.addLast(2);
         A.addLast(3);
+        A.addLast(4);
+        A.addLast(5);
+        A.get(2);
         A.get(0);
-        A.get(0);
-        A.get(1);
-        A.addLast(7);
         A.addLast(8);
-        A.removeLast();
-        A.addFirst(10);
-        A.removeLast();
-        A.addLast(12);
-        A.get(0);
-        A.removeLast();
-        A.addFirst(15);
-        A.addFirst(16);
-        A.addFirst(17);
-        A.addLast(18);
-        A.addLast(19);
+        A.addLast(9);
+        A.addLast(10);
+        System.out.print(A.get(2));
 
     }
 }
