@@ -26,7 +26,7 @@ public class ArrayDeque<Item> {
     }
 
     private int plusOne(int index) {
-        if (index == array.length) {
+        if (index == array.length - 1) {
             return 0;
         }
         return index + 1;
@@ -35,11 +35,13 @@ public class ArrayDeque<Item> {
     private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
         int x = plusOne(nextFirst);
+        int halfArraylength = array.length / 2;
         System.arraycopy(array, x, a, 0, array.length - x);
         System.arraycopy(array, 0, a, a.length - x, x);
         array = a;
-        nextFirst = (array.length / 2) - 1;
+        nextFirst = (halfArraylength) - 1;
         nextLast = 0;
+        midDistance = array.length + (halfArraylength / 2);
     }
 
     private void downSize() {
@@ -64,7 +66,7 @@ public class ArrayDeque<Item> {
      */
     public void addFirst(Item x) {
         array[nextFirst] = x;
-        nextFirst--;
+        nextFirst = minusOne(nextFirst);
         size++;
         if (midDistance == array.length + 1) {
             midDistance = array.length * 2;
@@ -80,12 +82,8 @@ public class ArrayDeque<Item> {
      */
     public void addLast(Item x) {
         array[nextLast] = x;
-        nextLast++;
+        nextLast = plusOne(nextLast);
         size++;
-        if (midDistance == array.length * 2) {
-            midDistance = array.length + 1;
-        }
-        midDistance++;
         if (size == array.length) {
             upSize();
         }
@@ -95,10 +93,7 @@ public class ArrayDeque<Item> {
      * Returns true if deque is empty, false otherwise.
      */
     public boolean isEmpty() {
-        if (size == 0) {
-            return true;
-        }
-        return false;
+        return size == 0;
     }
 
     /**
@@ -152,10 +147,6 @@ public class ArrayDeque<Item> {
         array[x] = null;
         nextLast--;
         size--;
-        if (midDistance == array.length + 1) {
-            midDistance = array.length * 2;
-        }
-        midDistance--;
         if (array.length > 16 && (size / array.length) < .25) {
             downSize();
         }
