@@ -4,7 +4,7 @@ public class ArrayDeque<Item> {
     private int nextLast;
     private Item[] array;
     private int size;
-    private int distMid;
+    private int midDistance;
 
 
     /**
@@ -13,9 +13,9 @@ public class ArrayDeque<Item> {
     public ArrayDeque() {
         array = (Item[]) new Object[8];
         size = 0;
-        nextFirst = 1;
-        nextLast = 2;
-        distMid = 13;
+        nextFirst = 4;
+        nextLast = 5;
+        midDistance = 13;
     }
 
     private void upSize() {
@@ -35,11 +35,11 @@ public class ArrayDeque<Item> {
         array = a;
         nextFirst = halfLength - 1;
         nextLast = size - halfLength;
-        if (distMid == array.length + 1) {
-            distMid = array.length;
+        if (midDistance == array.length + 1) {
+            midDistance = array.length;
         }
-        distMid -= array.length;
-        }
+            midDistance -= array.length;
+    }
 
 
 
@@ -47,33 +47,32 @@ public class ArrayDeque<Item> {
      * Adds an Item to the front of the Deque.
      */
     public void addFirst(Item x) {
-        if (size == array.length) {
-            upSize();
-        }
-        if (nextFirst == 0) {
-            array[nextFirst] = x;
-            nextFirst = array.length - 1;
-        }
         array[nextFirst] = x;
         nextFirst--;
         size++;
+        if (midDistance == array.length + 1) {
+            midDistance = array.length * 2;
+        }
+            midDistance--;
+        if (size == array.length) {
+            upSize();
+        }
     }
 
     /**
      * Adds an Item to the back of the Deque.
      */
     public void addLast(Item x) {
-        if (size == array.length) {
-            upSize();
-        }
-        if (nextLast == array.length) {
-            array[nextLast] = x;
-            nextLast = 0;
-        }
         array[nextLast] = x;
         nextLast++;
         size++;
-
+        if (midDistance == array.length * 2) {
+            midDistance = array.length + 1;
+        }
+            midDistance++;
+        if (size == array.length) {
+            upSize();
+        }
     }
 
     /**
@@ -106,13 +105,17 @@ public class ArrayDeque<Item> {
 
     /** Removes and returns the Item at the front of the Deque. */
     public Item removeFirst() {
-        if (this.isEmpty()) {
+        if (size == 0) {
             return null;
         }
         Item a = array[nextFirst + 1];
         array[nextFirst + 1] = null;
         nextFirst++;
         size--;
+        if (midDistance == array.length * 2) {
+            midDistance = array.length + 1;
+        }
+            midDistance++;
         if (size % 4 < array.length) {
             downSize();
         }
@@ -124,14 +127,17 @@ public class ArrayDeque<Item> {
      */
 
     public Item removeLast() {
-        if (this.isEmpty()) {
+        if (size == 0) {
             return null;
         }
         Item a = array[nextLast - 1];
         array[nextLast - 1] = null;
         nextLast--;
         size--;
-
+        if (midDistance == array.length + 1) {
+            midDistance = array.length * 2;
+        }
+        midDistance--;
         if (size % 4 < array.length) {
             downSize();
         }
@@ -139,12 +145,12 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int index) {
-        if (index > array.length -1) {
+        if (index > array.length - 1) {
             return null;
         }
         if (index < 0) {
             return null;
         }
-        return array[(distMid + index) % array.length];
+        return array[(midDistance + index) % array.length];
     }
 }
