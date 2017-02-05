@@ -6,7 +6,6 @@ public class ArrayDeque<Item> {
     private int size;
 
 
-
     /**
      * Creates an empty Array Deque
      */
@@ -48,7 +47,6 @@ public class ArrayDeque<Item> {
     }
 
 
-
     private void downSize() {
         Item[] a = (Item[]) new Object[array.length / 4];
         if (nextFirst < nextLast) {
@@ -63,7 +61,6 @@ public class ArrayDeque<Item> {
         }
         array = a;
     }
-
 
 
     /**
@@ -89,7 +86,7 @@ public class ArrayDeque<Item> {
      * Adds an Item to the back of the Deque.
      */
     public void addLast(Item x) {
-        if (nextLast + 1 == nextFirst){
+        if (nextLast + 1 == nextFirst) {
             upSize();
         }
         if (((nextFirst == 0 && nextLast == array.length - 1)) && size != 0) {
@@ -136,7 +133,9 @@ public class ArrayDeque<Item> {
         }
     }
 
-    /** Removes and returns the Item at the front of the Deque. */
+    /**
+     * Removes and returns the Item at the front of the Deque.
+     */
     public Item removeFirst() {
         if (size == 0) {
             return null;
@@ -195,7 +194,8 @@ public class ArrayDeque<Item> {
         }
         if (size == 1) {
             return array[nextFirst];
-
+        }
         return array[index - (array.length - nextFirst)];
     }
 }
+
