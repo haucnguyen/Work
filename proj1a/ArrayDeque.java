@@ -38,12 +38,11 @@ public class ArrayDeque<Item> {
             System.arraycopy(array, x, a, 0, size);
             array = a;
             nextFirst = 0;
-            nextLast = size - 1;
+            nextLast = size;
         } else {
             System.arraycopy(array, x, a, 0, array.length - x);
             System.arraycopy(array, 0, a, array.length - x, nextLast);
             array = a;
-
             nextFirst = array.length - 1;
             nextLast = size;
         }
@@ -152,6 +151,7 @@ public class ArrayDeque<Item> {
         Item a = array[x];
         array[x] = null;
         size--;
+        nextFirst++;
 
         if (nextFirst == array.length - 1) {
             nextFirst = 0;
@@ -194,7 +194,7 @@ public class ArrayDeque<Item> {
 
     public Item get(int index) {
         if (nextFirst < nextLast) {
-            return array[nextFirst];
+            return array[nextFirst + 1];
         }
         if (index < array.length - nextFirst) {
             return array[nextFirst + index];
@@ -208,13 +208,10 @@ public class ArrayDeque<Item> {
     private static void main(String[] args) {
         ArrayDeque<Integer> L = new ArrayDeque<Integer>();
         L.addLast(0);
-        L.addLast(0);
-        L.addLast(0);
-        L.addFirst(1);
-        L.addLast(3);
-        L.addLast(3);
+        L.addLast(1);
+        L.addLast(2);
         L.removeFirst();
-
+        System.out.print(L.removeFirst());
 
     }
 }
