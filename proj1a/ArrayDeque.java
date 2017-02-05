@@ -27,7 +27,7 @@ public class ArrayDeque<Item> {
 
     }
 
-    private void downsize() {
+    private void downSize() {
         Item[] a = (Item[]) new Object[size * 4];
         System.arraycopy(array, nextFirst + 1, a, 0, size);
         array = a;
@@ -85,7 +85,7 @@ public class ArrayDeque<Item> {
     }
 
     /**
-     * Prints the Items in the Deque from first to last, separated by a space.
+     * Prints the Items in the Deque from first to last, by a space.
      */
     public void printDeque() {
         int x = 0;
@@ -109,12 +109,11 @@ public class ArrayDeque<Item> {
         size--;
 
         if (size % 4 < array.length) {
-            downsize();
+            downSize();
         }
 
         return a;
     }
-
 
     /**
      * Removes and returns the Item at the back of the Deque.
@@ -131,7 +130,7 @@ public class ArrayDeque<Item> {
         size--;
 
         if (size % 4 < array.length) {
-            downsize();
+            downSize();
         }
         return a;
     }
