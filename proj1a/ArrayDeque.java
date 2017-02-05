@@ -189,7 +189,7 @@ public class ArrayDeque<Item> {
             return array[nextFirst + index + 1];
         }
         if (index < array.length - nextFirst) {
-            return array[nextFirst + index];
+            return array[nextFirst + index + 1];
         }
         if (size == 1) {
             return array[nextFirst];
@@ -199,23 +199,14 @@ public class ArrayDeque<Item> {
 
     private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
-        A.addFirst(0);
-        A.removeFirst();
-        A.addLast(2);
-        A.removeFirst();
-        A.addFirst(4);
-        A.removeLast();
-        A.addFirst(6);
-        A.removeLast();
-        A.addLast(8);
-        A.addFirst(9);
-        A.addFirst(10);
-        A.addFirst(11);
+        A.addLast(0);
+        A.get(0);
         A.get(0);
         A.removeFirst();
-        A.removeLast();
-        A.addFirst(15);
-        System.out.print(A.get(2));
+        A.addFirst(4);
+        A.get(0);
+        A.get(0);
+        System.out.print(A.get(0));
 
     }
 }
