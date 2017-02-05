@@ -4,7 +4,7 @@ public class ArrayDeque<Item> {
     private int nextLast;
     private Item[] array;
     private int size;
-    private int midDistance;
+
 
 
     /**
@@ -15,7 +15,7 @@ public class ArrayDeque<Item> {
         size = 0;
         nextFirst = 4;
         nextLast = 5;
-        midDistance = 13;
+
     }
 
     private int minusOne(int index) {
@@ -36,12 +36,12 @@ public class ArrayDeque<Item> {
         Item[] a = (Item[]) new Object[size * 2];
         int x = plusOne(nextFirst);
         int halfArraylength = array.length / 2;
-        System.arraycopy(array, x, a, 0, array.length - x);
+        System.arraycopy(array, x, a, array.length, array.length - x);
         System.arraycopy(array, 0, a, a.length - x, x);
         array = a;
         nextFirst = (halfArraylength) - 1;
         nextLast = 0;
-        midDistance = array.length + (halfArraylength / 2);
+
     }
 
     private void downSize() {
@@ -53,10 +53,7 @@ public class ArrayDeque<Item> {
         array = a;
         nextFirst = halfLength - 1;
         nextLast = size - halfLength;
-        if (midDistance == array.length + 1) {
-            midDistance = array.length;
-        }
-        midDistance -= array.length;
+
     }
 
 
@@ -68,10 +65,7 @@ public class ArrayDeque<Item> {
         array[nextFirst] = x;
         nextFirst = minusOne(nextFirst);
         size++;
-        if (midDistance == array.length + 1) {
-            midDistance = array.length * 2;
-        }
-        midDistance--;
+
         if (size == array.length) {
             upSize();
         }
@@ -119,20 +113,21 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
+        if (nextFirst == nextLast) {
+            size--;
+            return array[nextFirst];
+        }
         int x = plusOne(nextFirst);
         Item a = array[x];
         array[x] = null;
         nextFirst++;
         size--;
-        if (midDistance == array.length * 2) {
-            midDistance = array.length + 1;
-        }
-        midDistance++;
-        if (array.length > 16 && (size / array.length) < .25) {
+        if ((size / array.length) < .25 && array.length > 16) {
             downSize();
         }
         return a;
-    }
+        }
+
 
     /**
      * Removes and returns the Item at the back of the Deque.
@@ -142,12 +137,16 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
+        if (nextFirst == nextLast) {
+            size--;
+            return array[nextLast];
+        }
         int x = minusOne(nextLast);
         Item a = array[x];
         array[x] = null;
         nextLast--;
         size--;
-        if (array.length > 16 && (size / array.length) < .25) {
+        if ((size / array.length) < .25 && array.length > 16) {
             downSize();
         }
         return a;
@@ -160,6 +159,6 @@ public class ArrayDeque<Item> {
         if (index < 0) {
             return null;
         }
-        return array[(midDistance + index) % array.length];
+        return array[index - (array.length - nextFirst)];
     }
 }
