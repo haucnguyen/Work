@@ -44,7 +44,7 @@ public class ArrayDeque<Item> {
 
     private void downSize() {
         Item[] a = (Item[]) new Object[array.length / 4];
-        int x = plusOne(nextFirst)
+        int x = plusOne(nextFirst);
         int halfLength = a.length / 2;
         System.arraycopy(array, x, a, halfLength, halfLength);
         System.arraycopy(array, x + halfLength, a, 0, size - halfLength);
@@ -124,8 +124,9 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        Item a = array[nextFirst + 1];
-        array[nextFirst + 1] = null;
+        int x = plusOne(nextFirst);
+        Item a = array[x];
+        array[x] = null;
         nextFirst++;
         size--;
         if (midDistance == array.length * 2) {
@@ -146,8 +147,9 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        Item a = array[nextLast - 1];
-        array[nextLast - 1] = null;
+        int x = minusOne(nextLast);
+        Item a = array[x];
+        array[x] = null;
         nextLast--;
         size--;
         if (midDistance == array.length + 1) {
