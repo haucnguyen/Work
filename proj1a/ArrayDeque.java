@@ -58,7 +58,7 @@ public class ArrayDeque<Item> {
             nextLast = size - 1;
         } else {
             nextFirst = 0;
-            System.arraycopy(array, nextFirst + 1,  a, 0, array.length - x);
+            System.arraycopy(array, nextFirst,  a, 0, array.length - x);
             System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
             nextLast = size - 1;
         }
@@ -166,9 +166,6 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        if ((size / array.length) < .25 && array.length > 14) {
-            downSize();
-        }
         if (nextLast == 0) {
             nextLast = array.length - 1;
             size--;
@@ -179,6 +176,9 @@ public class ArrayDeque<Item> {
         array[x] = null;
         nextLast--;
         size--;
+        if (((double) size / array.length) < .25 && array.length > 14) {
+            downSize();
+        }
         return a;
     }
 
@@ -198,60 +198,33 @@ public class ArrayDeque<Item> {
         }
         return array[index - (array.length - nextFirst) + 1];
     }
-/**
+
     private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
         A.addLast(0);
-        A.addFirst(1);
-        A.addFirst(2);
+        A.removeFirst();
+        A.addLast(2);
         A.addFirst(3);
         A.addLast(4);
-        A.removeLast();
-        A.removeFirst();
-        A.addFirst(7);
-        A.addLast(8);
+        A.addLast(5);
+        A.addLast(6);
+        A.get(2);
+        A.addFirst(8);
         A.addLast(9);
-        A.addLast(10);
         A.removeFirst();
-        A.addLast(12);
-        A.addLast(13);
-        A.removeFirst();
-        A.removeLast();
-        A.get(1);
-        A.get(1);
-        A.removeLast();
-        A.removeLast();
-        A.addLast(20);
-        A.addFirst(21);
-        System.out.print(A.get(0));
-
-    }
-
-    private static void main(String[] args) {
-        ArrayDeque<Integer> A = new ArrayDeque<Integer>();
-        A.addLast(0);
-        A.addFirst(1);
-        A.removeLast();
-        A.removeLast();
-        A.addLast(4);
-        A.removeLast();
-        A.addFirst(6);
-        A.removeFirst();
-        A.addLast(8);
-        A.addLast(9);
-        A.addLast(10);
-        A.get(0);
-        A.addLast(12);
-        A.addFirst(13);
-        A.removeLast();
+        A.addLast(11);
+        A.get(6);
+        A.get(5);
+        A.addLast(14);
         A.addFirst(15);
-        A.get(0);
+        A.addFirst(16);
         A.addFirst(17);
-        A.get(1);
-        A.addFirst(19);
+        A.get(2);
+        A.addLast(19);
         A.addLast(20);
-        System.out.print(A.get(1));
+        A.addLast(21);
+        System.out.print(A.removeLast());
+
     }
-    */
 }
 
