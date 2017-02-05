@@ -36,15 +36,17 @@ public class ArrayDeque<Item> {
         int x = plusOne(nextFirst);
         if (nextFirst < nextLast) {
             System.arraycopy(array, x, a, 0, size);
+            array = a;
             nextFirst = 0;
             nextLast = size - 1;
         } else {
             System.arraycopy(array, x, a, 0, array.length - x);
-            System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
-            nextFirst = 0;
-            nextLast = size - 1;
+            System.arraycopy(array, 0, a, array.length - x, nextLast);
+            array = a;
+
+            nextFirst = array.length - 1;
+            nextLast = size;
         }
-        array = a;
     }
 
 
@@ -56,9 +58,9 @@ public class ArrayDeque<Item> {
             nextFirst = 0;
             nextLast = size - 1;
         } else {
-            System.arraycopy(array, x, a, 0, array.length - x);
-            System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
             nextFirst = 0;
+            System.arraycopy(array, nextFirst + 1,  a, 0, array.length - x);
+            System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
             nextLast = size - 1;
         }
         array = a;
@@ -142,9 +144,6 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        if ((size / array.length) < .25 && array.length > 16) {
-            downSize();
-        }
         if (nextFirst == nextLast) {
             size--;
             return array[nextFirst];
@@ -153,6 +152,13 @@ public class ArrayDeque<Item> {
         Item a = array[x];
         array[x] = null;
         size--;
+
+        if (nextFirst == array.length - 1) {
+            nextFirst = 0;
+        }
+        if ((size / array.length) < .25 && array.length > 14) {
+            downSize();
+        }
         return a;
     }
 
@@ -165,7 +171,7 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
-        if ((size / array.length) < .25 && array.length > 16) {
+        if ((size / array.length) < .25 && array.length > 14) {
             downSize();
         }
         if (nextFirst == nextLast) {
@@ -177,14 +183,13 @@ public class ArrayDeque<Item> {
             size--;
             return array[0];
         }
-        if (size == 1) {
-            size--;
-            return array[nextFirst];
-        }
+        int x = minusOne(nextLast);
+        Item a = array[x];
+        array[x] = null;
         size--;
-        nextLast--;
-        return array[nextLast + 1];
-    }
+        return a;
+        }
+
 
     public Item get(int index) {
         if (nextFirst < nextLast) {
@@ -197,6 +202,21 @@ public class ArrayDeque<Item> {
             return array[nextFirst];
         }
         return array[index - (array.length - nextFirst)];
+    }
+
+    public static void main(String[] args) {
+        ArrayDeque<Integer> test = new ArrayDeque<Integer>();
+        test.addLast(0);
+        test.isEmpty();
+        test.addLast(2);
+        test.addLast(3);
+        test.addLast(4);
+        test.addLast(5);
+        test.addLast(6);
+        test.addLast(7);
+        test.addFirst(8);
+        System.out.print(test.get(2));
+
     }
 }
 
