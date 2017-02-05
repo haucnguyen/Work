@@ -1,4 +1,4 @@
-public class LinkedListDeque <Item> {
+public class LinkedListDeque<Item> {
 
     private class Node {
         private Item value;
@@ -29,9 +29,9 @@ public class LinkedListDeque <Item> {
 
     private LinkedListDeque(Item x) {
         sentinel = new Node(x, null, null);
-        Node Item = new Node(x, sentinel, sentinel);
-        sentinel.previous = Item;
-        sentinel.next = Item;
+        Node item = new Node(x, sentinel, sentinel);
+        sentinel.previous = item;
+        sentinel.next = item;
     }
 
     /**
@@ -100,7 +100,7 @@ public class LinkedListDeque <Item> {
             placeholder = placeholder.next;
         }
     }
-    /** Removes and returns the Item at the back of the Deque. If no such Item exists, returns null. */
+    /** Removes and returns the Item at the back of the Deque. */
     public Item removeFirst() {
         if (this.isEmpty()) {
             return null;

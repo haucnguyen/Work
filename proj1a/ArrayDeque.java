@@ -4,6 +4,7 @@ public class ArrayDeque<Item> {
     private int nextLast;
     private Item[] array;
     private int size;
+    private int distMid;
 
 
     /**
@@ -14,38 +15,44 @@ public class ArrayDeque<Item> {
         size = 0;
         nextFirst = 1;
         nextLast = 2;
+        distMid = 13;
     }
 
-    /** */
     private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
-        System.arraycopy(array, nextFirst + 1, a, 0, size - nextLast);
-        System.arraycopy(array, 0, a, size - nextLast, nextLast);
+        System.arraycopy(array, nextFirst + 1, a, 0, array.length - (nextFirst + 1));
+        System.arraycopy(array, 0, a, a.length - (nextFirst + 1), nextFirst + 1);
         array = a;
-        nextFirst = array.length - 1;
-        nextLast = size;
-
+        nextFirst = (array.length / 2) - 1;
+        nextLast = 0;
     }
 
     private void downSize() {
-        Item[] a = (Item[]) new Object[size + 1];
-        System.arraycopy(array, nextFirst + 1, a, 0, size);
+        Item[] a = (Item[]) new Object[array.length / 4];
+        int halfLength = a.length / 2;
+        System.arraycopy(array, nextFirst + 1, a, halfLength, halfLength);
+        System.arraycopy(array, nextFirst + 1 + halfLength, a, 0, size - halfLength);
         array = a;
-        nextFirst = array.length - 1;
-        nextLast = size;
+        nextFirst = halfLength - 1;
+        nextLast = size - halfLength;
+        if (distMid == array.length + 1) {
+            distMid = array.length;
+        }
+        distMid -= array.length;
+        }
 
-    }
+
 
     /**
      * Adds an Item to the front of the Deque.
      */
     public void addFirst(Item x) {
+        if (size == array.length) {
+            upSize();
+        }
         if (nextFirst == 0) {
             array[nextFirst] = x;
             nextFirst = array.length - 1;
-        }
-        if (size == array.length) {
-            upSize();
         }
         array[nextFirst] = x;
         nextFirst--;
@@ -56,12 +63,12 @@ public class ArrayDeque<Item> {
      * Adds an Item to the back of the Deque.
      */
     public void addLast(Item x) {
+        if (size == array.length) {
+            upSize();
+        }
         if (nextLast == array.length) {
             array[nextLast] = x;
             nextLast = 0;
-        }
-        if (size == array.length) {
-            upSize();
         }
         array[nextLast] = x;
         nextLast++;
@@ -124,6 +131,7 @@ public class ArrayDeque<Item> {
         array[nextLast - 1] = null;
         nextLast--;
         size--;
+
         if (size % 4 < array.length) {
             downSize();
         }
@@ -131,17 +139,12 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int index) {
-        if (size < index) {
+        if (index > array.length -1) {
             return null;
         }
         if (index < 0) {
             return null;
         }
-        Item[] copy = (Item[]) new Object[size];
-        System.arraycopy(array, nextFirst + 1, copy, 0, size - nextLast);
-        System.arraycopy(array, 0, copy, size - nextLast, nextLast);
-        return copy[index];
+        return array[(distMid + index) % array.length];
     }
 }
-
-
