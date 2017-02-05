@@ -1,6 +1,4 @@
-import java.lang.reflect.Array;
-
-public class ArrayDeque <Item> {
+public class ArrayDeque<Item> {
 
     private int nextFirst;
     private int nextLast;
@@ -19,7 +17,7 @@ public class ArrayDeque <Item> {
     }
 
     /** */
-    private void UpSize() {
+    private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
         System.arraycopy(array, size - nextFirst, a, 0, size);
         System.arraycopy(array, nextLast, a, size - nextFirst, size);
@@ -29,7 +27,7 @@ public class ArrayDeque <Item> {
 
     }
 
-    private void DownSize() {
+    private void downsize() {
         Item[] a = (Item[]) new Object[size * 4];
         System.arraycopy(array, nextFirst + 1, a, 0, size);
         array = a;
@@ -46,7 +44,7 @@ public class ArrayDeque <Item> {
             nextFirst = array.length - 1;
         }
         if (size == array.length) {
-            UpSize();
+            upSize();
         }
         array[nextFirst] = x;
         nextFirst--;
@@ -61,7 +59,7 @@ public class ArrayDeque <Item> {
             nextLast = 0;
         }
         if (size == array.length) {
-            UpSize();
+            upSize();
         }
         array[nextLast] = x;
         nextLast--;
@@ -111,9 +109,9 @@ public class ArrayDeque <Item> {
         size--;
 
         if (size % 4 < array.length) {
-            DownSize();
+            downsize();
         }
-        
+
         return a;
     }
 
@@ -133,7 +131,7 @@ public class ArrayDeque <Item> {
         size--;
 
         if (size % 4 < array.length) {
-            DownSize();
+            downsize();
         }
         return a;
     }
