@@ -186,7 +186,7 @@ public class ArrayDeque<Item> {
         int x = minusOne(nextLast);
         Item a = array[x];
         array[x] = null;
-        nextFirst++;
+        nextLast--;
         size--;
         return a;
     }
@@ -194,7 +194,7 @@ public class ArrayDeque<Item> {
 
     public Item get(int index) {
         if (nextFirst < nextLast) {
-            return array[nextLast - 1];
+            return array[nextFirst];
         }
         if (index < array.length - nextFirst) {
             return array[nextFirst + index];
@@ -208,8 +208,11 @@ public class ArrayDeque<Item> {
     private static void main(String[] args) {
         ArrayDeque<Integer> L = new ArrayDeque<Integer>();
         L.addLast(0);
-        L.addLast(1);
-        L.addLast(2);
+        L.addLast(0);
+        L.addLast(0);
+        L.addFirst(1);
+        L.addLast(3);
+        L.addLast(3);
         L.removeFirst();
 
 
