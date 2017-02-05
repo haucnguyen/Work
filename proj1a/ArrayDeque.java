@@ -37,7 +37,7 @@ public class ArrayDeque<Item> {
         if (nextFirst < nextLast) {
             System.arraycopy(array, x, a, 0, size);
             array = a;
-            nextFirst = 0;
+            nextFirst = array.length - 1;
             nextLast = size;
         } else {
             System.arraycopy(array, x, a, 0, array.length - x);
@@ -198,7 +198,7 @@ public class ArrayDeque<Item> {
         }
         return array[index - (array.length - nextFirst) + 1];
     }
-
+/**
     private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
         A.addLast(0);
@@ -226,5 +226,32 @@ public class ArrayDeque<Item> {
         System.out.print(A.get(0));
 
     }
+
+    private static void main(String[] args) {
+        ArrayDeque<Integer> A = new ArrayDeque<Integer>();
+        A.addLast(0);
+        A.addFirst(1);
+        A.removeLast();
+        A.removeLast();
+        A.addLast(4);
+        A.removeLast();
+        A.addFirst(6);
+        A.removeFirst();
+        A.addLast(8);
+        A.addLast(9);
+        A.addLast(10);
+        A.get(0);
+        A.addLast(12);
+        A.addFirst(13);
+        A.removeLast();
+        A.addFirst(15);
+        A.get(0);
+        A.addFirst(17);
+        A.get(1);
+        A.addFirst(19);
+        A.addLast(20);
+        System.out.print(A.get(1));
+    }
+    */
 }
 
