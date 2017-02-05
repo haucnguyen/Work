@@ -33,13 +33,14 @@ public class ArrayDeque<Item> {
 
     private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
+        int x = plusOne(nextFirst);
         if (nextFirst < nextLast) {
-            System.arraycopy(array, nextFirst, a, 0, size);
+            System.arraycopy(array, x, a, 0, size);
             nextFirst = 0;
             nextLast = size - 1;
         } else {
-            System.arraycopy(array, nextFirst, a, 0, array.length - nextFirst);
-            System.arraycopy(array, 0, a, a.length - nextFirst, nextLast + 1);
+            System.arraycopy(array, x, a, 0, array.length - x);
+            System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
             nextFirst = 0;
             nextLast = size - 1;
         }
@@ -49,13 +50,14 @@ public class ArrayDeque<Item> {
 
     private void downSize() {
         Item[] a = (Item[]) new Object[array.length / 4];
+        int x = plusOne(nextFirst);
         if (nextFirst < nextLast) {
-            System.arraycopy(array, nextFirst, a, 0, size);
+            System.arraycopy(array, x, a, 0, size);
             nextFirst = 0;
             nextLast = size - 1;
         } else {
-            System.arraycopy(array, nextFirst, a, 0, array.length - nextFirst);
-            System.arraycopy(array, 0, a, a.length - nextFirst, nextLast + 1);
+            System.arraycopy(array, x, a, 0, array.length - x);
+            System.arraycopy(array, 0, a, a.length - x, nextLast + 1);
             nextFirst = 0;
             nextLast = size - 1;
         }
@@ -67,7 +69,7 @@ public class ArrayDeque<Item> {
      * Adds an Item to the front of the Deque.
      */
     public void addFirst(Item x) {
-        if (nextFirst - 1 == nextLast) {
+        if (nextFirst == nextLast) {
             upSize();
         }
         if (((nextFirst == 0) && nextLast == array.length - 1) && size != 0) {
@@ -75,7 +77,8 @@ public class ArrayDeque<Item> {
         }
         if (size == array.length) {
             upSize();
-        } else {
+        }
+        else {
             array[nextFirst] = x;
             nextFirst = minusOne(nextFirst);
         }
@@ -86,7 +89,7 @@ public class ArrayDeque<Item> {
      * Adds an Item to the back of the Deque.
      */
     public void addLast(Item x) {
-        if (nextLast + 1 == nextFirst) {
+        if (nextLast == nextFirst) {
             upSize();
         }
         if (((nextFirst == 0 && nextLast == array.length - 1)) && size != 0) {
@@ -95,12 +98,12 @@ public class ArrayDeque<Item> {
         if (size == array.length) {
             upSize();
         }
-        if (nextFirst == nextLast && size == 0) {
+        if ( size == 0) {
             array[nextLast] = x;
         }
         if (nextLast == array.length - 1) {
-            nextLast = 0;
             array[nextLast] = x;
+            nextLast = 0;
         } else {
             array[nextLast] = x;
             nextLast = plusOne(nextLast);
@@ -140,12 +143,12 @@ public class ArrayDeque<Item> {
         if (size == 0) {
             return null;
         }
+        if ((size / array.length) < .25 && array.length > 16) {
+            downSize();
+        }
         if (nextFirst == nextLast) {
             size--;
             return array[nextFirst];
-        }
-        if ((size / array.length) < .25 && array.length > 16) {
-            downSize();
         }
         int x = plusOne(nextFirst);
         Item a = array[x];
