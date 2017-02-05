@@ -19,8 +19,8 @@ public class ArrayDeque<Item> {
     /** */
     private void upSize() {
         Item[] a = (Item[]) new Object[size * 2];
-        System.arraycopy(array, size - nextFirst, a, 0, size);
-        System.arraycopy(array, nextLast, a, size - nextFirst, size);
+        System.arraycopy(array, nextFirst + 1, a, 0, size - nextLast);
+        System.arraycopy(array, 0, a, size - nextLast, nextLast);
         array = a;
         nextFirst = array.length - 1;
         nextLast = size;
@@ -28,7 +28,7 @@ public class ArrayDeque<Item> {
     }
 
     private void downSize() {
-        Item[] a = (Item[]) new Object[size * 4];
+        Item[] a = (Item[]) new Object[size + 1];
         System.arraycopy(array, nextFirst + 1, a, 0, size);
         array = a;
         nextFirst = array.length - 1;
@@ -41,6 +41,7 @@ public class ArrayDeque<Item> {
      */
     public void addFirst(Item x) {
         if (nextFirst == 0) {
+            array[nextFirst] = x;
             nextFirst = array.length - 1;
         }
         if (size == array.length) {
@@ -55,14 +56,15 @@ public class ArrayDeque<Item> {
      * Adds an Item to the back of the Deque.
      */
     public void addLast(Item x) {
-        if (nextLast == array.length - 1) {
+        if (nextLast == array.length) {
+            array[nextLast] = x;
             nextLast = 0;
         }
         if (size == array.length) {
             upSize();
         }
         array[nextLast] = x;
-        nextLast--;
+        nextLast++;
         size++;
 
     }
@@ -95,23 +97,18 @@ public class ArrayDeque<Item> {
         }
     }
 
-    /**
-     * Removes and returns the Item at the front of the Deque.
-     */
+    /** Removes and returns the Item at the front of the Deque. */
     public Item removeFirst() {
         if (this.isEmpty()) {
             return null;
         }
-
         Item a = array[nextFirst + 1];
         array[nextFirst + 1] = null;
         nextFirst++;
         size--;
-
         if (size % 4 < array.length) {
             downSize();
         }
-
         return a;
     }
 
@@ -123,12 +120,10 @@ public class ArrayDeque<Item> {
         if (this.isEmpty()) {
             return null;
         }
-
         Item a = array[nextLast - 1];
         array[nextLast - 1] = null;
         nextLast--;
         size--;
-
         if (size % 4 < array.length) {
             downSize();
         }
@@ -142,7 +137,10 @@ public class ArrayDeque<Item> {
         if (index < 0) {
             return null;
         }
-        return array[nextFirst + 1 + index];
+        Item[] copy = (Item[]) new Object[size];
+        System.arraycopy(array, nextFirst + 1, copy, 0, size - nextLast);
+        System.arraycopy(array, 0, copy, size - nextLast, nextLast);
+        return copy[index];
     }
 }
 
