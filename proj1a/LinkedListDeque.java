@@ -27,7 +27,7 @@ public class LinkedListDeque <Item> {
         sentinel.previous = sentinel;
     }
 
-    public LinkedListDeque(Item x) {
+    private LinkedListDeque(Item x) {
         sentinel = new Node(x, null, null);
         Node Item = new Node(x, sentinel, sentinel);
         sentinel.previous = Item;
@@ -37,7 +37,7 @@ public class LinkedListDeque <Item> {
     /**
      * Adds a Node to the front of the Deque.
      */
-    public void addFirst(Node x) {
+    private void addFirst(Node x) {
         x.next = sentinel.next;
         x.next.previous = x;
         sentinel.next = x;
@@ -58,7 +58,7 @@ public class LinkedListDeque <Item> {
     /**
      * Adds a Node to the front of the Deque.
      */
-    public void addLast(Node x) {
+    private void addLast(Node x) {
         x.next = sentinel;
         x.previous = sentinel.previous;
         x.previous.next = x;
@@ -154,7 +154,7 @@ public class LinkedListDeque <Item> {
 
     }
 
-    public Item getRecursiveHelper(int index, Node n) {
+    private Item getRecursiveHelper(int index, Node n) {
         if (index == 0) {
             return n.value;
         }
