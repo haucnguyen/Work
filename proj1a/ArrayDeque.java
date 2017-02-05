@@ -19,13 +19,23 @@ public class ArrayDeque <Item> {
     }
 
     /** */
-    private void Resize() {
+    private void UpSize() {
         Item[] a = (Item[]) new Object[size * 2];
         System.arraycopy(array, size - nextFirst, a, 0, size);
         System.arraycopy(array, nextLast, a, size - nextFirst, size);
+        array = a;
         nextFirst = array.length - 1;
         nextLast = size;
+
+    }
+
+    private void DownSize() {
+        Item[] a = (Item[]) new Object[size * 4];
+        System.arraycopy(array, nextFirst + 1, a, 0, size);
         array = a;
+        nextFirst = array.length - 1;
+        nextLast = size;
+
     }
 
     /**
@@ -36,7 +46,7 @@ public class ArrayDeque <Item> {
             nextFirst = array.length - 1;
         }
         if (size == array.length) {
-            Resize();
+            UpSize();
         }
         array[nextFirst] = x;
         nextFirst--;
@@ -51,7 +61,7 @@ public class ArrayDeque <Item> {
             nextLast = 0;
         }
         if (size == array.length) {
-            Resize();
+            UpSize();
         }
         array[nextLast] = x;
         nextLast--;
@@ -88,43 +98,54 @@ public class ArrayDeque <Item> {
     }
 
     /**
-     * Removes and returns the Item at the front of the Deque. If no such Item exists, returns null.
+     * Removes and returns the Item at the front of the Deque.
      */
     public Item removeFirst() {
         if (this.isEmpty()) {
             return null;
         }
+
         Item a = array[nextFirst + 1];
         array[nextFirst + 1] = null;
         nextFirst++;
         size--;
+
+        if (size % 4 < array.length) {
+            DownSize();
+        }
+        
         return a;
     }
 
 
     /**
-     * Removes and returns the Item at the back of the Deque. If no such Item exists, returns null.
+     * Removes and returns the Item at the back of the Deque.
      */
 
     public Item removeLast() {
         if (this.isEmpty()) {
             return null;
         }
+
         Item a = array[nextLast - 1];
         array[nextLast - 1] = null;
-        nextFirst--;
+        nextLast--;
         size--;
+
+        if (size % 4 < array.length) {
+            DownSize();
+        }
         return a;
     }
 
     public Item get(int index) {
-        if (size - 1 < index) {
+        if (size < index) {
             return null;
         }
         if (index < 0) {
             return null;
         }
-        return array[index];
+        return array[nextFirst + 1 + index];
     }
 }
 
