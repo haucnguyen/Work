@@ -204,18 +204,26 @@ public class ArrayDeque<Item> {
         return array[index - (array.length - nextFirst)];
     }
 
-    public static void main(String[] args) {
-        ArrayDeque<Integer> test = new ArrayDeque<Integer>();
-        test.addLast(0);
-        test.isEmpty();
-        test.addLast(2);
-        test.addLast(3);
-        test.addLast(4);
-        test.addLast(5);
-        test.addLast(6);
-        test.addLast(7);
-        test.addFirst(8);
-        System.out.print(test.get(2));
+    private static void main(String[] args) {
+        ArrayDeque<Integer> L = new ArrayDeque<Integer>();
+        L.addLast(0);
+        L.addFirst(1);
+        L.addLast(2);
+        L.addLast(3);
+        L.get(1);
+        L.addLast(5);
+        L.get(3);
+        L.get(1);
+        L.get(3);
+        L.addFirst(9);
+        L.addFirst(10);
+        L.get(6);
+        L.addLast(12);
+        L.get(2);
+        L.addLast(14);
+        L.removeLast();
+        L.removeLast();
+        L.removeFirst();
 
     }
 }
