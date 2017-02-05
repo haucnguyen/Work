@@ -188,7 +188,7 @@ public class ArrayDeque<Item> {
         array[x] = null;
         size--;
         return a;
-        }
+    }
 
 
     public Item get(int index) {
