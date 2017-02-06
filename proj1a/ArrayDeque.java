@@ -191,16 +191,16 @@ public class ArrayDeque<Item> {
 
 
     public Item get(int index) {
-        if (size == 1) {
-            return array[nextFirst + index + 1];
-        }
-        if (nextFirst < nextLast && size == 1) {
-            return array[nextFirst + index + 1];
-        }
         if (index < array.length - nextFirst) {
             if (nextFirst + index + 1 == array.length) {
                 return array[0];
             }
+            return array[nextFirst + index + 1];
+        }
+        if (size == 1) {
+            return array[nextFirst + index + 1];
+        }
+        if (nextFirst < nextLast && size == 1) {
             return array[nextFirst + index + 1];
         }
         return array[index - (array.length - nextFirst) + 1];
@@ -209,23 +209,7 @@ public class ArrayDeque<Item> {
     private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
         A.addFirst(0);
-        A.get(0);
-        A.removeLast();
-        A.addLast(3);
-        A.removeLast();
-        A.addFirst(5);
-        A.addFirst(6);
-        A.addLast(7);
-        A.addLast(8);
-        A.get(1);
-        A.addFirst(10);
-        A.get(3);
-        A.addFirst(12);
-        A.get(1);
-        A.addFirst(14);
-        A.addFirst(15);
-        A.removeFirst();
-        System.out.print(A.removeLast());
+        System.out.print(A.get(0));
 
     }
 }
