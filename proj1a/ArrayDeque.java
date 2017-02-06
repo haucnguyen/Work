@@ -12,8 +12,8 @@ public class ArrayDeque<Item> {
     public ArrayDeque() {
         array = (Item[]) new Object[8];
         size = 0;
-        nextFirst = 4;
-        nextLast = 5;
+        nextFirst = 0;
+        nextLast = 1;
 
     }
 
@@ -208,18 +208,24 @@ public class ArrayDeque<Item> {
 
     private static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
-        A.addLast(0);
-        A.addLast(1);
-        A.addLast(2);
+        A.addFirst(0);
+        A.get(0);
+        A.removeLast();
         A.addLast(3);
-        A.addFirst(4);
-        A.addLast(5);
-        A.addLast(6);
+        A.removeLast();
+        A.addFirst(5);
+        A.addFirst(6);
         A.addLast(7);
-        A.addFirst(8);
-        A.addLast(9);
+        A.addLast(8);
+        A.get(1);
+        A.addFirst(10);
+        A.get(3);
+        A.addFirst(12);
+        A.get(1);
+        A.addFirst(14);
+        A.addFirst(15);
         A.removeFirst();
-        System.out.print(A.removeFirst());
+        System.out.print(A.removeLast());
 
     }
 }
