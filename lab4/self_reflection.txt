@@ -1,0 +1,55 @@
+All questions are optional, though try to answer at least 4. The main goal of this file is to get you thinking critically about your own work, but we will also use these self reflections at the end of the semester when we do our internal review of the course.
+
+ArrayDeque:
+
+Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
+
+A: I think the way we are supposed to use the resize method. I tried to create two methods rather than just thinking about how to implement the one resize method in two ways.
+
+Q: What's something you felt proud of in your code, if anything?
+
+A: I felt proud of making the plus one/ minus one because it made my code cleaner but it wasn’t working the way I wanted it to work.
+
+Q: What's something that was particularly inelegant in your code, if anything?
+
+A: 
+
+Q: What do you wish you would have known before writing ArrayDeque, if anything?
+
+A: I did not understand the concept of a circular Array as much as I did for LinkedList. Maybe if I understood the concept better, I would have been able to save more time on a lot of stuff. 
+
+Q: If you wrote ArrayDeque again, what would you do differently, if anything?
+
+A: I would use the debugger more because I did not used it until the very end. 
+
+-----
+
+LinkedListDeque:
+
+Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
+
+A: 
+
+Q: What's something you felt proud of in your code, if anything?
+
+A: I felt proud that my code was clean. Not super super clean but it was way better than my older codes. 
+
+Q: What's something that was particularly inelegant in your code, if anything?
+
+A: 
+
+Q: What do you wish you would have known before writing LinkedListDeque, if anything?
+
+A: I wished I knew the importance of sentinels before I started working. I started and kept failing but then I worked it out when I started realizing the sentinel. 
+
+Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
+
+A: I would have a better approach when starting the test. 
+
+-----
+
+Meta:
+
+Q: This is the first time we've tried something like this. Did you like this design review process? Anything we should do differently next time?
+
+A: I enjoy this review process because I got to understand more rather than just moving on. 

@@ -214,7 +214,7 @@ public class ArrayDeque<Item> {
         return array[index - (array.length - nextFirst) + 1];
     }
 
-    private static void main(String[] args) {
+    public static void main(String[] args) {
         ArrayDeque<Integer> A = new ArrayDeque<Integer>();
         A.addLast(0);
         A.removeLast();
