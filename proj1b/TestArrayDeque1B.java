@@ -9,7 +9,7 @@ public class TestArrayDeque1B {
         StudentArrayDeque<Integer> student = new StudentArrayDeque<>();
         ArrayDequeSolution<Integer> answer = new ArrayDequeSolution<>();
 
-        for (int lol = 0; lol < 1000; lol++) {
+        for (int lol = 0; lol < 10000; lol++) {
             Integer number = StdRandom.uniform(100);
 
             if (student.isEmpty()) {
