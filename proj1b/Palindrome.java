@@ -1,16 +1,15 @@
-import java.util.Deque;
 
 public class Palindrome {
 
-    public static Deque<Character> wordToDeque(String word) {
-        ArrayDequeSolution donewithdeque = new ArrayDequeSolution();
+    public static Deque<Character> wordToDeque (String word) {
+        ArrayDequeSolution Deque = new ArrayDequeSolution();
         int size = word.length();
 
         for (int x = 0; x < size; x++) {
-            donewithdeque.addLast(word.charAt(x));
+            Deque.addLast(word.charAt(x));
             System.out.println(word.charAt(x));
         }
-        return donewithdeque;
+        return (Deque<Character>) Deque;
     }
 
     public static boolean isPalindrome(String word) {
