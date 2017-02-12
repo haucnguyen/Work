@@ -1,6 +1,3 @@
-/**
- * Created by dustintran on 2/11/17.
- */
 public class OffByN implements CharacterComparator {
     private int number;
 
