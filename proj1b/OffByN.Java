@@ -1,11 +1,14 @@
+/**
+ * Created by dustintran on 2/11/17.
+ */
 public class OffByN implements CharacterComparator {
-  private int number;
+    private int number;
 
-  public OffByN(int N) {
-    number = N;
-  }
+    public OffByN(int n) {
+        number = n;
+    }
 
-@Override
+    @Override
     public boolean equalChars(char x, char y) {
         if (Math.abs(x - y) == number) {
             return true;
