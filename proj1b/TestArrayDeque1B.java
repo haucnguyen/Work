@@ -9,15 +9,12 @@ public class TestArrayDeque1B {
         StudentArrayDeque<Integer> student = new StudentArrayDeque<>();
         ArrayDequeSolution<Integer> answer = new ArrayDequeSolution<>();
 
-        for (int lol = 0; lol < 100000; lol++); {
-
-            int number = StdRandom.uniform(8);
+        for (int lol = 0; lol < 1000; lol++) {
+            Integer number = StdRandom.uniform(100);
 
             if (student.isEmpty()) {
 
-                int operation = StdRandom.uniform(2);
-
-                if (operation == 0) {
+                if (number < 50) {
                     student.addFirst(number);
                     answer.addFirst(number);
                 } else {
@@ -25,37 +22,25 @@ public class TestArrayDeque1B {
                     answer.addLast(number);
                 }
 
-        } else {
-
-            int operation = StdRandom.uniform(5);
-
-            if (operation == 0) {
-                student.addLast(number);
-                answer.addLast(number);
-            } else if (operation == 1) {
-                student.addFirst(number);
-                answer.addFirst(number);
-            } else if (operation == 2) {
-                Integer remove1 = student.removeLast();
-                Integer remove2 = answer.removeLast();
             } else {
-                Integer remove1 = student.removeFirst();
-                Integer remove2 = answer.removeFirst();
+
+                if (number < 25) {
+                    System.out.println("addLast" + "(" + number + ")");
+                    student.addLast(number);
+                    answer.addLast(number);
+                } else if (number < 50) {
+                    System.out.println("addFirst" + "(" + number + ")");
+                    student.addFirst(number);
+                    answer.addFirst(number);
+                } else if (number < 75) {
+                    System.out.println("removeLast()");
+                    assertEquals(answer.removeLast(), student.removeLast());
+                } else {
+                    System.out.println("removeFirst()");
+                    assertEquals(answer.removeFirst(), student.removeFirst());
+
+                }
             }
-        }
-    }
-
-
-        for (int index = 0; index < answer.size(); index++) {
-            Integer test1 = student.get(index);
-            Integer test2 = answer.get(index);
-            assertEquals(test1, test2);
-        }
-    }
-
-    public void main(String[] args) {
-        for (int x = 0; x < 1000000; x++) {
-            testMethods();
         }
     }
 }
