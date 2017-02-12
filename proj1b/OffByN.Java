@@ -13,3 +13,4 @@ public class OffByN implements CharacterComparator {
         return false;
     }
 }
+
