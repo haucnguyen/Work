@@ -23,6 +23,6 @@ public interface BoundedQueue<synthesizer> {
         if (fillCount() == capacity()) {
             return true;
         }
-        return false
+        return false;
     }
 }

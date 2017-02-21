@@ -4,10 +4,10 @@ public abstract class AbstractBoundedQueue implements BoundedQueue {
     protected int capacity;
 
     public int capacity() {
-        return capacity - fillCount.length;
+        return capacity;
     }
 
     public int fillCount() {
-        return fillCount.length;
+        return fillCount;
     }
 }

@@ -33,9 +33,12 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      * covered Monday.
      */
     public void enqueue(T x) {
-        if
-        last = x;
-        last +=1
+        if (fillCount == capacity) {
+            return RuntimeException blah blah blah
+        } else
+        rb[last] = x;
+        fillCount += 1;
+        last += 1;
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
     }
 
@@ -45,6 +48,12 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      * covered Monday.
      */
     public T dequeue() {
+        if (fillCount == 0) {
+            return runtime error bs
+        }
+        return rb[last];
+        fillCount -= 1;
+        last -= 1;
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
     }
 
@@ -52,6 +61,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      * Return oldest item, but don't remove it.
      */
     public T peek() {
+        return rb[first];
         // TODO: Return the first item. None of your instance variables should change.
     }
 
