@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<t>  {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -34,7 +34,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      */
     public void enqueue(T x) {
         if (fillCount == capacity) {
-            return RuntimeException blah blah blah
+            return RuntimeException;
         } else
         rb[last] = x;
         fillCount += 1;
@@ -49,7 +49,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      */
     public T dequeue() {
         if (fillCount == 0) {
-            return runtime error bs
+            return RuntimeException;
         }
         return rb[last];
         fillCount -= 1;
