@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T>  {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -16,6 +16,10 @@ public class ArrayRingBuffer<T>  {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
+        int first = 0;
+        int last = 0;
+        int fillCount = 0;
+        this.capacity = capacity;
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
         //       this.capacity should be set appropriately. Note that the local variable
@@ -29,6 +33,9 @@ public class ArrayRingBuffer<T>  {
      * covered Monday.
      */
     public void enqueue(T x) {
+        if
+        last = x;
+        last +=1
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
     }
 
