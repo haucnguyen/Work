@@ -1,4 +1,4 @@
-public abstract class AbstractBoundedQueue implements BoundedQueue<> {
+public abstract class AbstractBoundedQueue implements BoundedQueue {
     protected int fillCount;
 
     protected int capacity;
