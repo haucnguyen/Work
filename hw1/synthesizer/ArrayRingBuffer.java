@@ -1,5 +1,7 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 // package <package name>;
+package synthesizer;
+import synthesizer.AbstractBoundedQueue;
 import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public

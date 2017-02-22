@@ -1,6 +1,6 @@
 // TODO: Make sure to make this class a part of the synthesizer package
 //package <package name>;
-
+package synthesizer;
 //Make sure this class is public
 public class GuitarString<T> {
     /** Constants. Do not change. In case you're curious, the keyword final means
