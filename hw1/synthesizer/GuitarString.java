@@ -2,7 +2,7 @@
 //package <package name>;
 
 //Make sure this class is public
-public class GuitarString {
+public class GuitarString<T> {
     /** Constants. Do not change. In case you're curious, the keyword final means
      * the values cannot be changed at runtime. We'll discuss this and other topics
      * in lecture on Friday. */
