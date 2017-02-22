@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<t>  {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -16,9 +16,9 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<t>  {
      * Create a new ArrayRingBuffer with the given capacity.
      */
     public ArrayRingBuffer(int capacity) {
-        int first = 0;
-        int last = 0;
-        int fillCount = 0;
+        first = 0;
+        last = 0;
+        fillCount = 0;
         this.capacity = capacity;
         // TODO: Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
@@ -34,11 +34,11 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<t>  {
      */
     public void enqueue(T x) {
         if (fillCount == capacity) {
-            return RuntimeException;
+            throw new RuntimeException("Ring buffer overflow");
         } else
         rb[last] = x;
         fillCount += 1;
-        last += 1;
+        last = (last + 1) % capacity;
         // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
     }
 
@@ -49,11 +49,13 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<t>  {
      */
     public T dequeue() {
         if (fillCount == 0) {
-            return RuntimeException;
+            throw new RuntimeException("Ring buffer underflow");
         }
-        return rb[last];
+        double place_holder = rb[first];
+        rb[first] = null;
         fillCount -= 1;
-        last -= 1;
+        first = (first + 1) % capacity;
+        return place_holder;
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update 
     }
 

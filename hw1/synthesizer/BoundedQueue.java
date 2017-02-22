@@ -1,4 +1,4 @@
-public interface BoundedQueue<synthesizer> {
+public interface BoundedQueue<T> {
 
     int capacity();     // return size of the buffer
 
