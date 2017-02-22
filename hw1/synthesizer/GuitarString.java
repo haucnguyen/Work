@@ -16,7 +16,7 @@ public class GuitarString<T> {
     public GuitarString(double frequency) {
         int LOL = (int) Math.round(SR/frequency);
         ArrayRingBuffer poo = new ArrayRingBuffer(LOL);
-        for (int i = 0; i < poo.length; i ++) {
+        for (i = 0; i < poo.length; i ++) {
             poo[i] = 0.0;
         }
         // TODO: Create a buffer with capacity = SR / frequency. You'll need to
@@ -29,6 +29,9 @@ public class GuitarString<T> {
     /* Pluck the guitar string by replacing the buffer with white noise. */
     public void pluck() {
         double r = Math.random() - 0.5;
+        for (i = 0; i < poo.length; i ++) {
+            poo[i] = int r;
+        }
         // TODO: Dequeue everything in the buffer, and replace it with random numbers
         //       between -0.5 and 0.5. You can get such a number by using:
         //       double r = Math.random() - 0.5;
@@ -40,6 +43,7 @@ public class GuitarString<T> {
      * the Karplus-Strong algorithm. 
      */
     public void tic() {
+
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
@@ -48,6 +52,6 @@ public class GuitarString<T> {
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return 0;
+        return double first;
     }
 }
