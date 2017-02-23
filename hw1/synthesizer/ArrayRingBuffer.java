@@ -77,7 +77,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     private class Hi implements Iterator<T>  {
         private int location;
 
-        public Hi() {
+        Hi() {
             location = 0;
         }
 
