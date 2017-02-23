@@ -20,7 +20,7 @@ public class GuitarString {
     /* Create a guitar string of the given frequency.  */
     public GuitarString(double frequency) {
         int lol = (int) Math.round(SR / frequency);
-        buffer = new ArrayRingBuffer(lol);
+        buffer = new ArrayRingBuffer<>(lol);
         while (lol != 0) {
             buffer.enqueue(0.0);
             lol--;
@@ -37,8 +37,6 @@ public class GuitarString {
         double r = Math.random() - 0.5;
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.dequeue();
-        }
-        for (int i = 0; i < buffer.capacity(); i++) {
             buffer.enqueue(r);
         }
         // Dequeue everything in the buffer, and replace it with random numbers
@@ -54,7 +52,7 @@ public class GuitarString {
     public void tic() {
         double pls2 = buffer.dequeue();
         double pls3 = buffer.peek();
-        double pls = (((pls2 + pls3) * 0.5) * DECAY);
+        double pls = ((pls2 + pls3) * 0.5);
         buffer.enqueue(pls);
         // Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
