@@ -52,7 +52,7 @@ public class GuitarString {
     public void tic() {
         double pls2 = buffer.dequeue();
         double pls3 = buffer.peek();
-        double pls = ((pls2 + pls3) * 0.5);
+        double pls = 1/2 * (pls2 + pls3) * DECAY;
         buffer.enqueue(pls);
         // Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
