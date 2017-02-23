@@ -1,11 +1,10 @@
 // TODO: Make sure to make this class a part of the synthesizer package
-// package <package name>;
 package synthesizer;
 import java.util.Iterator;
 
 //TODO: Make sure to make this class and all of its methods public
 //TODO: Make sure to make this class extend AbstractBoundedQueue<t>
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;            // index for the next dequeue or peek
     /* Index for the next enqueue. */
@@ -34,13 +33,14 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      * covered Monday.
      */
     public void enqueue(T x) {
-        if (fillCount == capacity) {
+        if (isFull()) {
             throw new RuntimeException("Ring buffer overflow");
-        } else
+        } else {
             rb[last] = x;
-        fillCount += 1;
-        last = (last + 1) % capacity;
-        // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
+            fillCount += 1;
+            last = (last + 1) % capacity;
+            // TODO: Enqueue the item. Don't forget to increase fillCount and update last.
+        }
     }
 
     /**
@@ -49,13 +49,13 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
      * covered Monday.
      */
     public T dequeue() {
-        if (fillCount == 0) {
+        if (isEmpty()) {
             throw new RuntimeException("Ring buffer underflow");
         }
-        T place_holder = rb[first];
+        T placeHolder = rb[first];
         fillCount -= 1;
         first = (first + 1) % capacity;
-        return place_holder;
+        return placeHolder;
         // TODO: Dequeue the first item. Don't forget to decrease fillCount and update
     }
 
@@ -66,22 +66,17 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
         return rb[first];
         // TODO: Return the first item. None of your instance variables should change.
     }
-    
 
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
-    private class hi implements Iterator {
+    private class Hi implements Iterator<T> {
         private int location = 0;
-
-        public hi() {
-            location = 0;
-        }
 
         public boolean hasNext() {
             return (location < capacity);
         }
 
-        public Object next() {
+        public T next() {
             T currentLocation = rb[location];
             location += 1;
             return currentLocation;
@@ -89,6 +84,6 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
     }
 
     public Iterator iterator() {
-        return new hi();
+        return new Hi();
     }
 }
