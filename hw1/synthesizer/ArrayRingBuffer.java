@@ -1,5 +1,6 @@
 //  Make sure to make this class a part of the synthesizer package
 package synthesizer;
+import java.util.Iterator;
 
 // Make sure to make this class and all of its methods public
 // Make sure to make this class extend AbstractBoundedQueue<t>
