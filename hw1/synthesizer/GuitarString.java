@@ -21,8 +21,9 @@ public class GuitarString {
     public GuitarString(double frequency) {
         int lol = (int) Math.round(SR / frequency);
         buffer = new ArrayRingBuffer(lol);
-        for (int i = 0; i < buffer.capacity(); i++) {
+        while (lol != 0) {
             buffer.enqueue(0.0);
+            lol--;
         }
         // Create a buffer with capacity = SR / frequency. You'll need to
         //       cast the result of this divsion operation into an int. For better
