@@ -51,7 +51,8 @@ public class GuitarString {
      * the Karplus-Strong algorithm.
      */
     public void tic() {
-        buffer.enqueue((buffer.dequeue() + buffer.peek()) * 0.5 * DECAY);
+        double pls = ((buffer.dequeue() + buffer.peek()) * 0.5 * DECAY);
+        buffer.enqueue(pls);
         // Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().

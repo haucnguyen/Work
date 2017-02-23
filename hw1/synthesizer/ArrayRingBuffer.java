@@ -74,7 +74,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
 
     // When you get to part 5, implement the needed code to support iteration.
-    private class Hi implements Iterator<T>  {
+    private class Hi implements Iterator<T> {
         private int location;
 
         Hi() {
@@ -82,17 +82,17 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         }
 
         public boolean hasNext() {
-            return (location < capacity);
+            return location < fillCount;
         }
 
         public T next() {
-            T currentLocation = rb[location];
-            location = (location + 1) % capacity;
-            return currentLocation;
+            T nextNumber = rb[location];
+            location += 1;
+            return nextNumber;
         }
     }
 
-    public Iterator<T> iterator() {
-        return new Hi();
+        public Iterator<T> iterator() {
+            return new Hi();
+        }
     }
-}
