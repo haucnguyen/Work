@@ -19,7 +19,6 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         first = 0;
         last = 0;
         fillCount = 0;
-        BoundedQueue rb = new ArrayRingBuffer(capacity);
         this.capacity = capacity;
         //  Create new array with capacity elements.
         //       first, last, and fillCount should all be set to 0.
@@ -80,12 +79,12 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
 
         public T next() {
             T currentLocation = rb[location];
-            location += 1;
+            location = (location + 1) % capacity;
             return currentLocation;
         }
     }
 
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return new Hi();
     }
 }
