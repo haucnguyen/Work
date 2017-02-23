@@ -11,7 +11,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
     /* Index for the next enqueue. */
     private int last;
     /* Array for storing the buffer data. */
-    private T[] rb;
+    private T[] rb:
 
     /**
      * Create a new ArrayRingBuffer with the given capacity.
@@ -53,7 +53,6 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
             throw new RuntimeException("Ring buffer underflow");
         }
         T place_holder = rb[first];
-        rb[first] = null;
         fillCount -= 1;
         first = (first + 1) % capacity;
         return place_holder;
@@ -69,4 +68,25 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T>  {
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
+    private class hi implements Iterator {
+        private int location = 0;
+
+        public hi() {
+            location = 0;
+        }
+
+        public boolean hasNext() {
+            return (location < capacity);
+        }
+
+        public Object next() {
+            T currentLocation = rb[location];
+            location += 1;
+            return currentLocation;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        return new hi();
+    }
 }

@@ -34,10 +34,12 @@ public class GuitarString {
     /* Pluck the guitar string by replacing the buffer with white noise. */
     public void pluck() {
         double r = Math.random() - 0.5;
-        for (int i = 0; i < buffer.capacity(); i++)
+        for (int i = 0; i < buffer.capacity(); i++) {
             buffer.dequeue();
-        for (int i = 0; i < buffer.capacity(); i++)
+        }
+        for (int i = 0; i < buffer.capacity(); i++) {
             buffer.enqueue(r);
+        }
         // TODO: Dequeue everything in the buffer, and replace it with random numbers
         //       between -0.5 and 0.5. You can get such a number by using:
         //       double r = Math.random() - 0.5;
