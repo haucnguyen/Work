@@ -37,6 +37,8 @@ public class GuitarString {
         double r = Math.random() - 0.5;
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.dequeue();
+        }
+        for (int i = 0; i < buffer.capacity(); i++) {
             buffer.enqueue(r);
         }
         // Dequeue everything in the buffer, and replace it with random numbers
@@ -52,7 +54,7 @@ public class GuitarString {
     public void tic() {
         double pls2 = buffer.dequeue();
         double pls3 = buffer.peek();
-        double pls = 1/2 * (pls2 + pls3) * DECAY;
+        double pls = 0.5 * (pls2 + pls3) * DECAY;
         buffer.enqueue(pls);
         // Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
