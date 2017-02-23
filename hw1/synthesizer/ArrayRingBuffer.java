@@ -92,7 +92,7 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         }
     }
 
-        public Iterator<T> iterator() {
-            return new Hi();
-        }
+    public Iterator<T> iterator() {
+        return new Hi();
     }
+}
