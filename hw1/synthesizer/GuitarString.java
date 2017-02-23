@@ -3,7 +3,7 @@ package synthesizer;
 /**
  * Created by Hau on 2/22/17.
  */
-// TODO: Make sure to make this class a part of the synthesizer package
+// Make sure to make this class a part of the synthesizer package
 //package <package name>;
 
 //Make sure this class is public
@@ -24,7 +24,7 @@ public class GuitarString {
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.enqueue(0.0);
         }
-        // TODO: Create a buffer with capacity = SR / frequency. You'll need to
+        // Create a buffer with capacity = SR / frequency. You'll need to
         //       cast the result of this divsion operation into an int. For better
         //       accuracy, use the Math.round() function before casting.
         //       Your buffer should be initially filled with zeros.
@@ -40,7 +40,7 @@ public class GuitarString {
         for (int i = 0; i < buffer.capacity(); i++) {
             buffer.enqueue(r);
         }
-        // TODO: Dequeue everything in the buffer, and replace it with random numbers
+        // Dequeue everything in the buffer, and replace it with random numbers
         //       between -0.5 and 0.5. You can get such a number by using:
         //       double r = Math.random() - 0.5;
         //
@@ -53,7 +53,7 @@ public class GuitarString {
     public void tic() {
         double pls = (buffer.dequeue() + buffer.peek()) * DECAY;
         buffer.enqueue(pls);
-        // TODO: Dequeue the front sample and enqueue a new sample that is
+        // Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
     }
@@ -61,6 +61,6 @@ public class GuitarString {
     /* Return the double at the front of the buffer. */
     public double sample() {
         return buffer.peek();
-        // TODO: Return the correct thing.
+        // Return the correct thing.
     }
 }
