@@ -19,7 +19,7 @@ public class Main {
                 break;
             }
 
-            if (!line.trim().isEmpty()) {
+             if (!line.trim().isEmpty()) {
                 String result = db.transact(line);
                 if (result.length() > 0) {
                     System.out.println(result);
@@ -28,6 +28,7 @@ public class Main {
             System.out.print(PROMPT);
         }
 
-        in.close();
+            in.close();
+        }
     }
-}
+
