@@ -241,7 +241,8 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = ("examples/" + tablename + ".tbl");
+        File file = new File("examples/" + tablename + ".tbl");
+        String path = file.getAbsolutePath();
         HashMap<String, String> columnMap = new HashMap<>();
 
         //figure out the column situation
@@ -250,7 +251,7 @@ public class Database {
 //        }
 
         try {
-            BufferedReader columnReader = new BufferedReader(new FileReader(filename));
+            BufferedReader columnReader = new BufferedReader(new FileReader(file));
             ArrayList<String> initialColumns = new ArrayList<>();
 
             initialColumns.add(columnReader.readLine());
