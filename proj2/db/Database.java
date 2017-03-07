@@ -241,6 +241,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
+        String filename = ("examples/" + tablename + ".tbl");
         HashMap<String, String> columnMap = new HashMap<>();
 
         //figure out the column situation
@@ -248,15 +249,8 @@ public class Database {
 //            return "ERROR: yo man can't adfasdf"
 //        }
 
-        File file = new File(tablename);
-        String path = file.getAbsolutePath();
-
-        if (path == null) {
-            return "ERROR: yo man you can't load a file that doesn't exist";
-        }
-
         try {
-            BufferedReader columnReader = new BufferedReader(new FileReader(file));
+            BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
 
             initialColumns.add(columnReader.readLine());
@@ -271,39 +265,42 @@ public class Database {
                 theRows.add(line);
                 numRows++;
             }
-            //gets column names
-            for (int i = 0; i < numColumns; i++) {
-                columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
+        } catch (IOException e) {
+            return "ERROR: that file don't exist man";
+        }
+
+        //gets column names
+        for (int i = 0; i < numColumns; i++) {
+            columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
+        }
+
+        //gets column types
+        for (int i = 0; i < numColumns; i++) {
+            String both = columnBoth.get(i);
+            columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
+        }
+
+        //puts shit in le columns
+        for (int i = 0; i < numColumns; i++) {
+            ArrayList<String> tempList = new ArrayList<>();
+            String tempColumnType = columnTypes.get(i);
+
+            for (int x = 0; x < numRows; x++) {
+                String stringRow = theRows.get(x);
+                String[] theRow = stringRow.split(",");
+                tempList.add(theRow[i]);
             }
 
-            //gets column types
-            for (int i = 0; i < numColumns; i++) {
-                String both = columnBoth.get(i);
-                columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
-            }
-            //puts shit in le columns
-            for (int i = 0; i < numColumns; i++) {
-                ArrayList<String> tempList = new ArrayList<>();
-                String tempColumnType = columnTypes.get(i);
-
-                for (int x = 0; x < numRows; x++) {
-                    String stringRow = theRows.get(x);
-                    String[] theRow = stringRow.split(",");
-                    tempList.add(theRow[i]);
-                }
-
-                Columns newColumn = new Columns(tempColumnType, tempList);
-                columnDataLists.add(newColumn);
-            }
-
-            //creates a table object for the data just loaded from .tbl file
-            newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
-            databaseOfTables.put(tablename, newTable);
-            //System.out.println("bitch did you put it in");
-            System.out.println(databaseOfTables.containsKey(tablename)
-                    + " " + tablename + " " + newTable);
-            //System.out.println(databaseOfTables.get("records"));
-        } catch (IOException e) {}
+            Columns newColumn = new Columns(tempColumnType, tempList);
+            columnDataLists.add(newColumn);
+        }
+        //creates a table object for the data just loaded from .tbl file
+        newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
+        databaseOfTables.put(tablename, newTable);
+        //System.out.println("bitch did you put it in");
+        System.out.println(databaseOfTables.containsKey(tablename)
+                + " " + tablename + " " + newTable);
+        //System.out.println(databaseOfTables.get("records"));
         return "";
     }
 
@@ -396,7 +393,7 @@ public class Database {
             }
 
             ArrayList<String> values = new ArrayList<>();
-            String[] splitThemUp = m.group().split("insert into |values ");
+            String[] splitThemUp = m.group(1).split("insert into |values ");
             String tableName = splitThemUp[0];
             String unsplitValues = splitThemUp[1];
             String[] value = unsplitValues.split(",");
@@ -428,10 +425,8 @@ public class Database {
             System.err.printf("Malformed select: %s\n", expr);
             return;
         }
-
         select(m.group(1), m.group(2), m.group(3));
     }
-
     private void select(String exprs, String tables, String conds) {
         ArrayList<String> columnNamesToUse = new ArrayList<>();
         ArrayList<String> fromWhatTables = new ArrayList<>();
@@ -471,7 +466,6 @@ public class Database {
         }
       select(columnNamesToUse, fromWhatTables, whereClauses);
     }
-
     private void createTable(String expr) {
         Matcher m;
         if ((m = CREATE_NEW.matcher(expr)).matches()) {
@@ -482,7 +476,6 @@ public class Database {
             System.err.printf("Malformed create: %s\n", expr);
         }
     }
-
     private void createNewTable(String name, String[] cols) {
         ArrayList<String> columnHeaders = new ArrayList<String>();
         StringJoiner joiner = new StringJoiner(", ");
@@ -505,27 +498,4 @@ public class Database {
                 + "by these conditions: '%s'\n", name, exprs, tables, conds);
     }
 
-    private void insertRow(String expr) {
-        Matcher m = INSERT_CLS.matcher(expr);
-        if (!m.matches()) {
-            System.err.printf("Malformed insert: %s\n", expr);
-            return;
-        }
-
-        ArrayList<String> values = new ArrayList<>();
-        String[] splitThemUp = expr.split("insert into |values ");
-        String tableName = splitThemUp[0];
-        String unsplitValues = splitThemUp[1];
-        String[] value = unsplitValues.split(",");
-        //String[] value = unsplitValues.split("\\s+(.+?\\s*(?:,\\s*.+?\\s*)*)");
-        for (int i = 0; i < value.length; i++) {
-            values.add(value[i].trim());
-        }
-        for (String s : values) {
-            System.out.println(s);
-        }
-        insertInto(tableName.trim(), values);
-        //System.out.printf("You are trying to insert the
-        // row \"%s\" into the table %s\n", m.group(2), m.group(1));
-    }
 }
