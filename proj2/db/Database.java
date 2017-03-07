@@ -1,12 +1,16 @@
 package db;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.StringJoiner;
+import java.io.IOException;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
@@ -304,7 +308,8 @@ public class Database {
         return "";
     }
 
-//    public String select(ArrayList<String> columnNamesToUse, ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
+//    public String select(ArrayList<String> columnNamesToUse,
+// ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
 //        ArrayList<Table> fromTables = new ArrayList<>();
 //        for (int i = 0; i < fromWhatTables.size(); i++) {
 //            fromTables.add(getTable(fromWhatTables.get(i)));
@@ -373,8 +378,7 @@ public class Database {
 
     public String transact(String query) {
         Matcher m;
-        int index = 0;
-        int i = 0;
+        int index = 0, i = 0;
         while (i < query.length()) {
             if (query.charAt(i) == ' ') {
                 index++;
@@ -398,13 +402,11 @@ public class Database {
             if (!l.matches()) {
                 System.err.printf("Malformed insert: %s\n", m.group(1));
             }
-
             ArrayList<String> values = new ArrayList<>();
             String[] splitThemUp = m.group(1).split("insert into |values ");
             String tableName = splitThemUp[0];
             String unsplitValues = splitThemUp[1];
             String[] value = unsplitValues.split(",");
-            //String[] value = unsplitValues.split("\\s+(.+?\\s*(?:,\\s*.+?\\s*)*)");
             for (int a = 0; a < value.length; a++) {
                 values.add(value[a].trim());
             }
@@ -412,11 +414,9 @@ public class Database {
                 System.out.println(s);
             }
             return insertInto(tableName.trim(), values);
-
         } else if ((m = PRINT_CMD.matcher(query)).matches()) {
             return print(m.group(1).trim());
         } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-
             Matcher l = SELECT_CLS.matcher(m.group(1));
             if (!l.matches()) {
                 System.err.printf("Malformed select: %s\n", m.group(1));
@@ -435,15 +435,9 @@ public class Database {
                     columnNamesToUse.add(s.trim());
                 }
             }
-            for (String sadas : columnNamesToUse) {
-                System.out.println(sadas);
-            }
             String[] secondSplit = l.group(2).split("\\s*,\\s*");
             for (String c : secondSplit) {
                 fromWhatTables.add(c.trim());
-            }
-            for (String sadasd : fromWhatTables) {
-                System.out.println(sadasd);
             }
             if (l.group(3) != null) {
                 String[] thirdSplit = l.group(3).split("\\s*and\\s*");
@@ -453,17 +447,12 @@ public class Database {
                         whereClauses.add(b);
                     }
                 }
-                for (String as : whereClauses) {
-                    System.out.println(as);
-                }
             }
             return "hi";
 //                    select(columnNamesToUse, fromWhatTables, whereClauses);
-        }
-        else {
+        } else {
             System.err.printf("Malformed query: %s\n", query);
         }
-        //readThatShit.eval(query);
         return "fuck";
     }
 
