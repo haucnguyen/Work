@@ -239,10 +239,13 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = (tablename);
+        String filename = ("examples/" + tablename + ".tbl");
         HashMap<String, String> columnMap = new HashMap<>();
 
         //figure out the column situation
+        if (databaseOfTables.containsKey(tablename)) {
+            return "ERROR: yo man can't reload a table";
+        }
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
