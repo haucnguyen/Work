@@ -464,7 +464,7 @@ public class Database {
         }
         query = query.substring(index, query.length());
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-           createTable(m.group(1));
+            createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
             work = load(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -517,7 +517,8 @@ public class Database {
             System.out.println(s);
         }
         work = insertInto(tableName.trim(), values);
-        System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
+        System.out.printf("You are trying to insert the "
+                + "row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
     private void select(String expr) {
@@ -559,8 +560,9 @@ public class Database {
             }
         }
         work = select(columnNamesToUse, fromWhatTables, whereClauses);
-        System.out.printf("You are trying to select these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+        System.out.printf("You are trying to select these expressions:"
+                + " '%s' from the join of these tables: '%s', "
+                + "filtered by these conditions: '%s'\n", exprs, tables, conds);
     }
 
 
