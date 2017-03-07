@@ -5,11 +5,13 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.File;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
@@ -243,9 +245,10 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
 
         //figure out the column situation
-        if (databaseOfTables.containsKey(tablename)) {
-            return "ERROR: yo man can't reload a table";
-        }
+//        if (databaseOfTables.containsKey(tablename)) {
+//            return "ERROR: yo man can't adfasdf"
+//        }
+
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
