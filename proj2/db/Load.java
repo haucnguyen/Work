@@ -23,7 +23,7 @@ public class Load {
 
     protected Load(String tablename, Database database) throws IOException {
         this.tablename = tablename;
-        this.filename = ("examples/" + tablename + ".tbl");
+        this.filename = (tablename + ".tbl");
 
         //figure out the column situation
         BufferedReader columnReader = new BufferedReader(new FileReader(filename));
