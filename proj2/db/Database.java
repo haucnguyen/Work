@@ -241,16 +241,16 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        File file = new File("examples/" + tablename + ".tbl");
-        String path = file.getAbsolutePath();
         HashMap<String, String> columnMap = new HashMap<>();
 
         //figure out the column situation
 //        if (databaseOfTables.containsKey(tablename)) {
 //            return "ERROR: yo man can't adfasdf"
 //        }
-
         try {
+            File file = new File(tablename);
+            String path = file.getAbsolutePath();
+
             BufferedReader columnReader = new BufferedReader(new FileReader(file));
             ArrayList<String> initialColumns = new ArrayList<>();
 
@@ -266,42 +266,39 @@ public class Database {
                 theRows.add(line);
                 numRows++;
             }
-        } catch (IOException e) {
-            return "ERROR: that file don't exist man";
-        }
-
-        //gets column names
-        for (int i = 0; i < numColumns; i++) {
-            columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
-        }
-
-        //gets column types
-        for (int i = 0; i < numColumns; i++) {
-            String both = columnBoth.get(i);
-            columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
-        }
-
-        //puts shit in le columns
-        for (int i = 0; i < numColumns; i++) {
-            ArrayList<String> tempList = new ArrayList<>();
-            String tempColumnType = columnTypes.get(i);
-
-            for (int x = 0; x < numRows; x++) {
-                String stringRow = theRows.get(x);
-                String[] theRow = stringRow.split(",");
-                tempList.add(theRow[i]);
+            //gets column names
+            for (int i = 0; i < numColumns; i++) {
+                columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
             }
 
-            Columns newColumn = new Columns(tempColumnType, tempList);
-            columnDataLists.add(newColumn);
-        }
-        //creates a table object for the data just loaded from .tbl file
-        newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
-        databaseOfTables.put(tablename, newTable);
-        //System.out.println("bitch did you put it in");
-        System.out.println(databaseOfTables.containsKey(tablename)
-                + " " + tablename + " " + newTable);
-        //System.out.println(databaseOfTables.get("records"));
+            //gets column types
+            for (int i = 0; i < numColumns; i++) {
+                String both = columnBoth.get(i);
+                columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
+            }
+            //puts shit in le columns
+            for (int i = 0; i < numColumns; i++) {
+                ArrayList<String> tempList = new ArrayList<>();
+                String tempColumnType = columnTypes.get(i);
+
+                for (int x = 0; x < numRows; x++) {
+                    String stringRow = theRows.get(x);
+                    String[] theRow = stringRow.split(",");
+                    tempList.add(theRow[i]);
+                }
+
+                Columns newColumn = new Columns(tempColumnType, tempList);
+                columnDataLists.add(newColumn);
+            }
+
+            //creates a table object for the data just loaded from .tbl file
+            newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
+            databaseOfTables.put(tablename, newTable);
+            //System.out.println("bitch did you put it in");
+            System.out.println(databaseOfTables.containsKey(tablename)
+                    + " " + tablename + " " + newTable);
+            //System.out.println(databaseOfTables.get("records"));
+        } catch (IOException e) {}
         return "";
     }
 
