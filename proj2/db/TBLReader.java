@@ -11,12 +11,12 @@ import java.util.List;
  * Created by Hau on 3/3/17.
  */
 public class TBLReader<T> {
-    protected ArrayList<String> wholeTable = new ArrayList<>();
-    ArrayList<String> columnNames = new ArrayList<>();
-    ArrayList<String> columnTypes = new ArrayList<>();
-    ArrayList<String> columnBoth;
-    ArrayList<String> theRows = new ArrayList<>();
-    List<List<T>> theColumns;
+    protected ArrayList<String> wholeTable = new ArrayList<>(); //string form of wholetable
+    ArrayList<String> columnNames = new ArrayList<>(); //just column names
+    ArrayList<String> columnTypes = new ArrayList<>(); //just column types
+    ArrayList<String> columnBoth; //column names and types
+    ArrayList<String> theRows = new ArrayList<>(); //string forms of the rows
+    List<List<T>> theColumns; //list of column lists
     int numColumns;
     int numRows = 0;
     String filename;
@@ -44,14 +44,17 @@ public class TBLReader<T> {
             numRows++;
         }
 
-
+        //gets column names
         for (int i = 0; i < numColumns; i++) {
             columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
         }
+
+        //gets column types
         for (int i = 0; i < numColumns; i++) {
             String both = columnBoth.get(i);
             columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
         }
+
         theColumns = new ArrayList<>();
         for (int i = 0; i < numColumns; i++) {
             theColumns.add(new ArrayList<T>());
@@ -66,20 +69,22 @@ public class TBLReader<T> {
         }
 
         //makes whole table
-        String columnCategoryString = String.join(", ", columnBoth);
+        String columnCategoryString = String.join(",", columnBoth);
         wholeTable.add(columnCategoryString);
         for (int i = 1; i < numRows; i++) {
             wholeTable.add(theRows.get(i));
         }
+
+        System.out.println("yikes");
     }
 
-    public void printTable() {
+    private void printTable() {
         for (int i = 0; i < numRows; i++) {
             System.out.println(wholeTable.get(i));
         }
     }
 
-    public List<T> getColumn(String columnName) {
+    private List<T> getColumn(String columnName) {
         int index = 0;
         int counter = 0;
 
@@ -92,7 +97,42 @@ public class TBLReader<T> {
 
     public static void main(String args[]) throws IOException {
         TBLReader T = new TBLReader("records");
+        //ActualTable HELP = new ActualTable(T);
+        //List aColumn = (List) T.theColumns.get(0);
+        //System.out.println(T.theColumns);
+        //System.out.println(T.columnNames);
+        //System.out.println(T.theRows);
+        //T.getColumnNames();
+        //T.getColumnTypes();
+        //T.setUpColumns();
+        //T.makeColumns();
+        //T.setUpColumns();
+        //T.makeColumns();
+        for (int i = 0; i < T.numColumns; i++) {
+            System.out.println(T.columnNames.get(i));
+        }
+        for (int i = 0; i < T.numColumns; i++) {
+            System.out.println(T.columnTypes.get(i));
+        }
+        for (int i = 0; i < T.numRows; i++) {
+            System.out.println(T.theRows.get(i));
+            //String something = T.columnName.get(0);
+            //System.out.println(something.equals("Lastname string"));
+        }
+        //System.out.println(T.theColumns.get(4)); //prints Row0
+        System.out.println(T.theRows);
+        System.out.println(T.theColumns);
+        System.out.println(T.columnBoth);
+
+
+        System.out.println(T.wholeTable);
+        System.out.println(T.columnBoth);
+        System.out.println(T.columnBoth.get(1));
+        //T.setWholeTable();
         T.printTable();
+        System.out.println(T.theColumns);
+        System.out.println(T.columnBoth);
+        System.out.println("potato");
 
     }
 }
