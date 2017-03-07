@@ -9,19 +9,22 @@ public class Selector {
     //ArrayList<Columns> columnsToUse = new ArrayList<>();
     ArrayList<Columns> columnsToUse;
     ArrayList<String> columnNames;
-    ArrayList<String> inCommon;
-    //Table table;
+    ArrayList<String> columnsInCommon;
+    Table table;
     ArrayList<String> typesToUse = new ArrayList<>();
     ArrayList<Table> tablesToUse = new ArrayList<>();
     ArrayList<String> columnTypes;
     ArrayList<String> columnBoth;
+    ArrayList<String> columnNamez;
     String tablename = "tempTable";
-    Boolean columnsInCommon;
+    Boolean inCommon = false;
 
-    Boolean exists;
+    Boolean exists = true;
+
+    Table tableToPrint;
 
 
-    int tableDepth;
+    int tableDepth = 0;
     int tableWidth;
     int numTables;
 
@@ -33,47 +36,63 @@ public class Selector {
         //typesToUse = new ArrayList<>();
         numTables = fromWhatTables.size();
         tableWidth = columnNamesToUse.size();
-        this.columnNames = columnNamesToUse;
+        columnNamez = columnNamesToUse;
         tablesToUse = fromWhatTables;
 
-        inCommon = new ArrayList<>();
+        ArrayList<String> columnList;
 
         //check if columns requested exist in tables
-        ArrayList<Boolean> doesColumnExist = new ArrayList<>();
         for (int i = 0; i < columnNamesToUse.size(); i++) {
-            String checkColumn = columnNames.get(i);
+            ArrayList<Boolean> doesColumnExist = new ArrayList<>();
+            String checkColumn = columnNamez.get(i);
             for (int x = 0; x < tablesToUse.size(); x++) {
-                Table table = tablesToUse.get(x);
-                ArrayList<String> columnList = table.justNames;
+                table = tablesToUse.get(x);
+                columnList = table.justNames;
                 if (columnList.contains(checkColumn)) {
                     doesColumnExist.add(true);
                 } else {
                     doesColumnExist.add(false);
                 }
-            } if (!doesColumnExist.contains(true)) {
+            }
+            if (!doesColumnExist.contains(true)) {
                 exists = false;
+                break;
             }
         }
 
-        //
+
+        //check for columns in common to set variable inCommon
+        //also store columns in common to use for future
+        if (tablesToUse.size() > 1) {
+            for (int i = 0; i < columnNamez.size(); i++) {
+                Table a = tablesToUse.get(0);
+                Table b = tablesToUse.get(1);
+                for (int x = 0; x < columnNamez.size(); x++) {
+                    String tempName = columnNamez.get(x);
+                    if (a.justNames.contains(tempName) && b.justNames.contains(tempName)) {
+                        columnsInCommon.add(tempName);
+                        inCommon = true;
+                    }
+                }
+            }
+        }
     }
 
     //simple select that does not need join
     public Table simpleSelect() {
-        Table table = tablesToUse.get(0);
-        tableDepth = table.depth;
-        ArrayList<String> typesAvailable = table.columnTypes;
-        ArrayList<Columns> columnsAvailable = table.columns;
-        ArrayList<String> columnToMake = new ArrayList<>();
+        Table tablezz = tablesToUse.get(0);
+        tableDepth = tablezz.depth;
+//        ArrayList<String> typesAvailable = table.columnTypes;
+//        ArrayList<Columns> columnsAvailable = table.columns;
+//        ArrayList<String> columnToMake = new ArrayList<>();
 
-        for (int i = 0; i < columnNames.size(); i ++) {
-            columnsToUse.add(table.newTable.get(columnNames.get(i)));
-            columnTypes.add(table.getType.get(columnNames.get(i)));
-            columnBoth.add(table.getBoth.get(columnNames.get(i)));
+        for (int i = 0; i < columnNamez.size(); i++) {
+            columnsToUse.add(tablezz.newTable.get(columnNamez.get(i)));
+            columnTypes.add(tablezz.getType.get(columnNamez.get(i)));
+            columnBoth.add(tablezz.getBoth.get(columnNamez.get(i)));
         }
         //creates a table object for the data just loaded from .tbl file
-        Table tableToPrint = new Table(tablename, columnBoth, columnTypes, columnsToUse);
-        System.out.println("help");
+        tableToPrint = new Table(tablename, columnBoth, columnTypes, columnsToUse);
         return tableToPrint;
     }
 
@@ -83,54 +102,11 @@ public class Selector {
     }
 
     public String cartesian() {
-
+        Table a = tablesToUse.get(0);
+        Table b = tablesToUse.get(1);
+        for (int i = 0; i < a.depth; i++) {
+            System.out.println("eh");
+        }
         return "fuck";
     }
 }
-
- /*
-        //adds column headers to row to print
-        for (int i = 0; i < tableWidth; i++) {
-            columnsToUse.add(tablez.newTable.get(columnNames.get(i)));
-            typesToUse.add(tablez.getType.get(columnNames.get(i)));
-            if (i == tableWidth - 1) {
-                rowToPrint += tablez.columnNames.get(i);
-                rowToPrint += "\n";
-            } else {
-                rowToPrint += tablez.columnNames.get(i) + ",";
-            }
-        }
-
-        //adds everything else to row to print
-        for (int i = 0; i < tableDepth; i++) {
-            for (int x = 0; x < columnNames.size(); x++) {
-                //if column to
-                String tempColumnType = typesToUse.get(x);
-                Columns tempColumn = tablez.columns.get(x);
-                if (x == tableWidth - 1) {
-                    if (tempColumnType.equals("int")) {
-                        rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + "\n";
-                        //System.out.print(tempColumn.integerColumn.get(i));
-                    } else if (tempColumnType.equals("float")) {
-                        rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + "\n";
-                        //System.out.print(tempColumn.floatColumn.get(i));
-                    } else if (tempColumnType.equals("string")) {
-                        rowToPrint += tempColumn.integerColumn.get(i) + "\n";
-                        //System.out.print(tempColumn.stringColumn.get(i));
-                    }
-                } else {
-                    if (tempColumnType.equals("int")) {
-                        rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + ",";
-                        //System.out.print(tempColumn.integerColumn.get(i) + ",");
-                    } else if (tempColumnType.equals("float")) {
-                        rowToPrint += Float.toString(tempCoslumn.floatColumn.get(i)) + ",";
-                        //System.out.print(tempColumn.floatColumn.get(i) + ",");
-                    } else if (tempColumnType.equals("string")) {
-                        rowToPrint += tempColumn.stringColumn.get(i) + ",";
-                        //System.out.print(tempColumn.stringColumn.get(i) + ",");
-                    }
-                }
-            }
-        }
-        return rowToPrint;*/
-

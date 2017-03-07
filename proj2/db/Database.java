@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
@@ -60,9 +61,45 @@ public class Database {
         return "";
     }
 
+    //create basic, empty table
+    public String createBasicTable(String tablename, ArrayList<String> columnBoths) {
+        //gets column names
+        int numColumns = columnBoths.size();
+        ArrayList<String> columnTypes = new ArrayList<>();
+        ArrayList<Columns> emptyColumns = new ArrayList<>();
+        //gets column types
+        for (int i = 0; i < numColumns; i++) {
+            String both = columnBoths.get(i).trim();
+            String justType = both.substring(both.lastIndexOf(" ") + 1);
+            if (!justType.equals("int") && !justType.equals("string")
+                    && !justType.equals("float")) {
+                return "ERROR: yo that's an incorrect type ya got there";
+            }
+            columnTypes.add(justType);
+            ArrayList<String> blankColumns = new ArrayList<>();
+            Columns tempColumn = new Columns(justType, blankColumns);
+            emptyColumns.add(tempColumn);
+        }
+        Table table = new Table(tablename, columnBoths, columnTypes, emptyColumns);
+        databaseOfTables.put(tablename, table);
+        //System.out.println(databaseOfTables.get(tablename));
+        //System.out.println("is this working??????????");
+        return "";
+    }
+
+    public String createSelectedTables(String tableName, ArrayList<String> namesToUse,
+                                       ArrayList<String> fromWhat, ArrayList<String> where) {
+
+        ArrayList<Table> fromTables = new ArrayList<>();
+        for (int i = 0; i < fromWhat.size(); i++) {
+            fromTables.add(getTable(fromWhat.get(i)));
+        }
+        Selector pleaseSelect = new Selector(namesToUse, fromTables, where);
+        databaseOfTables.put(tableName, pleaseSelect.tableToPrint);
+        return "";
+    }
+
     public String insertInto(String tablename, ArrayList<String> values) {
-        //System.out.println("tablename " + tablename + "Capatain America");
-        //System.out.println("table exists " + tablename.equals("records"));
         Table table = getTable(tablename);
         if (table == null) {
             return "ERROR: yo man u can't insert into a table that don't exist";
@@ -74,50 +111,54 @@ public class Database {
         int tableWidth = 0;
         int tableDepth = 0;
 
-        //table.depth = table.depth + 1;
-        //System.out.println(tableWidth);
-
-        //columnTypes = table.columnTypes;
-
         theColumns = table.columns;
-
         tableWidth = table.counter;
-
-        tableDepth = table.depth + 1;
-        //System.out.println(tableWidth);
 
         //checks to make sure row is same width as column
         if (values.size() != tableWidth) {
-            throw new Error("ERROR: yo man that row you tryin to insert ain't the right size");
+            return "ERROR: yo man that row you tryin to insert ain't the right size";
         }
 
         for (int i = 0; i < tableWidth; i++) {
             String tempType = columnType.get(i);
             String tempValue = values.get(i);
-            //System.out.println(tempValue);
-            //System.out.println(tempType);
             if (tempType.equals("int")) {
-                try {
-                    Integer.parseInt(tempValue);
-                } catch (NumberFormatException e) {
-                    return "ERROR: yo this shit ain't an integer";
+                if (tempValue.equals("NOVALUE")) {
+                    theColumns.get(i).integerColumn.add(666);
+                } else if (tempValue.indexOf(".") > 0) {
+                    return "ERROR: come on man, integers can't have decimals";
+                } else {
+                    try {
+                        Integer.parseInt(tempValue);
+                    } catch (NumberFormatException e) {
+                        return "ERROR: yo this shit ain't an integer";
+                    }
+                    theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
                 }
-                theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
                 //System.out.println(theColumns.get(i).integerColumn);
             } else if (tempType.equals("float")) {
-                try {
-                    Float.parseFloat(tempValue);
-                } catch (NumberFormatException e) {
-                    return "ERROR: yo this shit ain't an float";
+                if (tempValue.equals("NOVALUE")) {
+                    theColumns.get(i).floatColumn.add(666.0f);
+                } else {
+                    try {
+                        Float.parseFloat(tempValue);
+                    } catch (NumberFormatException e) {
+                        return "ERROR: yo this shit ain't an float";
+                    }
+                    Float hiNeil = Float.parseFloat(String.format("%.2f", tempValue));
+                    theColumns.get(i).floatColumn.add(hiNeil);
                 }
-                theColumns.get(i).floatColumn.add(Float.parseFloat(tempValue));
                 //System.out.println(theColumns.get(i).floatColumn);
 
             } else if (tempType.equals("string")) {
-                if (!(tempValue instanceof String)) {
-                    return "ERROR: yo this shit ain't an string";
+                if (tempValue.equals("NOVALUE")) {
+                    theColumns.get(i).stringColumn.add("you motherfucker");
+                } else {
+                    if (!(tempValue instanceof String)) {
+                        return "ERROR: yo this shit ain't an string";
+                    }
+                    theColumns.get(i).stringColumn.add(tempValue);
                 }
-                theColumns.get(i).stringColumn.add(tempValue);
                 //System.out.println(theColumns.get(i).stringColumn);
             } else {
                 return "ERROR: why is this not fucking working";
@@ -127,7 +168,7 @@ public class Database {
         Table newTable = new Table(tablename, table.columnNames, columnType, theColumns);
         //print(tablename);
         databaseOfTables.put(tablename, newTable);
-        System.out.println("WHY AREN'T YOU WORKING");
+        //System.out.println("WHY AREN'T YOU WORKING");
         return "";
     }
 
@@ -139,7 +180,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            String filename = "db/Tables/" + tablename + ".tbl";
+            String filename = "tablename" + ".tbl";
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -170,7 +211,7 @@ public class Database {
             }
             bufferedWriter.close();
         } catch (IOException e) {
-            System.err.println("God fucking damn it");
+            return "Way to fuck up that store";
         }
         return "";
     }
@@ -199,24 +240,48 @@ public class Database {
                 Columns tempColumn = table.columns.get(x);
                 if (x == tableWidth - 1) {
                     if (tempColumnType.equals("int")) {
-                        rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + "\n";
+                        if (tempColumn.integerColumn.get(i) == 666) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + "\n";
+                        }
                         //System.out.print(tempColumn.integerColumn.get(i));
                     } else if (tempColumnType.equals("float")) {
-                        rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + "\n";
+                        if (tempColumn.floatColumn.get(i) == 666.0f) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + "\n";
+                        }
                         //System.out.print(tempColumn.floatColumn.get(i));
                     } else if (tempColumnType.equals("string")) {
-                        rowToPrint += tempColumn.stringColumn.get(i) + "\n";
+                        if (tempColumn.stringColumn.get(i).equals("you motherfucker")) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += tempColumn.stringColumn.get(i) + "\n";
+                        }
                         //System.out.print(tempColumn.stringColumn.get(i));
                     }
                 } else {
                     if (tempColumnType.equals("int")) {
-                        rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + ",";
+                        if (tempColumn.integerColumn.get(i) == 666) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + ",";
+                        }
                         //System.out.print(tempColumn.integerColumn.get(i) + ",");
                     } else if (tempColumnType.equals("float")) {
-                        rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + ",";
+                        if (tempColumn.floatColumn.get(i) == 666.0f) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + ",";
+                        }
                         //System.out.print(tempColumn.floatColumn.get(i) + ",");
                     } else if (tempColumnType.equals("string")) {
-                        rowToPrint += tempColumn.stringColumn.get(i) + ",";
+                        if (tempColumn.stringColumn.get(i).equals("you motherfucker")) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += tempColumn.stringColumn.get(i) + ",";
+                        }
                         //System.out.print(tempColumn.stringColumn.get(i) + ",");
                     }
                 }
@@ -244,15 +309,11 @@ public class Database {
         String filename = (tablename + ".tbl");
         HashMap<String, String> columnMap = new HashMap<>();
 
-        //figure out the column situation
-//        if (databaseOfTables.containsKey(tablename)) {
-//            return "ERROR: yo man can't adfasdf"
-//        }
-        try {
+        /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
         } catch (IOException e) {
             //This code runs if there is an IOException. This allows the program to continue to run.
-        }
+        }*/
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
@@ -281,9 +342,15 @@ public class Database {
         //gets column types
         for (int i = 0; i < numColumns; i++) {
             String both = columnBoth.get(i);
-            columnTypes.add(both.substring(both.lastIndexOf(" ") + 1));
-        }
+            String justType = both.substring(both.lastIndexOf(" ") + 1);
 
+            //check to make sure type is only the 3 accepted
+            if (!justType.equals("int") && !justType.equals("string")
+                    && !justType.equals("float")) {
+                return "ERROR: yo that's an incorrect type ya got there";
+            }
+            columnTypes.add(justType);
+        }
         //puts shit in le columns
         for (int i = 0; i < numColumns; i++) {
             ArrayList<String> tempList = new ArrayList<>();
@@ -301,31 +368,34 @@ public class Database {
         //creates a table object for the data just loaded from .tbl file
         newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
         databaseOfTables.put(tablename, newTable);
-        //System.out.println("bitch did you put it in");
-        System.out.println(databaseOfTables.containsKey(tablename)
-                + " " + tablename + " " + newTable);
-        //System.out.println(databaseOfTables.get("records"));
         return "";
     }
 
-//    public String select(ArrayList<String> columnNamesToUse,
-// ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
-//        ArrayList<Table> fromTables = new ArrayList<>();
-//        for (int i = 0; i < fromWhatTables.size(); i++) {
-//            fromTables.add(getTable(fromWhatTables.get(i)));
-//            }
-//            System.out.println(columnNamesToUse);
-//            Selector pleaseSelect = new Selector(columnNamesToUse, fromTables, whereClauses);
-//            System.out.println(pleaseSelect);
-//        if (!pleaseSelect.exists) {
-//            return "ERROR: columns requested don't exist in tables provided";
-//        }
-//        if (pleaseSelect.columnNames.size() == 1) {
-//            return print(pleaseSelect.simpleSelect().tablename);
-//        }
-//        return "fuck";
-//    }
+    //does not handle "where" clauses yet, simple select where there's only 1 table
+    public String select(ArrayList<String> columnNamesToUse,
+                         ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
 
+        ArrayList<Table> fromTables = new ArrayList<>();
+        for (int i = 0; i < fromWhatTables.size(); i++) {
+            fromTables.add(getTable(fromWhatTables.get(i)));
+        }
+        Selector pleaseSelect = new Selector(columnNamesToUse, fromTables, whereClauses);
+        //return pleaseSelect.simpleSelect();
+        if (!pleaseSelect.exists) {
+            return "ERROR: columns requested don't exist in tables provided";
+        }
+        if (pleaseSelect.tablesToUse.size() == 1) {
+            return print(pleaseSelect.simpleSelect());
+        }
+        if (pleaseSelect.inCommon) {
+            return pleaseSelect.join();
+        }
+        if (!pleaseSelect.inCommon) {
+            return pleaseSelect.cartesian();
+        } else {
+            return "ERROR: idk it just didn't work man";
+        }
+    }
 
     public static final String REST = "\\s*(.*)\\s*",
             COMMA = "\\s*,\\s*",
@@ -389,8 +459,7 @@ public class Database {
         }
         query = query.substring(index, query.length());
         if ((m = CREATE_CMD.matcher(query)).matches()) {
-            //createTable(m.group(1));
-            return "not yet man";
+            return createTable(m.group(1));
         } else if ((m = LOAD_CMD.matcher(query)).matches()) {
             return load(m.group(1));
         } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -448,45 +517,124 @@ public class Database {
                     }
                 }
             }
-            return "hi";
-//                    select(columnNamesToUse, fromWhatTables, whereClauses);
+            return select(columnNamesToUse, fromWhatTables, whereClauses);
         } else {
             System.err.printf("Malformed query: %s\n", query);
         }
-        return "fuck";
+        return "ERROR: that's an ugly ass query";
     }
 
-//    private void createTable(String expr) {
-//        Matcher m;
-//        if ((m = CREATE_NEW.matcher(expr)).matches()) {
-//            createNewTable(m.group(1), m.group(2).split(COMMA));
-//        } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
-//            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
-//        } else {
-//            System.err.printf("Malformed create: %s\n", expr);
-//        }
-//    }
-//
-//    private void createNewTable(String name, String[] cols) {
-//        ArrayList<String> columnHeaders = new ArrayList<String>();
-//        StringJoiner joiner = new StringJoiner(", ");
-//        for (int i = 0; i < cols.length - 1; i++) {
-//            joiner.add(cols[i]);
-//        }
-//        for (String s : cols) {
-//            columnHeaders.add(s);
-//        }
-//        newTable(name, columnHeaders);
-//        String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
-//        System.out.printf("You are trying to create a table " +
-//                "named %s with the columns %s\n", name, colSentence);
-//    }
-//
-//    private void createSelectedTable(String name, String exprs, String tables, String conds) {
-//        System.out.printf("You are trying to create a table named "
-//                + "%s by selecting these expressions:"
-//                + " '%s' from the join of these tables: '%s', filtered "
-//                + "by these conditions: '%s'\n", name, exprs, tables, conds);
-//    }
+    private String createTable(String expr) {
+        Matcher m;
+        if ((m = CREATE_NEW.matcher(expr)).matches()) {
+            ArrayList<String> columns = new ArrayList<>(Arrays.asList(m.group(2).split(COMMA)));
+            for (int i = 0; i < columns.size(); i++) {
+                columns.set(i, columns.get(i).replaceAll("\\s+", " "));
+            }
+            return createBasicTable(m.group(1), columns);
+        } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
+            return createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+        } else {
+            System.err.printf("Malformed create: %s\n", expr);
+            return "ERROR: you fucked up man that's not a command";
+        }
+    }
+
+    private void createNewTable(String name, String[] cols) {
+        ArrayList<String> columnHeaders = new ArrayList<String>();
+        StringJoiner joiner = new StringJoiner(", ");
+        for (int i = 0; i < cols.length - 1; i++) {
+            joiner.add(cols[i]);
+        }
+        for (String s : cols) {
+            columnHeaders.add(s);
+        }
+        createBasicTable(name, columnHeaders);
+        String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
+        System.out.printf("You are trying to create a table "
+                + "named %s with the columns %s\n", name, colSentence);
+    }
+
+    private String createSelectedTable(String name, String exprs, String tables, String conds) {
+        return "not yet man";
+    }
+
+
+    public String print(Table table) {
+        //System.out.println("potato");
+        //Table table = getTable(tablename);
+        if (table == null) {
+            return "ERROR: yo man u can't print a table that don't exist";
+        }
+        ArrayList<String> columnType;
+        columnType = table.columnTypes;
+        String columnCategoryString = String.join(",", table.columnNames);
+        //System.out.println(columnCategoryString);
+        //ArrayList<String> stringsToPrint = new ArrayList<>();
+        String rowToPrint = "";
+        rowToPrint += columnCategoryString + "\n";
+        //get depth of the table
+        //int tableDepth = 0;
+        int tableDepth = table.depth;
+        int tableWidth = table.counter;
+
+        for (int i = 0; i < tableDepth; i++) {
+            for (int x = 0; x < table.counter; x++) {
+                String tempColumnType = columnType.get(x);
+                Columns tempColumn = table.columns.get(x);
+                if (x == tableWidth - 1) {
+                    if (tempColumnType.equals("int")) {
+                        if (tempColumn.integerColumn.get(i) == 666) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + "\n";
+                        }
+                        //System.out.print(tempColumn.integerColumn.get(i));
+                    } else if (tempColumnType.equals("float")) {
+                        if (tempColumn.floatColumn.get(i) == 666.0f) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + "\n";
+                        }
+                        //System.out.print(tempColumn.floatColumn.get(i));
+                    } else if (tempColumnType.equals("string")) {
+                        if (tempColumn.stringColumn.get(i).equals("you motherfucker")) {
+                            rowToPrint += "NOVALUE" + "\n";
+                        } else {
+                            rowToPrint += tempColumn.stringColumn.get(i) + "\n";
+                        }
+                        //System.out.print(tempColumn.stringColumn.get(i));
+                    }
+                } else {
+                    if (tempColumnType.equals("int")) {
+                        if (tempColumn.integerColumn.get(i) == 666) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + ",";
+                        }
+                        //System.out.print(tempColumn.integerColumn.get(i) + ",");
+                    } else if (tempColumnType.equals("float")) {
+                        if (tempColumn.floatColumn.get(i) == 666.0f) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + ",";
+                        }
+                        //System.out.print(tempColumn.floatColumn.get(i) + ",");
+                    } else if (tempColumnType.equals("string")) {
+                        if (tempColumn.stringColumn.get(i).equals("you motherfucker")) {
+                            rowToPrint += "NOVALUE" + ",";
+                        } else {
+                            rowToPrint += tempColumn.stringColumn.get(i) + ",";
+                        }
+                        //System.out.print(tempColumn.stringColumn.get(i) + ",");
+                    }
+                }
+            }
+            //stringsToPrint.add(rowToPrint);
+            //System.out.println();
+        }
+        //System.out.println(rowToPrint);
+        return rowToPrint;
+    }
 
 }
