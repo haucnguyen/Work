@@ -247,10 +247,15 @@ public class Database {
 //        if (databaseOfTables.containsKey(tablename)) {
 //            return "ERROR: yo man can't adfasdf"
 //        }
-        try {
-            File file = new File(tablename);
-            String path = file.getAbsolutePath();
 
+        File file = new File(tablename);
+        String path = file.getAbsolutePath();
+
+        if (path == null) {
+            return "ERROR: yo man you can't load a file that doesn't exist";
+        }
+
+        try {
             BufferedReader columnReader = new BufferedReader(new FileReader(file));
             ArrayList<String> initialColumns = new ArrayList<>();
 
