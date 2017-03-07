@@ -180,7 +180,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            String filename = "tablename" + ".tbl";
+            String filename = tablename + ".tbl";
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
