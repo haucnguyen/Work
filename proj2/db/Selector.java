@@ -50,8 +50,20 @@ public class Selector {
         columnTypesB = new ArrayList<>();
         justNames = new ArrayList<>();
 
-        //check if columns requested exist in tables
+        System.out.println(columnNamez);
+        if (columnNamez.get(0).equals("*")) {
+            System.out.println("good");
+            columnNamez.remove(0);
+            for (int i = 0; i < tablesToUse.size(); i++) {
+                Table tempTable = tablesToUse.get(i);
+                for (int x = 0; x < tempTable.columnNames.size(); x++) {
+                    columnNamez.add(x + i, tempTable.justNames.get(x));
+                }
+            }
+            System.out.println(columnNamez);
+        }
 
+        //check if columns requested exist in tables
         for (int i = 0; i < columnNamez.size(); i++) {
             ArrayList<Boolean> doesColumnExist = new ArrayList<>();
             String checkColumn = columnNamez.get(i);
@@ -129,10 +141,12 @@ public class Selector {
         Table b = tablesToUse.get(1);
         ArrayList<String> cartRow;
         int newDepth = a.depth * b.depth;
+//        System.out.println("what the fuck");
         //gets column types
         for (int d = 0; d < columnNamez.size(); d++) {
             String both = columnNamez.get(d);
             String justType = both.substring(both.lastIndexOf(" ") + 1);
+
             //check to make sure type is only the 3 accepted
             if (!justType.equals("int") && !justType.equals("string")
                     && !justType.equals("float")) {
@@ -140,6 +154,8 @@ public class Selector {
             }
             cartTypes.add(justType);
         }
+//        System.out.println(cartTypes);
+
         for (int i = 0; i < a.counter; i++) {
             cartRow = new ArrayList<>();
             String tempType = cartTypes.get(i);
@@ -147,8 +163,7 @@ public class Selector {
                 int depthCounter = 0;
                 if (tempType.equals("int")) {
                     while (depthCounter < b.depth) {
-                        ArrayList<Integer> intColumn = a.newTable.get
-                                (justNames.get(i)).integerColumn;
+                        ArrayList<Integer> intColumn = a.newTable.get(justNames.get(i)).integerColumn;
                         String newInt = Integer.toString(intColumn.get(x));
                         cartRow.add(newInt);
                         depthCounter++;
@@ -162,14 +177,14 @@ public class Selector {
                     }
                 } else if (tempType.equals("string")) {
                     while (depthCounter < b.depth) {
-                        ArrayList<String> stringColumn = a.newTable.get
-                                (justNames.get(i)).stringColumn;
+                        ArrayList<String> stringColumn = a.newTable.get(justNames.get(i)).stringColumn;
                         String newString = stringColumn.get(x);
                         cartRow.add(newString);
                         depthCounter++;
                     }
                 }
             }
+//            System.out.println(cartRow);
             Columns tempColumn = new Columns(tempType, cartRow);
             cartColumns.add(tempColumn);
             //now and cartseian product rows
@@ -181,14 +196,14 @@ public class Selector {
             for (int x = 0; x < b.counter; x++) {
                 //System.out.println("where is this fucking up");
                 if (tempType.equals("int")) {
-                    ArrayList<Integer> integerColumn = b.newTable.get(justNames.get
-                            (i + a.counter)).integerColumn;
+                    ArrayList<Integer> integerColumn = b.newTable.get(justNames.get(i + a.counter)).integerColumn;
                     //System.out.println(integerColumn + "oh boy");
                     while (cartRow.size() < newDepth) {
                         for (int m = 0; m < b.depth; m++) {
                             String newInt = Integer.toString(integerColumn.get(m));
                             cartRow.add(newInt);
                         }
+                        //System.out.println("wooswwwwww");
                     }
                 }
             }
@@ -201,6 +216,10 @@ public class Selector {
             //System.out.println(cartColumns + " huh");
             //return table to be printed
         }
+//        System.out.println(tablename);
+//        System.out.println(columnNamez);
+//        System.out.println(cartTypes);
+//        System.out.println(cartColumns);
         cartesianTable = new Table(tablename, columnNamez, cartTypes, cartColumns);
         return cartesianTable;
     }

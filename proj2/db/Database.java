@@ -85,7 +85,7 @@ public class Database {
         Table table = new Table(tablename, columnBoths, columnTypes, emptyColumns);
         databaseOfTables.put(tablename, table);
         //System.out.println(databaseOfTables.get(tablename));
-        // System.out.println("is this working??????????");
+        //System.out.println("is this working??????????");
         return "";
     }
 
@@ -97,6 +97,11 @@ public class Database {
             fromTables.add(getTable(fromWhat.get(i)));
         }
         Selector pleaseSelect = new Selector(namesToUse, fromTables, where);
+        if (pleaseSelect.tablesToUse.size() == 1) {
+            Table table = pleaseSelect.simpleSelect();
+            databaseOfTables.put(tableName, table);
+            return "";
+        }
         if (!pleaseSelect.inCommon) {
             Table table = pleaseSelect.cartesian();
             databaseOfTables.put(tableName, table);
@@ -273,7 +278,6 @@ public class Database {
         //int tableDepth = 0;
         int tableDepth = table.depth;
         int tableWidth = table.counter;
-
         for (int i = 0; i < tableDepth; i++) {
             for (int x = 0; x < table.counter; x++) {
                 String tempColumnType = columnType.get(x);
@@ -285,7 +289,6 @@ public class Database {
                         } else {
                             rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + "\n";
                         }
-                        //System.out.print(tempColumn.integerColumn.get(i));
                     } else if (tempColumnType.equals("float")) {
                         if (tempColumn.floatColumn.get(i) == 666.0f) {
                             rowToPrint += "NOVALUE" + "\n";
@@ -301,18 +304,15 @@ public class Database {
                             } else {
                                 suckmyass[1] = suckmyass[1] + "00";
                                 pop = suckmyass[0] + "." + suckmyass[1];
-
                             }
                             rowToPrint += pop + "\n";
                         }
-                        //System.out.print(tempColumn.floatColumn.get(i));
                     } else if (tempColumnType.equals("string")) {
                         if (tempColumn.stringColumn.get(i).equals("you motherfucker")) {
                             rowToPrint += "NOVALUE" + "\n";
                         } else {
                             rowToPrint += tempColumn.stringColumn.get(i) + "\n";
                         }
-                        //System.out.print(tempColumn.stringColumn.get(i));
                     }
                 } else {
                     if (tempColumnType.equals("int")) {
@@ -321,7 +321,6 @@ public class Database {
                         } else {
                             rowToPrint += Integer.toString(tempColumn.integerColumn.get(i)) + ",";
                         }
-                        //System.out.print(tempColumn.integerColumn.get(i) + ",");
                     } else if (tempColumnType.equals("float")) {
                         if (tempColumn.floatColumn.get(i) == 666.0f) {
                             rowToPrint += "NOVALUE" + ",";
@@ -335,14 +334,10 @@ public class Database {
                         } else {
                             rowToPrint += tempColumn.stringColumn.get(i) + ",";
                         }
-                        //System.out.print(tempColumn.stringColumn.get(i) + ",");
                     }
                 }
             }
-            //stringsToPrint.add(rowToPrint);
-            //System.out.println();
         }
-        //System.out.println(rowToPrint);
         return rowToPrint;
     }
 
@@ -359,7 +354,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
@@ -451,23 +446,13 @@ public class Database {
     //does not handle "where" clauses yet, simple select where there's only 1 table
     public String select(ArrayList<String> columnNamesToUse,
                          ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
+
         ArrayList<Table> fromTables = new ArrayList<>();
         for (int i = 0; i < fromWhatTables.size(); i++) {
             fromTables.add(getTable(fromWhatTables.get(i)));
         }
-        if (columnNamesToUse.get(0).equals("everything")) {
-            System.out.println("good");
-            columnNamesToUse.remove(0);
-            for (int i = 0; i < fromTables.size(); i++) {
-                Table tempTable = fromTables.get(i);
-                for (int x = 0; x < tempTable.columnNames.size(); x++) {
-                    columnNamesToUse.add(x + i, tempTable.columnNames.get(x));
-                }
-            }
-        }
-
         Selector pleaseSelect = new Selector(columnNamesToUse, fromTables, whereClauses);
-        //return pleaseSelect.simpleSelect()
+        //return pleaseSelect.simpleSelect();
         if (!pleaseSelect.exists) {
             return "ERROR: columns requested don't exist in tables provided";
         }
@@ -483,6 +468,7 @@ public class Database {
             return "ERROR: idk it just didn't work man";
         }
     }
+
 
     public static final String
             REST = "\\s*(.*)\\s*",
@@ -570,61 +556,109 @@ public class Database {
             i++;
         }
         query = query.substring(index, query.length());
-        try {
-            if ((m = CREATE_CMD.matcher(query)).matches()) {
-                createTable(m.group(1));
-                return pls;
-            } else if ((m = LOAD_CMD.matcher(query)).matches()) {
-                return load(m.group(1));
-            } else if ((m = STORE_CMD.matcher(query)).matches()) {
-                return store(m.group(1));
-            } else if ((m = DROP_CMD.matcher(query)).matches()) {
-                return dropTable(m.group(1));
-            } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-                insertRow(m.group(1));
-                return pls;
-            } else if ((m = PRINT_CMD.matcher(query)).matches()) {
-                return print(m.group(1).trim());
-            } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-                select(m.group(1));
-                return pls;
-            } else {
-                System.out.printf("Malformed query: %s\n", query);
+        if ((m = CREATE_CMD.matcher(query)).matches()) {
+            return createTable(m.group(1));
+        } else if ((m = LOAD_CMD.matcher(query)).matches()) {
+            return load(m.group(1));
+        } else if ((m = STORE_CMD.matcher(query)).matches()) {
+            return store(m.group(1));
+        } else if ((m = DROP_CMD.matcher(query)).matches()) {
+            return dropTable(m.group(1));
+        } else if ((m = INSERT_CMD.matcher(query)).matches()) {
+            Matcher l = INSERT_CLS.matcher(m.group(1));
+            if (!l.matches()) {
+                System.err.printf("Malformed insert: %s\n", m.group(1));
             }
-        } catch (IllegalStateException e) {
-            System.out.printf("ERROR: Malformed Command!");
+            ArrayList<String> values = new ArrayList<>();
+            String[] splitThemUp = m.group(1).split("insert into |values ");
+            String tableName = splitThemUp[0];
+            String unsplitValues = splitThemUp[1];
+            String[] value = unsplitValues.split(",");
+            for (int a = 0; a < value.length; a++) {
+                values.add(value[a].trim());
+            }
+            for (String s : values) {
+                System.out.println(s);
+            }
+            return insertInto(tableName.trim(), values);
+        } else if ((m = PRINT_CMD.matcher(query)).matches()) {
+            return print(m.group(1).trim());
+        } else if ((m = SELECT_CMD.matcher(query)).matches()) {
+            Matcher l = SELECT_CLS.matcher(m.group(1));
+            if (!l.matches()) {
+                System.err.printf("Malformed select: %s\n", m.group(1));
+            }
+            ArrayList<String> columnNamesToUse = new ArrayList<>();
+            ArrayList<String> fromWhatTables = new ArrayList<>();
+            ArrayList<String> whereClauses = new ArrayList<>();
+            String[] firstSplit = l.group(1).trim().split("\\s*,\\s*");
+            for (String s : firstSplit) {
+                if (s.contains(" as ")) {
+                    String[] a = asSelect(s);
+                    for (String b : a) {
+                        columnNamesToUse.add(b.trim());
+                    }
+                } else {
+                    columnNamesToUse.add(s.trim());
+                }
+            }
+            String[] secondSplit = l.group(2).split("\\s*,\\s*");
+            for (String c : secondSplit) {
+                fromWhatTables.add(c.trim());
+            }
+            if (l.group(3) != null) {
+                String[] thirdSplit = l.group(3).split("\\s*and\\s*");
+                for (String s : thirdSplit) {
+                    String[] a = clauseSelect(s);
+                    for (String b : a) {
+                        whereClauses.add(b);
+                    }
+                }
+            }
+            return select(columnNamesToUse, fromWhatTables, whereClauses);
+        } else {
+            System.err.printf("Malformed query: %s\n", query);
         }
-        return "you fucked up somewhere fam";
+        return "ERROR: that's an ugly ass query";
     }
 
-    private void createTable(String expr) {
+    private String createTable(String expr) {
         Matcher m;
         if ((m = CREATE_NEW.matcher(expr)).matches()) {
-            createNewTable(m.group(1), m.group(2).split(COMMA));
+            ArrayList<String> columns = new ArrayList<>(Arrays.asList(m.group(2).split(COMMA)));
+            for (int i = 0; i < columns.size(); i++) {
+                columns.set(i, columns.get(i).replaceAll("\\s+", " "));
+            }
+            return createBasicTable(m.group(1), columns);
         } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
-            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+            return createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
         } else {
             System.err.printf("Malformed create: %s\n", expr);
+            return "ERROR: you fucked up man that's not a command";
         }
     }
 
     private void createNewTable(String name, String[] cols) {
+        ArrayList<String> columnHeaders = new ArrayList<String>();
         StringJoiner joiner = new StringJoiner(", ");
-        ArrayList<String> columnHeaders = new ArrayList<>();
         for (int i = 0; i < cols.length - 1; i++) {
             joiner.add(cols[i]);
         }
         for (String s : cols) {
-            columnHeaders.add(s.trim().replaceAll(" +", " "));
+            columnHeaders.add(s);
         }
-        pls = createBasicTable(name, columnHeaders);
+        createBasicTable(name, columnHeaders);
+        String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
+        System.out.printf("You are trying to create a table "
+                + "named %s with the columns %s\n", name, colSentence);
     }
 
-    private void createSelectedTable(String name, String exprs, String tables, String conds) {
+
+    private String createSelectedTable(String name, String exprs, String tables, String conds) {
         ArrayList<String> columnNamesToUse = new ArrayList<>();
         ArrayList<String> fromWhatTables = new ArrayList<>();
         ArrayList<String> whereClauses = new ArrayList<>();
-        String[] firstSplit = exprs.trim().split(COMMA);
+        String[] firstSplit = exprs.trim().split("\\s*,\\s*");
         for (String s : firstSplit) {
             if (s.contains(" as ")) {
                 String[] a = asSelect(s);
@@ -635,20 +669,20 @@ public class Database {
                 columnNamesToUse.add(s.trim());
             }
         }
-        String[] secondSplit = tables.split(COMMA);
+        String[] secondSplit = tables.split("\\s*,\\s*");
         for (String c : secondSplit) {
             fromWhatTables.add(c.trim());
         }
         if (conds != null) {
-            String[] thirdSplit = conds.split(AND);
+            String[] thirdSplit = conds.split("\\s*and\\s*");
             for (String s : thirdSplit) {
                 String[] a = clauseSelect(s);
                 for (String b : a) {
                     whereClauses.add(b);
                 }
             }
-            pls = createSelectedTables(name, columnNamesToUse, fromWhatTables, whereClauses);
         }
+        return createSelectedTables(name, columnNamesToUse, fromWhatTables, whereClauses);
     }
 
     private void insertRow(String expr) {
@@ -670,51 +704,51 @@ public class Database {
         pls = insertInto(tableName.trim(), values);
     }
 
-    private void select(String expr) {
-        Matcher m = SELECT_CLS.matcher(expr);
-        if (!m.matches()) {
-            System.err.printf("Malformed select: %s\n", expr);
-            return;
-        }
-
-        select(m.group(1), m.group(2), m.group(3));
-    }
-
-    private void select(String exprs, String tables, String conds) {
-        ArrayList<String> columnNamesToUse = new ArrayList<>();
-        ArrayList<String> fromWhatTables = new ArrayList<>();
-        ArrayList<String> whereClauses = new ArrayList<>();
-
-        if (exprs.contains("*")) {
-            columnNamesToUse.add("everything");
-        } else {
-            String[] firstSplit = exprs.trim().split(COMMA);
-            for (String s : firstSplit) {
-                if (s.contains(" as ")) {
-                    String[] a = asSelect(s);
-                    for (String b : a) {
-                        columnNamesToUse.add(b.trim());
-                    }
-                } else {
-                    columnNamesToUse.add(s.trim());
-                }
-            }
-        }
-        String[] secondSplit = tables.split(COMMA);
-        for (String c : secondSplit) {
-            fromWhatTables.add(c.trim());
-        }
-        if (conds != null) {
-            String[] thirdSplit = conds.split(AND);
-            for (String s : thirdSplit) {
-                String[] a = clauseSelect(s);
-                for (String b : a) {
-                    whereClauses.add(b);
-                }
-            }
-        }
-        pls = select(columnNamesToUse, fromWhatTables, whereClauses);
-    }
+//    private void select(String expr) {
+//        Matcher m = SELECT_CLS.matcher(expr);
+//        if (!m.matches()) {
+//            System.err.printf("Malformed select: %s\n", expr);
+//            return;
+//        }
+//
+//        select(m.group(1), m.group(2), m.group(3));
+//    }
+//
+//    private void select(String exprs, String tables, String conds) {
+//        ArrayList<String> columnNamesToUse = new ArrayList<>();
+//        ArrayList<String> fromWhatTables = new ArrayList<>();
+//        ArrayList<String> whereClauses = new ArrayList<>();
+//
+//        if (exprs.contains("*")) {
+//            columnNamesToUse.add("everything");
+//        } else {
+//            String[] firstSplit = exprs.trim().split(COMMA);
+//            for (String s : firstSplit) {
+//                if (s.contains(" as ")) {
+//                    String[] a = asSelect(s);
+//                    for (String b : a) {
+//                        columnNamesToUse.add(b.trim());
+//                    }
+//                } else {
+//                    columnNamesToUse.add(s.trim());
+//                }
+//            }
+//        }
+//        String[] secondSplit = tables.split(COMMA);
+//        for (String c : secondSplit) {
+//            fromWhatTables.add(c.trim());
+//        }
+//        if (conds != null) {
+//            String[] thirdSplit = conds.split(AND);
+//            for (String s : thirdSplit) {
+//                String[] a = clauseSelect(s);
+//                for (String b : a) {
+//                    whereClauses.add(b);
+//                }
+//            }
+//        }
+//        pls = select(columnNamesToUse, fromWhatTables, whereClauses);
+//    }
 
     public String print(Table table) {
         //System.out.println("potato");
