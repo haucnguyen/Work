@@ -145,8 +145,19 @@ public class Database {
                         } catch (NumberFormatException e) {
                             return "ERROR: yo this shit ain't an float";
                         }
+                        String[] hi = tempValue.split("\\.");
+                        if (hi[1].length() >= 3) {
+                            hi[1] = hi[1].substring(0, 2);
+                            tempValue = hi[0] +  "." + hi[1];
+                        } else if (hi[1].length() == 2) {
+                            hi[1] = hi[1] + "0";
+                            tempValue = hi[0] + "." + hi[1];
+                        } else {
+                            hi[1] = hi[1] + "00";
+                            tempValue = hi[0] + "." + hi[1];
+                        }
                         Float hiNeil = Float.parseFloat(tempValue);
-                        theColumns.get(i).floatColumn.add(hiNeil);
+                        theColumns.get(i).floatColumn.add(Float.valueOf(hiNeil + "00"));
                     }
                 } else if (tempType.equals("string")) {
                     if (tempValue.equals("NOVALUE")) {
