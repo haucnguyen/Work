@@ -479,10 +479,10 @@ public class Database {
                 select(m.group(1));
                 return pls;
             } else {
-                System.err.printf("Malformed query: %s\n", query);
+                System.out.printf("Malformed query: %s\n", query);
             }
         } catch (IllegalStateException e) {
-            System.err.printf("ERROR: Malformed Command!");
+            System.out.printf("ERROR: Malformed Command!");
         }
         return "you fucked up somewhere fam";
     }
@@ -546,6 +546,10 @@ public class Database {
         Matcher m = INSERT_CLS.matcher(expr);
         if (!m.matches()) {
             System.err.printf("Malformed insert: %s\n", expr);
+            return;
+        }
+        if (m.group(2).contains("and")) {
+            System.out.printf("ERROR: THERE IS AN AND");
             return;
         }
         ArrayList<String> values = new ArrayList<>();
