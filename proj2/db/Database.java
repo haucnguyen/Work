@@ -1,13 +1,11 @@
 package db;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import edu.princeton.cs.algs4.In;
+
+import java.io.*;
 import java.util.HashMap;
-import java.io.FileReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 import java.util.Arrays;
@@ -180,7 +178,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            String filename = tablename + ".tbl";
+            File filename = new File(tablename + ".tbl");
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -298,6 +296,7 @@ public class Database {
         if (!allLetters) {
             return "ERROR: malformed table name";
         }
+
         ArrayList<String> columnBoth;
         ArrayList<String> columnNames = new ArrayList<>();
         ArrayList<String> columnTypes = new ArrayList<>();
@@ -308,6 +307,13 @@ public class Database {
         Table newTable;
         String filename = tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
+        In file = null;
+        try {
+            file = new In(filename);
+        }
+        catch (RuntimeException e) {
+            System.out.print("ERROR" + filename + " not found");
+        }
 
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
@@ -447,7 +453,6 @@ public class Database {
     }
 
     public String transact(String query) {
-        try {
             Matcher m;
             int index = 0, i = 0;
             while (i < query.length()) {
@@ -459,6 +464,7 @@ public class Database {
                 i++;
             }
             query = query.substring(index, query.length());
+        try {
             if ((m = CREATE_CMD.matcher(query)).matches()) {
                 createTable(m.group(1));
                 return pls;
