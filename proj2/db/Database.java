@@ -132,7 +132,7 @@ public class Database {
                     } else {
                         try {
                             Integer.parseInt(tempValue);
-                        } catch (NumberFormatException e) {
+                        } catch (IllegalFormatConversionException e) {
                             return "ERROR: yo this shit ain't an integer";
                         }
                         theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
@@ -144,7 +144,7 @@ public class Database {
                     } else {
                         try {
                             Float.parseFloat(tempValue);
-                        } catch (NumberFormatException e) {
+                        } catch (IllegalFormatConversionException e) {
                             return "ERROR: yo this shit ain't an float";
                         }
                         Float hiNeil = Float.parseFloat(String.format("%.2f", tempValue));
@@ -206,14 +206,22 @@ public class Database {
                     String tempColumnType = columnType.get(x);
                     Columns tempColumn = columns.get(x);
                     if (tempColumnType.equals("int")) {
-                        String input = Integer.toString(tempColumn.integerColumn.get(i));
-                        rowToAdd.add(input);
-                    } else if (tempColumnType.equals("float")) {
-                        String input = Float.toString(tempColumn.floatColumn.get(i));
-                        if (!input.contains(".")) {
-                            return "ERROR: yo man that aibt a flot eheh";
+                        try {
+                            String input = Integer.toString(tempColumn.integerColumn.get(i));
+                            rowToAdd.add(input);
+                        } catch (IllegalFormatConversionException e) {
+                            return "ERROR: yo man you this shit ain't an integer";
                         }
-                        rowToAdd.add(input);
+                    } else if (tempColumnType.equals("float")) {
+                        try {
+                            String input = Float.toString(tempColumn.floatColumn.get(i));
+                            if (!input.contains(".")) {
+                                return "ERROR: yo man that aibt a flot eheh";
+                            }
+                            rowToAdd.add(input);
+                        } catch (IllegalFormatConversionException e) {
+                            return "ERROR: yo man this shit ain't a float";
+                        }
                     } else if (tempColumnType.equals("string")) {
                         String input = tempColumn.stringColumn.get(i);
                         rowToAdd.add(input);
