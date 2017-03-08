@@ -158,6 +158,9 @@ public class Database {
                     if (!(tempValue instanceof String)) {
                         return "ERROR: yo this shit ain't an string";
                     }
+                    if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
+                        return "ERROR: yo this shit ain't an string";
+                    }
                     theColumns.get(i).stringColumn.add(tempValue);
                 }
                 //System.out.println(theColumns.get(i).stringColumn);
@@ -307,7 +310,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
@@ -436,17 +439,30 @@ public class Database {
     }
 
     public String[] asSelect(String line) {
-        Pattern p = Pattern.compile
-                ("([A-Za-z]\\w*)\\s*(\\*|\\/|\\+|\\-)\\s*(\\w+)\\s*[\"as\"]\\w+\\s*(\\w+)");
-        Matcher m;
-        if ((m = p.matcher(line)).matches()) {
-            String[] s = {m.group(1), m.group(2), m.group(3), m.group(4)};
-            return s;
+        if (line.contains("<") || (line.contains(">")) || (line.contains("<="))
+                || (line.contains(">=")) || (line.contains("=<")) || (line.contains("=>"))) {
+            Pattern p = Pattern.compile
+                    ("([A-Za-z]\\w*)\\s*(\\*|\\/|\\+|\\-)\\s*(\\w+)\\s*[\"as\"]\\w+\\s*(\\w+)");
+            Matcher m;
+            if ((m = p.matcher(line)).matches()) {
+                String[] s = {m.group(1), m.group(2), m.group(3), m.group(4)};
+                return s;
+            } else {
+                System.err.printf("ERROR: something");
+            }
         } else {
-            System.err.printf("ERROR: something");
+            Pattern a = Pattern.compile("([A-Za-z]\\w*)\\s*[\"as\"]\\w\\s*(\\w+)");
+            Matcher m;
+            if ((m = a.matcher(line)).matches()) {
+                String[] s = {m.group(1), m.group(2)};
+                return s;
+            } else {
+                System.err.printf("ERROR: something");
+            }
         }
         return null;
     }
+
 
     public String transact(String query) {
         Matcher m;
@@ -740,10 +756,10 @@ public class Database {
             if (operator.equals(">")) {
                 return first > second;
             }
-            if (operator.equals("<=") | operator.equals("=<")) {
+            if (operator.equals("<=") || operator.equals("=<")) {
                 return first <= second;
             }
-            if (operator.equals("=>") | (operator.equals(">="))) {
+            if (operator.equals("=>") || (operator.equals(">="))) {
                 return first >= second;
             }
         } else {
@@ -755,10 +771,10 @@ public class Database {
             if (operator.equals(">")) {
                 return first > second;
             }
-            if (operator.equals("<=") | operator.equals("=<")) {
+            if (operator.equals("<=") || operator.equals("=<")) {
                 return first <= second;
             }
-            if (operator.equals("=>") | (operator.equals(">="))) {
+            if (operator.equals("=>") || (operator.equals(">="))) {
                 return first >= second;
             }
         }
