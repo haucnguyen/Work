@@ -91,20 +91,6 @@ public class Selector {
             columnTypes.add(tablezz.getType.get(columnNamez.get(i)));
             columnBoth.add(tablezz.getBoth.get(columnNamez.get(i)));
         }
-        if (columnNamez.contains("+")) {
-            if (columnTypes.equals("int")) {
-
-            }
-        }
-        else if (columnNamez.contains("-")) {
-
-        }
-        else if (columnNamez.contains("*")) {
-
-        }
-        else if (columnNamez.contains("/")) {
-
-        }
         //creates a table object for the data just loaded from .tbl file
         tableToPrint = new Table(tablename, columnBoth, columnTypes, columnsToUse);
         return tableToPrint;

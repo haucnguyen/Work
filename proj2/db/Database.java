@@ -177,8 +177,12 @@ public class Database {
     }
 
     public String store(String tablename) {
+        Table table = getTable(tablename);
+        if (table == null) {
+            return "ERROR: yo man u can't load a table that don't exist";
+        }
         try {
-            Table table = getTable(tablename);
+            table = getTable(tablename);
             ArrayList<String> columnHeaders = table.columnNames;
             ArrayList<String> columnType = table.columnTypes;
             ArrayList<Columns> columns = table.columns;
@@ -310,7 +314,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
