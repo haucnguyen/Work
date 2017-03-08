@@ -314,7 +314,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = "examples/" + tablename + ".tbl";
+        String filename = tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
