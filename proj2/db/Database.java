@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
+    String pls;
 
     public Database() {
         databaseOfTables = new HashMap<>();
@@ -459,65 +460,8 @@ public class Database {
             }
             query = query.substring(index, query.length());
             if ((m = CREATE_CMD.matcher(query)).matches()) {
-                Matcher l = CREATE_NEW.matcher(m.group(1));
-                if (!l.matches()) {
-                    System.err.printf("Malformed select: %s\n", m.group(1));
-                } else {
-                    ArrayList<String> columns = new ArrayList<>(Arrays.asList
-                            (l.group(2).split(COMMA)));
-                    for (int a = 0; a < columns.size(); a++) {
-                        columns.set(a, columns.get(a).replaceAll("\\s+", " "));
-                    }
-                    String tableName = l.group(1);
-                    String[] cols = l.group(2).split(COMMA);
-                    ArrayList<String> columnHeaders = new ArrayList<>();
-                    StringJoiner joiner = new StringJoiner(", ");
-                    for (int a = 0; a < cols.length - 1; a++) {
-                        joiner.add(cols[a]);
-                    }
-                    for (String s : cols) {
-                        columnHeaders.add(s);
-                    }
-                    String colSentence = joiner.toString() + "and " + cols[cols.length - 1];
-                    System.out.printf("You are trying to create a table "
-                            + "named %s with the columns %s\n", tableName, colSentence);
-                    return createBasicTable(tableName, columnHeaders);
-                }
-            } else if ((m = CREATE_CMD.matcher(query)).matches()) {
-                Matcher l = CREATE_SEL.matcher(m.group(1));
-                if (!l.matches()) {
-                    System.err.printf("Malformed select: %s\n", m.group(1));
-                }
-                String tableName = l.group(1);
-                ArrayList<String> columnNamesToUse = new ArrayList<>();
-                ArrayList<String> fromWhatTables = new ArrayList<>();
-                ArrayList<String> whereClauses = new ArrayList<>();
-                String[] firstSplit = l.group(2).trim().split(COMMA);
-                for (String s : firstSplit) {
-                    if (s.contains(" as ")) {
-                        String[] a = asSelect(s);
-                        for (String b : a) {
-                            columnNamesToUse.add(b.trim());
-                        }
-                    } else {
-                        columnNamesToUse.add(s.trim());
-                    }
-                }
-                String[] secondSplit = l.group(3).split(COMMA);
-                for (String c : secondSplit) {
-                    fromWhatTables.add(c.trim());
-                }
-                if (l.group(4) != null) {
-                    String[] thirdSplit = l.group(3).split("\\s*and\\s*");
-                    for (String s : thirdSplit) {
-                        String[] a = clauseSelect(s);
-                        for (String b : a) {
-                            whereClauses.add(b);
-                        }
-                    }
-                    return createSelectedTables(tableName,
-                            columnNamesToUse, fromWhatTables, whereClauses);
-                }
+                createTable(m.group(1));
+                return pls;
             } else if ((m = LOAD_CMD.matcher(query)).matches()) {
                 return load(m.group(1));
             } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -525,61 +469,13 @@ public class Database {
             } else if ((m = DROP_CMD.matcher(query)).matches()) {
                 return dropTable(m.group(1));
             } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-                Matcher p = INSERT_CLS.matcher(m.group(1));
-                if (!p.matches()) {
-                    System.err.printf("Malformed insert: %s\n", m.group(1));
-                }
-                ArrayList<String> values = new ArrayList<>();
-                String[] splitThemUp = m.group(1).split("insert into |values ");
-                String tableName = splitThemUp[0];
-                String unsplitValues = splitThemUp[1];
-                String[] value = unsplitValues.split(",");
-                for (int a = 0; a < value.length; a++) {
-                    values.add(value[a].trim());
-                }
-                for (String s : values) {
-                    System.out.println(s);
-                }
-                return insertInto(tableName.trim(), values);
+               insertRow(m.group(1));
+               return pls;
             } else if ((m = PRINT_CMD.matcher(query)).matches()) {
                 return print(m.group(1).trim());
             } else if ((m = SELECT_CMD.matcher(query)).matches()) {
-                Matcher q = SELECT_CLS.matcher(m.group(1));
-                if (!q.matches()) {
-                    System.err.printf("Malformed select: %s\n", m.group(1));
-                }
-                ArrayList<String> columnNamesToUse = new ArrayList<>();
-                ArrayList<String> fromWhatTables = new ArrayList<>();
-                ArrayList<String> whereClauses = new ArrayList<>();
-                if (q.group(1).contains("*")) {
-                    columnNamesToUse.add("everything");
-                } else {
-                    String[] firstSplit = q.group(1).trim().split(COMMA);
-                    for (String s : firstSplit) {
-                        if (s.contains(" as ")) {
-                            String[] a = asSelect(s);
-                            for (String b : a) {
-                                columnNamesToUse.add(b.trim());
-                            }
-                        } else {
-                            columnNamesToUse.add(s.trim());
-                        }
-                    }
-                }
-                String[] secondSplit = q.group(2).split(COMMA);
-                for (String c : secondSplit) {
-                    fromWhatTables.add(c.trim());
-                }
-                if (q.group(3) != null) {
-                    String[] thirdSplit = q.group(3).split("\\s*and\\s*");
-                    for (String s : thirdSplit) {
-                        String[] a = clauseSelect(s);
-                        for (String b : a) {
-                            whereClauses.add(b);
-                        }
-                    }
-                }
-                return select(columnNamesToUse, fromWhatTables, whereClauses);
+                select(m.group(1));
+                return pls;
             } else {
                 System.err.printf("Malformed query: %s\n", query);
             }
@@ -589,6 +485,125 @@ public class Database {
         return "you fucked up somewhere fam";
     }
 
+    private void createTable(String expr) {
+        Matcher m;
+        if ((m = CREATE_NEW.matcher(expr)).matches()) {
+            createNewTable(m.group(1), m.group(2).split(COMMA));
+        } else if ((m = CREATE_SEL.matcher(expr)).matches()) {
+            createSelectedTable(m.group(1), m.group(2), m.group(3), m.group(4));
+        } else {
+            System.err.printf("Malformed create: %s\n", expr);
+        }
+    }
+
+    private void createNewTable(String name, String[] cols) {
+        StringJoiner joiner = new StringJoiner(", ");
+        ArrayList<String> columnHeaders = new ArrayList<>();
+        for (int i = 0; i < cols.length-1; i++) {
+            joiner.add(cols[i]);
+        }
+        for (String s : cols) {
+            columnHeaders.add(s);
+        }
+        pls = createBasicTable(name, columnHeaders);
+        String colSentence = joiner.toString() + " and " + cols[cols.length-1];
+        System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
+    }
+
+    private void createSelectedTable(String name, String exprs, String tables, String conds) {
+        ArrayList<String> columnNamesToUse = new ArrayList<>();
+        ArrayList<String> fromWhatTables = new ArrayList<>();
+        ArrayList<String> whereClauses = new ArrayList<>();
+        String[] firstSplit = exprs.trim().split(COMMA);
+        for (String s : firstSplit) {
+            if (s.contains(" as ")) {
+                String[] a = asSelect(s);
+                for (String b : a) {
+                    columnNamesToUse.add(b.trim());
+                }
+            } else {
+                columnNamesToUse.add(s.trim());
+            }
+        }
+        String[] secondSplit = tables.split(COMMA);
+        for (String c : secondSplit) {
+            fromWhatTables.add(c.trim());
+        }
+        if (conds != null) {
+            String[] thirdSplit = conds.split("\\s*and\\s*");
+            for (String s : thirdSplit) {
+                String[] a = clauseSelect(s);
+                for (String b : a) {
+                    whereClauses.add(b);
+                }
+            }
+            pls = createSelectedTables(name, columnNamesToUse, fromWhatTables, whereClauses);
+        }
+    }
+
+    private void insertRow(String expr) {
+        Matcher m = INSERT_CLS.matcher(expr);
+        if (!m.matches()) {
+            System.err.printf("Malformed insert: %s\n", expr);
+            return;
+        }
+        ArrayList<String> values = new ArrayList<>();
+        String[] splitValues = m.group(2).split(COMMA);
+        String tableName = m.group(1);
+        for (int a = 0; a < splitValues.length; a++) {
+            values.add(splitValues[a].trim());
+        }
+        pls = insertInto(tableName.trim(), values);
+        System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
+    }
+
+    private void select(String expr) {
+        Matcher m = SELECT_CLS.matcher(expr);
+        if (!m.matches()) {
+            System.err.printf("Malformed select: %s\n", expr);
+            return;
+        }
+
+        select(m.group(1), m.group(2), m.group(3));
+    }
+
+    private void select(String exprs, String tables, String conds) {
+        ArrayList<String> columnNamesToUse = new ArrayList<>();
+        ArrayList<String> fromWhatTables = new ArrayList<>();
+        ArrayList<String> whereClauses = new ArrayList<>();
+
+        if (exprs.contains("*")) {
+            columnNamesToUse.add("everything");
+        } else {
+            String[] firstSplit = exprs.trim().split(COMMA);
+            for (String s : firstSplit) {
+                if (s.contains(" as ")) {
+                    String[] a = asSelect(s);
+                    for (String b : a) {
+                        columnNamesToUse.add(b.trim());
+                    }
+                } else {
+                    columnNamesToUse.add(s.trim());
+                }
+            }
+        }
+        String[] secondSplit = tables.split(COMMA);
+        for (String c : secondSplit) {
+            fromWhatTables.add(c.trim());
+        }
+        if (conds != null) {
+            String[] thirdSplit = conds.split("\\s*and\\s*");
+            for (String s : thirdSplit) {
+                String[] a = clauseSelect(s);
+                for (String b : a) {
+                    whereClauses.add(b);
+                }
+            }
+        }
+        pls = select(columnNamesToUse, fromWhatTables, whereClauses);
+        System.out.printf("You are trying to select these expressions:" +
+                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+    }
 
     public String print(Table table) {
         //System.out.println("potato");
