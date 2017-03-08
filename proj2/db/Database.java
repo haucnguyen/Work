@@ -3,11 +3,14 @@ package db;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.HashMap;
 import java.io.FileReader;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringJoiner;
+import java.util.Arrays;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
@@ -460,7 +463,8 @@ public class Database {
                 if (!l.matches()) {
                     System.err.printf("Malformed select: %s\n", m.group(1));
                 } else {
-                    ArrayList<String> columns = new ArrayList<>(Arrays.asList(l.group(2).split(COMMA)));
+                    ArrayList<String> columns = new ArrayList<>(Arrays.asList
+                            (l.group(2).split(COMMA)));
                     for (int a = 0; a < columns.size(); a++) {
                         columns.set(a, columns.get(a).replaceAll("\\s+", " "));
                     }
@@ -479,39 +483,41 @@ public class Database {
                             + "named %s with the columns %s\n", tableName, colSentence);
                     return createBasicTable(tableName, columnHeaders);
                 }
-//        else if ((m = CREATE_CMD.matcher(query)).matches()) {
-//            Matcher l = CREATE_SEL.matcher(m.group(1));
-//            if (!l.matches()) {
-//                System.err.printf("Malformed select: %s\n", m.group(1));
-//            }
-//            String tableName = l.group(1);
-//            ArrayList<String> columnNamesToUse = new ArrayList<>();
-//            ArrayList<String> fromWhatTables = new ArrayList<>();
-//            ArrayList<String> whereClauses = new ArrayList<>();
-//            String[] firstSplit = l.group(2).trim().split(COMMA);
-//            for (String s : firstSplit) {
-//                if (s.contains(" as ")) {
-//                    String[] a = asSelect(s);
-//                    for (String b : a) {
-//                        columnNamesToUse.add(b.trim());
-//                    }
-//                } else {
-//                    columnNamesToUse.add(s.trim());
-//                }
-//            }
-//            String[] secondSplit = l.group(3).split(COMMA);
-//            for (String c : secondSplit) {
-//                fromWhatTables.add(c.trim());
-//            }
-//            if (l.group(4) != null) {
-//                String[] thirdSplit = l.group(3).split("\\s*and\\s*");
-//                for (String s : thirdSplit) {
-//                    String[] a = clauseSelect(s);
-//                    for (String b : a) {
-//                        whereClauses.add(b);
-//                    }
-//                }
-//                return createSelectedTables(tableName, columnNamesToUse, fromWhatTables, whereClauses);
+            } else if ((m = CREATE_CMD.matcher(query)).matches()) {
+                Matcher l = CREATE_SEL.matcher(m.group(1));
+                if (!l.matches()) {
+                    System.err.printf("Malformed select: %s\n", m.group(1));
+                }
+                String tableName = l.group(1);
+                ArrayList<String> columnNamesToUse = new ArrayList<>();
+                ArrayList<String> fromWhatTables = new ArrayList<>();
+                ArrayList<String> whereClauses = new ArrayList<>();
+                String[] firstSplit = l.group(2).trim().split(COMMA);
+                for (String s : firstSplit) {
+                    if (s.contains(" as ")) {
+                        String[] a = asSelect(s);
+                        for (String b : a) {
+                            columnNamesToUse.add(b.trim());
+                        }
+                    } else {
+                        columnNamesToUse.add(s.trim());
+                    }
+                }
+                String[] secondSplit = l.group(3).split(COMMA);
+                for (String c : secondSplit) {
+                    fromWhatTables.add(c.trim());
+                }
+                if (l.group(4) != null) {
+                    String[] thirdSplit = l.group(3).split("\\s*and\\s*");
+                    for (String s : thirdSplit) {
+                        String[] a = clauseSelect(s);
+                        for (String b : a) {
+                            whereClauses.add(b);
+                        }
+                    }
+                    return createSelectedTables(tableName,
+                            columnNamesToUse, fromWhatTables, whereClauses);
+                }
             } else if ((m = LOAD_CMD.matcher(query)).matches()) {
                 return load(m.group(1));
             } else if ((m = STORE_CMD.matcher(query)).matches()) {
@@ -577,12 +583,12 @@ public class Database {
             } else {
                 System.err.printf("Malformed query: %s\n", query);
             }
-        }
-        catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             System.err.printf("ERROR: Malformed Command!");
         }
         return "you fucked up somewhere fam";
     }
+
 
     public String print(Table table) {
         //System.out.println("potato");
@@ -662,24 +668,24 @@ public class Database {
     }
 
 
-    public String math(String a, String Operator, String b) {
+    public String math(String a, String operator, String b) {
         if (a.contains(".") | (b.contains("."))) {
             float first = Float.valueOf(a);
             float second = Float.valueOf(b);
             float temp;
-            if (Operator.equals("+")) {
+            if (operator.equals("+")) {
                 temp = first + second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("-")) {
+            if (operator.equals("-")) {
                 temp = first - second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("*")) {
+            if (operator.equals("*")) {
                 temp = first * second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("/")) {
+            if (operator.equals("/")) {
                 temp = first / second;
                 return String.valueOf(temp);
             }
@@ -687,19 +693,19 @@ public class Database {
             int first = Integer.parseInt(a);
             int second = Integer.parseInt(b);
             int temp;
-            if (Operator.equals("+")) {
+            if (operator.equals("+")) {
                 temp = first + second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("-")) {
+            if (operator.equals("-")) {
                 temp = first - second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("*")) {
+            if (operator.equals("*")) {
                 temp = first * second;
                 return String.valueOf(temp);
             }
-            if (Operator.equals("/")) {
+            if (operator.equals("/")) {
                 temp = first / second;
                 return String.valueOf(temp);
             }
@@ -707,35 +713,35 @@ public class Database {
         return "u fuked up somewhere";
     }
 
-    public boolean mathEquality(String a, String Operator, String b) {
+    public boolean mathEquality(String a, String operator, String b) {
         if (a.contains(".") | (b.contains("."))) {
             float first = Float.valueOf(a);
             float second = Float.valueOf(b);
-            if (Operator.equals("<")) {
+            if (operator.equals("<")) {
                 return first < second;
             }
-            if (Operator.equals(">")) {
+            if (operator.equals(">")) {
                 return first > second;
             }
-            if (Operator.equals("<=") | Operator.equals("=<")) {
+            if (operator.equals("<=") | operator.equals("=<")) {
                 return first <= second;
             }
-            if (Operator.equals("=>") | (Operator.equals(">="))) {
+            if (operator.equals("=>") | (operator.equals(">="))) {
                 return first >= second;
             }
         } else {
             int first = Integer.parseInt(a);
             int second = Integer.parseInt(b);
-            if (Operator.equals("<")) {
+            if (operator.equals("<")) {
                 return first < second;
             }
-            if (Operator.equals(">")) {
+            if (operator.equals(">")) {
                 return first > second;
             }
-            if (Operator.equals("<=") | Operator.equals("=<")) {
+            if (operator.equals("<=") | operator.equals("=<")) {
                 return first <= second;
             }
-            if (Operator.equals("=>") | (Operator.equals(">="))) {
+            if (operator.equals("=>") | (operator.equals(">="))) {
                 return first >= second;
             }
         }
