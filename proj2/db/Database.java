@@ -156,8 +156,8 @@ public class Database {
                             hi[1] = hi[1] + "00";
                             tempValue = hi[0] + "." + hi[1];
                         }
-                        Float hiNeil = Float.parseFloat(tempValue);
-                        theColumns.get(i).floatColumn.add(Float.valueOf(hiNeil + "00"));
+                        Float hiNeil = Float.valueOf(tempValue);
+                        theColumns.get(i).floatColumn.add(hiNeil);
                     }
                 } else if (tempType.equals("string")) {
                     if (tempValue.equals("NOVALUE")) {
