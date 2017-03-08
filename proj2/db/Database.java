@@ -85,7 +85,7 @@ public class Database {
         Table table = new Table(tablename, columnBoths, columnTypes, emptyColumns);
         databaseOfTables.put(tablename, table);
         //System.out.println(databaseOfTables.get(tablename));
-        //System.out.println("is this working??????????");
+        // System.out.println("is this working??????????");
         return "";
     }
 
@@ -97,8 +97,13 @@ public class Database {
             fromTables.add(getTable(fromWhat.get(i)));
         }
         Selector pleaseSelect = new Selector(namesToUse, fromTables, where);
-        databaseOfTables.put(tableName, pleaseSelect.tableToPrint);
-        return "";
+        if (!pleaseSelect.inCommon) {
+            Table table = pleaseSelect.cartesian();
+            databaseOfTables.put(tableName, table);
+            return "";
+        } else {
+            return "fuck not yet";
+        }
     }
 
     public String insertInto(String tablename, ArrayList<String> values) {
@@ -217,7 +222,15 @@ public class Database {
                             if (!input.contains(".")) {
                                 return "ERROR: yo man that aibt a flot eheh";
                             }
-                            rowToAdd.add(input);
+                            String[] hi = input.split(".");
+                            if (hi[1].length() >= 3) {
+                                hi[1] = hi[1].substring(0, 2);
+                                input = hi[0] + hi[1];
+                            }
+                            if (hi[1].length() == 2) {
+                                rowToAdd.add(input + "0");
+                            }
+                            rowToAdd.add(input + "00");
                         } catch (IllegalFormatConversionException e) {
                             return "ERROR: yo man this shit ain't a float";
                         }
@@ -328,7 +341,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
@@ -420,13 +433,23 @@ public class Database {
     //does not handle "where" clauses yet, simple select where there's only 1 table
     public String select(ArrayList<String> columnNamesToUse,
                          ArrayList<String> fromWhatTables, ArrayList<String> whereClauses) {
-
         ArrayList<Table> fromTables = new ArrayList<>();
         for (int i = 0; i < fromWhatTables.size(); i++) {
             fromTables.add(getTable(fromWhatTables.get(i)));
         }
+        if (columnNamesToUse.get(0).equals("everything")) {
+            System.out.println("good");
+            columnNamesToUse.remove(0);
+            for (int i = 0; i < fromTables.size(); i++) {
+                Table tempTable = fromTables.get(i);
+                for (int x = 0; x < tempTable.columnNames.size(); x++) {
+                    columnNamesToUse.add(x + i, tempTable.columnNames.get(x));
+                }
+            }
+        }
+
         Selector pleaseSelect = new Selector(columnNamesToUse, fromTables, whereClauses);
-        //return pleaseSelect.simpleSelect();
+        //return pleaseSelect.simpleSelect()
         if (!pleaseSelect.exists) {
             return "ERROR: columns requested don't exist in tables provided";
         }
@@ -437,7 +460,7 @@ public class Database {
             return pleaseSelect.join();
         }
         if (!pleaseSelect.inCommon) {
-            return pleaseSelect.cartesian();
+            return print(pleaseSelect.cartesian());
         } else {
             return "ERROR: idk it just didn't work man";
         }
@@ -472,38 +495,46 @@ public class Database {
 
 
     public String[] clauseSelect(String line) {
-        Pattern p = Pattern.compile("([A-Za-z]\\w*)\\s*(<=|>=|>|<|==|!=)\\s*(\'*\\w+\'*)");
-        Matcher m;
-        if ((m = p.matcher(line)).matches()) {
-            String[] s = {m.group(1), m.group(2), m.group(3)};
-            return s;
-        } else {
-            System.err.printf("ERROR: something");
+        try {
+            Pattern p = Pattern.compile("([A-Za-z]\\w*)\\s*(<=|>=|>|<|==|!=)\\s*(\'*\\w+\'*)");
+            Matcher m;
+            if ((m = p.matcher(line)).matches()) {
+                String[] s = {m.group(1), m.group(2), m.group(3)};
+                return s;
+            } else {
+                System.err.printf("ERROR: something");
+            }
+        } catch (IllegalStateException e) {
+            System.err.printf("ERROR: typed something wrong");
         }
         return null;
     }
 
     public String[] asSelect(String line) {
-        if (line.contains("<") || (line.contains(">")) || (line.contains("<="))
-                || (line.contains(">=")) || (line.contains("=<")) || (line.contains("=>"))) {
-            Pattern p = Pattern.compile
-                    ("([A-Za-z]\\w*)\\s*(\\*|\\/|\\+|\\-)\\s*(\\w+)\\s*[\"as\"]\\w+\\s*(\\w+)");
-            Matcher m;
-            if ((m = p.matcher(line)).matches()) {
-                String[] s = {m.group(1), m.group(2), m.group(3), m.group(4)};
-                return s;
+        try {
+            if (line.contains("<") || (line.contains(">")) || (line.contains("<="))
+                    || (line.contains(">=")) || (line.contains("=<")) || (line.contains("=>"))) {
+                Pattern p = Pattern.compile
+                        ("([A-Za-z]\\w*)\\s*(\\*|\\/|\\+|\\-)\\s*(\\w+)\\s*[\"as\"]\\w+\\s*(\\w+)");
+                Matcher m;
+                if ((m = p.matcher(line)).matches()) {
+                    String[] s = {m.group(1), m.group(2), m.group(3), m.group(4)};
+                    return s;
+                } else {
+                    System.err.printf("ERROR: something");
+                }
             } else {
-                System.err.printf("ERROR: something");
+                Pattern a = Pattern.compile("([A-Za-z]\\w*)\\s*[\"as\"]\\w\\s*(\\w+)");
+                Matcher m;
+                if ((m = a.matcher(line)).matches()) {
+                    String[] s = {m.group(1), m.group(2)};
+                    return s;
+                } else {
+                    System.err.printf("ERROR: something");
+                }
             }
-        } else {
-            Pattern a = Pattern.compile("([A-Za-z]\\w*)\\s*[\"as\"]\\w\\s*(\\w+)");
-            Matcher m;
-            if ((m = a.matcher(line)).matches()) {
-                String[] s = {m.group(1), m.group(2)};
-                return s;
-            } else {
-                System.err.printf("ERROR: something");
-            }
+        } catch (IllegalStateException e) {
+            System.err.printf("ERROR: typed something wrong");
         }
         return null;
     }
