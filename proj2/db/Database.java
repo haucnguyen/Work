@@ -6,9 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.IllegalFormatConversionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.StringJoiner;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
@@ -165,8 +169,7 @@ public class Database {
                     return "ERROR: why is this not fucking working";
                 }
             }
-        }
-        catch (IllegalFormatConversionException e) {
+        } catch (IllegalFormatConversionException e) {
             return "ERROR: pls work here";
         }
         //print(tablename);
@@ -315,28 +318,18 @@ public class Database {
         ArrayList<String> columnTypes = new ArrayList<>();
         ArrayList<String> theRows = new ArrayList<>();
         ArrayList<Columns> columnDataLists = new ArrayList<>();
-        int numColumns = 0;
-        int numRows = 0;
+        HashMap<String, String> columnMap = new HashMap<>();
+        int numColumns, numRows = 0;
         Table newTable;
         String filename = "examples/" + tablename + ".tbl";
-        HashMap<String, String> columnMap = new HashMap<>();
-        /*try {
-            FileInputStream file = new FileInputStream(tablename + ".tbl");
-        } catch (IOException e) {
-            //This code runs if there is an IOException. This allows the program to continue to run.
-        }*/
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
-
             initialColumns.add(columnReader.readLine());
-
             String columnString = initialColumns.get(0);
             columnBoth = new ArrayList<>(Arrays.asList(columnString.trim().split(COMMA)));
             numColumns = columnBoth.size();
-
-            //figure out the row situation
-            String line;
+            String line; //gets column names
             while ((line = columnReader.readLine()) != null) {
                 theRows.add(line);
                 numRows++;
@@ -345,16 +338,12 @@ public class Database {
             return "ERROR: that file don't exist man";
         }
         try {
-            //gets column names
-            for (int i = 0; i < numColumns; i++) {
+            for (int i = 0; i < numColumns; i++) { //gets column names
                 columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
             }
-
-            //gets column types
-            for (int i = 0; i < numColumns; i++) {
+            for (int i = 0; i < numColumns; i++) {  //gets column types
                 String both = columnBoth.get(i);
                 String justType = both.substring(both.lastIndexOf(" ") + 1);
-
                 //check to make sure type is only the 3 accepted
                 if (!justType.equals("int") && !justType.equals("string")
                         && !justType.equals("float")) {
@@ -362,43 +351,17 @@ public class Database {
                 }
                 columnTypes.add(justType);
             }
-            //puts shit in le columns
-            for (int i = 0; i < numColumns; i++) {
+            for (int i = 0; i < numColumns; i++) { //puts shit in le columns
                 ArrayList<String> tempList = new ArrayList<>();
                 String tempType = columnTypes.get(i);
-
                 for (int x = 0; x < numRows; x++) {
                     String stringRow = theRows.get(x);
                     String[] theRow = stringRow.split(",");
                     String tempValue = theRow[i];
-                    if (tempType.equals("int")) {
-                         if (tempValue.indexOf(".") > 0) {
-                            return "ERROR: come on man, integers can't have decimals";
-                        } else {
-                            try {
-                                Integer.parseInt(tempValue);
-                            } catch (NumberFormatException e) {
-                                return "ERROR: yo this shit ain't an integer, malformed table";
-                            }
-                        }
-                    } else if (tempType.equals("float")) {
-                        if (!tempValue.contains(".")) {
-                            return "ERROR: yo man floats need decimels";
-                        } else {
-                            try {
-                                Float.parseFloat(tempValue);
-                            } catch (NumberFormatException e) {
-                                return "ERROR: yo this shit ain't an float, malformed table";
-                            }
-                        }
 
-                    } else if (tempType.equals("string")) {
-                        if (!(tempValue instanceof String)) {
-                            return "ERROR: yo this shit ain't an string";
-                        }
-                        if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
-                            return "ERROR: yo this shit ain't an string";
-                        }
+                    Boolean idkError = loadHelper(tempValue, tempType);
+                    if (!idkError) {
+                        return "ERROR: yo man this is a fucking malformed table";
                     }
                     tempList.add(theRow[i]);
                 }
@@ -410,10 +373,41 @@ public class Database {
             newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
             databaseOfTables.put(tablename, newTable);
             return "";
-        }
-        catch (IllegalFormatConversionException e) {
+        } catch (IllegalFormatConversionException e) {
             return "ERROR: pls be this one";
         }
+    }
+
+    public Boolean loadHelper(String tempValue, String tempType) {
+        if (tempType.equals("int")) {
+            if (tempValue.indexOf(".") > 0) {
+                return false;
+            } else {
+                try {
+                    Integer.parseInt(tempValue);
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        } else if (tempType.equals("float")) {
+            if (!tempValue.contains(".")) {
+                return false;
+            } else {
+                try {
+                    Float.parseFloat(tempValue);
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        } else if (tempType.equals("string")) {
+            if (!(tempValue instanceof String)) {
+                return false;
+            }
+            if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     //does not handle "where" clauses yet, simple select where there's only 1 table
