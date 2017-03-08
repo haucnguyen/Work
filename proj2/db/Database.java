@@ -1,7 +1,5 @@
 package db;
 
-import edu.princeton.cs.algs4.In;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -432,8 +430,9 @@ public class Database {
             String[] s = {m.group(1), m.group(2), m.group(3)};
             return s;
         } else {
-            return null;
+            System.err.printf("ERROR: something");
         }
+        return null;
     }
 
     public String[] asSelect(String line) {
@@ -444,8 +443,9 @@ public class Database {
             String[] s = {m.group(1), m.group(2), m.group(3), m.group(4)};
             return s;
         } else {
-            return null;
+            System.err.printf("ERROR: something");
         }
+        return null;
     }
 
     public String transact(String query) {
@@ -549,7 +549,7 @@ public class Database {
             return;
         }
         if (m.group(2).contains("and")) {
-            System.out.printf("ERROR: THERE IS AN AND");
+            System.err.printf("ERROR: wrong input");
             return;
         }
         ArrayList<String> values = new ArrayList<>();
