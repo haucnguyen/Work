@@ -329,7 +329,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = "examples/" + tablename + ".tbl";
+        String filename = tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
