@@ -107,15 +107,11 @@ public class Database {
             return "ERROR: yo man u can't insert into a table that don't exist";
         }
         ArrayList<String> columnType = table.columnTypes;
-        //System.out.println(table.columnTypes);
-        // ArrayList<String> columnTypes = table.columnTypes;
         ArrayList<Columns> theColumns = new ArrayList<>();
         int tableWidth = 0;
         int tableDepth = 0;
-
         theColumns = table.columns;
         tableWidth = table.counter;
-
         //checks to make sure row is same width as column
         if (values.size() != tableWidth) {
             return "ERROR: yo man that row you tryin to insert ain't the right size";
@@ -132,7 +128,7 @@ public class Database {
                     } else {
                         try {
                             Integer.parseInt(tempValue);
-                        } catch (IllegalFormatConversionException e) {
+                        } catch (NumberFormatException e) {
                             return "ERROR: yo this shit ain't an integer";
                         }
                         theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
@@ -144,10 +140,10 @@ public class Database {
                     } else {
                         try {
                             Float.parseFloat(tempValue);
-                        } catch (IllegalFormatConversionException e) {
+                        } catch (NumberFormatException e) {
                             return "ERROR: yo this shit ain't an float";
                         }
-                        Float hiNeil = Float.parseFloat(String.format("%.2f", tempValue));
+                        Float hiNeil = Float.parseFloat(tempValue);
                         theColumns.get(i).floatColumn.add(hiNeil);
                     }
                     //System.out.println(theColumns.get(i).floatColumn);
@@ -156,15 +152,18 @@ public class Database {
                     if (tempValue.equals("NOVALUE")) {
                         theColumns.get(i).stringColumn.add("you motherfucker");
                     } else {
-                        if (!(tempValue instanceof String)) {
-                            return "ERROR: yo this shit ain't an string";
+                        try {
+                            if (!(tempValue instanceof String)) {
+                                return "ERROR: yo this shit ain't an string";
+                            }
+                            if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
+                                return "ERROR: yo this shit ain't an string";
+                            }
+                            theColumns.get(i).stringColumn.add(tempValue);
+                        } catch (NumberFormatException e) {
+                            return "ERROR: num error";
                         }
-                        if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
-                            return "ERROR: yo this shit ain't an string";
-                        }
-                        theColumns.get(i).stringColumn.add(tempValue);
                     }
-                    //System.out.println(theColumns.get(i).stringColumn);
                 } else {
                     return "ERROR: why is this not fucking working";
                 }
@@ -329,7 +328,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
@@ -444,9 +443,11 @@ public class Database {
         }
     }
 
-    public static final String REST = "\\s*(.*)\\s*",
+    public static final String
+            REST = "\\s*(.*)\\s*",
             COMMA = "\\s*,\\s*",
             AND = "\\s+and\\s+";
+
 
     // Stage 1 syntax, contains the command name.
     public static final Pattern CREATE_CMD = Pattern.compile("create table " + REST),
@@ -568,7 +569,6 @@ public class Database {
             columnHeaders.add(s.trim().replaceAll(" +", " "));
         }
         pls = createBasicTable(name, columnHeaders);
-        String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
     }
 
     private void createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -591,7 +591,7 @@ public class Database {
             fromWhatTables.add(c.trim());
         }
         if (conds != null) {
-            String[] thirdSplit = conds.split("\\s*and\\s*");
+            String[] thirdSplit = conds.split(AND);
             for (String s : thirdSplit) {
                 String[] a = clauseSelect(s);
                 for (String b : a) {
@@ -608,7 +608,7 @@ public class Database {
             System.err.printf("Malformed insert: %s\n", expr);
             return;
         }
-        if (m.group(2).contains(" and ")) {
+        if (m.group(2).contains(AND)) {
             System.err.printf("ERROR: wrong input");
             return;
         }
@@ -617,6 +617,7 @@ public class Database {
         String tableName = m.group(1);
         for (int a = 0; a < splitValues.length; a++) {
             values.add(splitValues[a].trim());
+            System.out.println(values);
         }
         pls = insertInto(tableName.trim(), values);
     }
@@ -656,7 +657,7 @@ public class Database {
             fromWhatTables.add(c.trim());
         }
         if (conds != null) {
-            String[] thirdSplit = conds.split("\\s*and\\s*");
+            String[] thirdSplit = conds.split(AND);
             for (String s : thirdSplit) {
                 String[] a = clauseSelect(s);
                 for (String b : a) {
