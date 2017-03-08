@@ -156,7 +156,7 @@ public class Database {
                             hi[1] = hi[1] + "00";
                             tempValue = hi[0] + "." + hi[1];
                         }
-                        Float hiNeil = Float.valueOf(tempValue);
+                        Float hiNeil = Float.parseFloat(tempValue);
                         theColumns.get(i).floatColumn.add(hiNeil);
                     }
                 } else if (tempType.equals("string")) {
@@ -290,7 +290,20 @@ public class Database {
                         if (tempColumn.floatColumn.get(i) == 666.0f) {
                             rowToPrint += "NOVALUE" + "\n";
                         } else {
-                            rowToPrint += Float.toString(tempColumn.floatColumn.get(i)) + "\n";
+                            String pop = Float.toString(tempColumn.floatColumn.get(i));
+                            String[] suckmyass = pop.split("\\.");
+                            if (suckmyass[1].length() >= 3) {
+                                suckmyass[1] = suckmyass[1].substring(0, 2);
+                                pop = suckmyass[0] +  "." + suckmyass[1];
+                            } else if (suckmyass[1].length() == 2) {
+                                suckmyass[1] = suckmyass[1] + "0";
+                                pop = suckmyass[0] + "." + suckmyass[1];
+                            } else {
+                                suckmyass[1] = suckmyass[1] + "00";
+                                pop = suckmyass[0] + "." + suckmyass[1];
+
+                            }
+                            rowToPrint += pop + "\n";
                         }
                         //System.out.print(tempColumn.floatColumn.get(i));
                     } else if (tempColumnType.equals("string")) {
