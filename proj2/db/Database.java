@@ -503,7 +503,7 @@ public class Database {
             joiner.add(cols[i]);
         }
         for (String s : cols) {
-            columnHeaders.add(s);
+            columnHeaders.add(s.trim().replaceAll(" +", " "));
         }
         pls = createBasicTable(name, columnHeaders);
         String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
