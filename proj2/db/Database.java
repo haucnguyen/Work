@@ -342,76 +342,72 @@ public class Database {
     }
 
     public String load(String tablename) {
+        boolean allLetters = tablename.matches("[a-zA-Z0-9]*");
+        if (!allLetters) {
+            return "ERROR: malformed table name";
+        }
+        ArrayList<String> columnBoth;
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<String> columnTypes = new ArrayList<>();
+        ArrayList<String> theRows = new ArrayList<>();
+        ArrayList<Columns> columnDataLists = new ArrayList<>();
+        HashMap<String, String> columnMap = new HashMap<>();
+        int numColumns, numRows = 0;
+        Table newTable;
+        String filename = tablename + ".tbl";
         try {
-            boolean allLetters = tablename.matches("[a-zA-Z0-9]*");
-            if (!allLetters) {
-                return "ERROR: malformed table name";
+            BufferedReader columnReader = new BufferedReader(new FileReader(filename));
+            ArrayList<String> initialColumns = new ArrayList<>();
+            initialColumns.add(columnReader.readLine());
+            String columnString = initialColumns.get(0);
+            columnBoth = new ArrayList<>(Arrays.asList(columnString.trim().split(COMMA)));
+            numColumns = columnBoth.size();
+            String line; //gets column names
+            while ((line = columnReader.readLine()) != null) {
+                theRows.add(line);
+                numRows++;
             }
-            ArrayList<String> columnBoth;
-            ArrayList<String> columnNames = new ArrayList<>();
-            ArrayList<String> columnTypes = new ArrayList<>();
-            ArrayList<String> theRows = new ArrayList<>();
-            ArrayList<Columns> columnDataLists = new ArrayList<>();
-            HashMap<String, String> columnMap = new HashMap<>();
-            int numColumns, numRows = 0;
-            Table newTable;
-            String filename = tablename + ".tbl";
-            try {
-                BufferedReader columnReader = new BufferedReader(new FileReader(filename));
-                ArrayList<String> initialColumns = new ArrayList<>();
-                initialColumns.add(columnReader.readLine());
-                String columnString = initialColumns.get(0);
-                columnBoth = new ArrayList<>(Arrays.asList(columnString.trim().split(COMMA)));
-                numColumns = columnBoth.size();
-                String line; //gets column names
-                while ((line = columnReader.readLine()) != null) {
-                    theRows.add(line);
-                    numRows++;
-                }
-            } catch (IOException e) {
-                return "ERROR: that file don't exist man";
+        } catch (IOException e) {
+            return "ERROR: that file don't exist man";
+        }
+        try {
+            for (int i = 0; i < numColumns; i++) { //gets column names
+                columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
             }
-            try {
-                for (int i = 0; i < numColumns; i++) { //gets column names
-                    columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
+            for (int i = 0; i < numColumns; i++) {  //gets column types
+                String both = columnBoth.get(i);
+                String justType = both.substring(both.lastIndexOf(" ") + 1);
+                //check to make sure type is only the 3 accepted
+                if (!justType.equals("int") && !justType.equals("string")
+                        && !justType.equals("float")) {
+                    return "ERROR: yo that's an incorrect type ya got there";
                 }
-                for (int i = 0; i < numColumns; i++) {  //gets column types
-                    String both = columnBoth.get(i);
-                    String justType = both.substring(both.lastIndexOf(" ") + 1);
-                    //check to make sure type is only the 3 accepted
-                    if (!justType.equals("int") && !justType.equals("string")
-                            && !justType.equals("float")) {
-                        return "ERROR: yo that's an incorrect type ya got there";
-                    }
-                    columnTypes.add(justType);
-                }
-                for (int i = 0; i < numColumns; i++) { //puts shit in le columns
-                    ArrayList<String> tempList = new ArrayList<>();
-                    String tempType = columnTypes.get(i);
-                    for (int x = 0; x < numRows; x++) {
-                        String stringRow = theRows.get(x);
-                        String[] theRow = stringRow.split(",");
-                        String tempValue = theRow[i];
+                columnTypes.add(justType);
+            }
+            for (int i = 0; i < numColumns; i++) { //puts shit in le columns
+                ArrayList<String> tempList = new ArrayList<>();
+                String tempType = columnTypes.get(i);
+                for (int x = 0; x < numRows; x++) {
+                    String stringRow = theRows.get(x);
+                    String[] theRow = stringRow.split(",");
+                    String tempValue = theRow[i];
 
-                        Boolean idkError = loadHelper(tempValue, tempType);
-                        if (!idkError) {
-                            return "ERROR: yo man this is a fucking malformed table";
-                        }
-                        tempList.add(theRow[i]);
+                    Boolean idkError = loadHelper(tempValue, tempType);
+                    if (!idkError) {
+                        return "ERROR: yo man this is a fucking malformed table";
                     }
-
-                    Columns newColumn = new Columns(tempType, tempList);
-                    columnDataLists.add(newColumn);
+                    tempList.add(theRow[i]);
                 }
-                //creates a table object for the data just loaded from .tbl file
-                newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
-                databaseOfTables.put(tablename, newTable);
-                return "";
-            } catch (IllegalFormatConversionException e) {
-                return "ERROR: pls be this one";
+
+                Columns newColumn = new Columns(tempType, tempList);
+                columnDataLists.add(newColumn);
             }
-        } catch (Error e) {
-            return "ERROR: YOU FUCKED UP MAN";
+            //creates a table object for the data just loaded from .tbl file
+            newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
+            databaseOfTables.put(tablename, newTable);
+            return "";
+        } catch (IllegalFormatConversionException e) {
+            return "ERROR: pls be this one";
         }
     }
 
