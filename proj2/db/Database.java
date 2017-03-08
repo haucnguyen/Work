@@ -564,7 +564,7 @@ public class Database {
             System.err.printf("Malformed insert: %s\n", expr);
             return;
         }
-        if (m.group(2).contains("and")) {
+        if (m.group(2).contains(" and ")) {
             System.err.printf("ERROR: wrong input");
             return;
         }
