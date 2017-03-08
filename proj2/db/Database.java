@@ -199,7 +199,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            File filename = new File("examples/" + tablename + ".tbl");
+            File filename = new File(tablename + ".tbl");
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -346,7 +346,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = "examples/" + tablename + ".tbl";
+        String filename = tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
