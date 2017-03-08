@@ -2,7 +2,12 @@ package db;
 
 import edu.princeton.cs.algs4.In;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -296,7 +301,6 @@ public class Database {
         if (!allLetters) {
             return "ERROR: malformed table name";
         }
-
         ArrayList<String> columnBoth;
         ArrayList<String> columnNames = new ArrayList<>();
         ArrayList<String> columnTypes = new ArrayList<>();
@@ -307,14 +311,6 @@ public class Database {
         Table newTable;
         String filename = tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
-        In file = null;
-        try {
-            file = new In(filename);
-        }
-        catch (RuntimeException e) {
-            System.out.print("ERROR" + filename + " not found");
-        }
-
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
         } catch (IOException e) {
@@ -453,17 +449,17 @@ public class Database {
     }
 
     public String transact(String query) {
-            Matcher m;
-            int index = 0, i = 0;
-            while (i < query.length()) {
-                if (query.charAt(i) == ' ') {
-                    index++;
-                } else if (query.charAt(i) != ' ') {
-                    break;
-                }
-                i++;
+        Matcher m;
+        int index = 0, i = 0;
+        while (i < query.length()) {
+            if (query.charAt(i) == ' ') {
+                index++;
+            } else if (query.charAt(i) != ' ') {
+                break;
             }
-            query = query.substring(index, query.length());
+            i++;
+        }
+        query = query.substring(index, query.length());
         try {
             if ((m = CREATE_CMD.matcher(query)).matches()) {
                 createTable(m.group(1));
@@ -513,8 +509,6 @@ public class Database {
         }
         pls = createBasicTable(name, columnHeaders);
         String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
-        System.out.printf("You are trying to create a table "
-                + "named %s with the columns %s\n", name, colSentence);
     }
 
     private void createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -561,8 +555,6 @@ public class Database {
             values.add(splitValues[a].trim());
         }
         pls = insertInto(tableName.trim(), values);
-        System.out.printf("You are trying to insert the "
-                + "row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
     private void select(String expr) {
@@ -609,9 +601,6 @@ public class Database {
             }
         }
         pls = select(columnNamesToUse, fromWhatTables, whereClauses);
-        System.out.printf("You are trying to select these expressions:"
-                + " '%s' from the join of these tables: '%s', filtered by "
-                + "these conditions: '%s'\n", exprs, tables, conds);
     }
 
     public String print(Table table) {
