@@ -6,12 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.FileWriter;
-import java.util.HashMap;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.ArrayList;
-import java.util.StringJoiner;
-import java.util.Arrays;
 
 public class Database {
     HashMap<String, Table> databaseOfTables;
@@ -119,54 +116,58 @@ public class Database {
         if (values.size() != tableWidth) {
             return "ERROR: yo man that row you tryin to insert ain't the right size";
         }
+        try {
+            for (int i = 0; i < tableWidth; i++) {
+                String tempType = columnType.get(i);
+                String tempValue = values.get(i);
+                if (tempType.equals("int")) {
+                    if (tempValue.equals("NOVALUE")) {
+                        theColumns.get(i).integerColumn.add(666);
+                    } else if (tempValue.indexOf(".") > 0) {
+                        return "ERROR: come on man, integers can't have decimals";
+                    } else {
+                        try {
+                            Integer.parseInt(tempValue);
+                        } catch (NumberFormatException e) {
+                            return "ERROR: yo this shit ain't an integer";
+                        }
+                        theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
+                    }
+                    //System.out.println(theColumns.get(i).integerColumn);
+                } else if (tempType.equals("float")) {
+                    if (tempValue.equals("NOVALUE")) {
+                        theColumns.get(i).floatColumn.add(666.0f);
+                    } else {
+                        try {
+                            Float.parseFloat(tempValue);
+                        } catch (NumberFormatException e) {
+                            return "ERROR: yo this shit ain't an float";
+                        }
+                        Float hiNeil = Float.parseFloat(String.format("%.2f", tempValue));
+                        theColumns.get(i).floatColumn.add(hiNeil);
+                    }
+                    //System.out.println(theColumns.get(i).floatColumn);
 
-        for (int i = 0; i < tableWidth; i++) {
-            String tempType = columnType.get(i);
-            String tempValue = values.get(i);
-            if (tempType.equals("int")) {
-                if (tempValue.equals("NOVALUE")) {
-                    theColumns.get(i).integerColumn.add(666);
-                } else if (tempValue.indexOf(".") > 0) {
-                    return "ERROR: come on man, integers can't have decimals";
+                } else if (tempType.equals("string")) {
+                    if (tempValue.equals("NOVALUE")) {
+                        theColumns.get(i).stringColumn.add("you motherfucker");
+                    } else {
+                        if (!(tempValue instanceof String)) {
+                            return "ERROR: yo this shit ain't an string";
+                        }
+                        if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
+                            return "ERROR: yo this shit ain't an string";
+                        }
+                        theColumns.get(i).stringColumn.add(tempValue);
+                    }
+                    //System.out.println(theColumns.get(i).stringColumn);
                 } else {
-                    try {
-                        Integer.parseInt(tempValue);
-                    } catch (NumberFormatException e) {
-                        return "ERROR: yo this shit ain't an integer";
-                    }
-                    theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
+                    return "ERROR: why is this not fucking working";
                 }
-                //System.out.println(theColumns.get(i).integerColumn);
-            } else if (tempType.equals("float")) {
-                if (tempValue.equals("NOVALUE")) {
-                    theColumns.get(i).floatColumn.add(666.0f);
-                } else {
-                    try {
-                        Float.parseFloat(tempValue);
-                    } catch (NumberFormatException e) {
-                        return "ERROR: yo this shit ain't an float";
-                    }
-                    Float hiNeil = Float.parseFloat(String.format("%.2f", tempValue));
-                    theColumns.get(i).floatColumn.add(hiNeil);
-                }
-                //System.out.println(theColumns.get(i).floatColumn);
-
-            } else if (tempType.equals("string")) {
-                if (tempValue.equals("NOVALUE")) {
-                    theColumns.get(i).stringColumn.add("you motherfucker");
-                } else {
-                    if (!(tempValue instanceof String)) {
-                        return "ERROR: yo this shit ain't an string";
-                    }
-                    if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
-                        return "ERROR: yo this shit ain't an string";
-                    }
-                    theColumns.get(i).stringColumn.add(tempValue);
-                }
-                //System.out.println(theColumns.get(i).stringColumn);
-            } else {
-                return "ERROR: why is this not fucking working";
             }
+        }
+        catch (IllegalFormatConversionException e) {
+            return "ERROR: pls work here";
         }
         //print(tablename);
         Table newTable = new Table(tablename, table.columnNames, columnType, theColumns);
@@ -206,6 +207,9 @@ public class Database {
                         rowToAdd.add(input);
                     } else if (tempColumnType.equals("float")) {
                         String input = Float.toString(tempColumn.floatColumn.get(i));
+                        if (!input.contains(".")) {
+                            return "ERROR: yo man that aibt a flot eheh";
+                        }
                         rowToAdd.add(input);
                     } else if (tempColumnType.equals("string")) {
                         String input = tempColumn.stringColumn.get(i);
@@ -314,7 +318,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
         /*try {
             FileInputStream file = new FileInputStream(tablename + ".tbl");
@@ -328,7 +332,7 @@ public class Database {
             initialColumns.add(columnReader.readLine());
 
             String columnString = initialColumns.get(0);
-            columnBoth = new ArrayList<>(Arrays.asList(columnString.trim().split("\\s*,\\s*")));
+            columnBoth = new ArrayList<>(Arrays.asList(columnString.trim().split(COMMA)));
             numColumns = columnBoth.size();
 
             //figure out the row situation
@@ -340,42 +344,76 @@ public class Database {
         } catch (IOException e) {
             return "ERROR: that file don't exist man";
         }
-
-        //gets column names
-        for (int i = 0; i < numColumns; i++) {
-            columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
-        }
-
-        //gets column types
-        for (int i = 0; i < numColumns; i++) {
-            String both = columnBoth.get(i);
-            String justType = both.substring(both.lastIndexOf(" ") + 1);
-
-            //check to make sure type is only the 3 accepted
-            if (!justType.equals("int") && !justType.equals("string")
-                    && !justType.equals("float")) {
-                return "ERROR: yo that's an incorrect type ya got there";
-            }
-            columnTypes.add(justType);
-        }
-        //puts shit in le columns
-        for (int i = 0; i < numColumns; i++) {
-            ArrayList<String> tempList = new ArrayList<>();
-            String tempColumnType = columnTypes.get(i);
-
-            for (int x = 0; x < numRows; x++) {
-                String stringRow = theRows.get(x);
-                String[] theRow = stringRow.split(",");
-                tempList.add(theRow[i]);
+        try {
+            //gets column names
+            for (int i = 0; i < numColumns; i++) {
+                columnNames.add((columnBoth.get(i)).replaceAll(" .*", ""));
             }
 
-            Columns newColumn = new Columns(tempColumnType, tempList);
-            columnDataLists.add(newColumn);
+            //gets column types
+            for (int i = 0; i < numColumns; i++) {
+                String both = columnBoth.get(i);
+                String justType = both.substring(both.lastIndexOf(" ") + 1);
+
+                //check to make sure type is only the 3 accepted
+                if (!justType.equals("int") && !justType.equals("string")
+                        && !justType.equals("float")) {
+                    return "ERROR: yo that's an incorrect type ya got there";
+                }
+                columnTypes.add(justType);
+            }
+            //puts shit in le columns
+            for (int i = 0; i < numColumns; i++) {
+                ArrayList<String> tempList = new ArrayList<>();
+                String tempType = columnTypes.get(i);
+
+                for (int x = 0; x < numRows; x++) {
+                    String stringRow = theRows.get(x);
+                    String[] theRow = stringRow.split(",");
+                    String tempValue = theRow[i];
+                    if (tempType.equals("int")) {
+                         if (tempValue.indexOf(".") > 0) {
+                            return "ERROR: come on man, integers can't have decimals";
+                        } else {
+                            try {
+                                Integer.parseInt(tempValue);
+                            } catch (NumberFormatException e) {
+                                return "ERROR: yo this shit ain't an integer, malformed table";
+                            }
+                        }
+                    } else if (tempType.equals("float")) {
+                        if (!tempValue.contains(".")) {
+                            return "ERROR: yo man floats need decimels";
+                        } else {
+                            try {
+                                Float.parseFloat(tempValue);
+                            } catch (NumberFormatException e) {
+                                return "ERROR: yo this shit ain't an float, malformed table";
+                            }
+                        }
+
+                    } else if (tempType.equals("string")) {
+                        if (!(tempValue instanceof String)) {
+                            return "ERROR: yo this shit ain't an string";
+                        }
+                        if (tempValue.matches("[-+]?\\d*\\.?\\d+")) {
+                            return "ERROR: yo this shit ain't an string";
+                        }
+                    }
+                    tempList.add(theRow[i]);
+                }
+
+                Columns newColumn = new Columns(tempType, tempList);
+                columnDataLists.add(newColumn);
+            }
+            //creates a table object for the data just loaded from .tbl file
+            newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
+            databaseOfTables.put(tablename, newTable);
+            return "";
         }
-        //creates a table object for the data just loaded from .tbl file
-        newTable = new Table(tablename, columnBoth, columnTypes, columnDataLists);
-        databaseOfTables.put(tablename, newTable);
-        return "";
+        catch (IllegalFormatConversionException e) {
+            return "ERROR: pls be this one";
+        }
     }
 
     //does not handle "where" clauses yet, simple select where there's only 1 table
