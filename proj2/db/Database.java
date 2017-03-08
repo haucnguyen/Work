@@ -180,7 +180,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            String filename = "examples/" + tablename + ".tbl";
+            String filename = tablename + ".tbl";
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -306,7 +306,7 @@ public class Database {
         int numColumns = 0;
         int numRows = 0;
         Table newTable;
-        String filename = ("examples/" + tablename + ".tbl");
+        String filename = tablename + ".tbl";
         HashMap<String, String> columnMap = new HashMap<>();
 
         /*try {
@@ -469,8 +469,8 @@ public class Database {
             } else if ((m = DROP_CMD.matcher(query)).matches()) {
                 return dropTable(m.group(1));
             } else if ((m = INSERT_CMD.matcher(query)).matches()) {
-               insertRow(m.group(1));
-               return pls;
+                insertRow(m.group(1));
+                return pls;
             } else if ((m = PRINT_CMD.matcher(query)).matches()) {
                 return print(m.group(1).trim());
             } else if ((m = SELECT_CMD.matcher(query)).matches()) {
@@ -499,15 +499,16 @@ public class Database {
     private void createNewTable(String name, String[] cols) {
         StringJoiner joiner = new StringJoiner(", ");
         ArrayList<String> columnHeaders = new ArrayList<>();
-        for (int i = 0; i < cols.length-1; i++) {
+        for (int i = 0; i < cols.length - 1; i++) {
             joiner.add(cols[i]);
         }
         for (String s : cols) {
             columnHeaders.add(s);
         }
         pls = createBasicTable(name, columnHeaders);
-        String colSentence = joiner.toString() + " and " + cols[cols.length-1];
-        System.out.printf("You are trying to create a table named %s with the columns %s\n", name, colSentence);
+        String colSentence = joiner.toString() + " and " + cols[cols.length - 1];
+        System.out.printf("You are trying to create a table "
+                + "named %s with the columns %s\n", name, colSentence);
     }
 
     private void createSelectedTable(String name, String exprs, String tables, String conds) {
@@ -554,7 +555,8 @@ public class Database {
             values.add(splitValues[a].trim());
         }
         pls = insertInto(tableName.trim(), values);
-        System.out.printf("You are trying to insert the row \"%s\" into the table %s\n", m.group(2), m.group(1));
+        System.out.printf("You are trying to insert the "
+                + "row \"%s\" into the table %s\n", m.group(2), m.group(1));
     }
 
     private void select(String expr) {
@@ -601,8 +603,9 @@ public class Database {
             }
         }
         pls = select(columnNamesToUse, fromWhatTables, whereClauses);
-        System.out.printf("You are trying to select these expressions:" +
-                " '%s' from the join of these tables: '%s', filtered by these conditions: '%s'\n", exprs, tables, conds);
+        System.out.printf("You are trying to select these expressions:"
+                + " '%s' from the join of these tables: '%s', filtered by "
+                + "these conditions: '%s'\n", exprs, tables, conds);
     }
 
     public String print(Table table) {
