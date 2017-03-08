@@ -113,11 +113,9 @@ public class Database {
         }
         ArrayList<String> columnType = table.columnTypes;
         ArrayList<Columns> theColumns = new ArrayList<>();
-        int tableWidth = 0;
-        int tableDepth = 0;
+        int tableWidth, tableDepth = 0;
         theColumns = table.columns;
         tableWidth = table.counter;
-        //checks to make sure row is same width as column
         if (values.size() != tableWidth) {
             return "ERROR: yo man that row you tryin to insert ain't the right size";
         }
@@ -138,7 +136,6 @@ public class Database {
                         }
                         theColumns.get(i).integerColumn.add(Integer.parseInt(tempValue));
                     }
-                    //System.out.println(theColumns.get(i).integerColumn);
                 } else if (tempType.equals("float")) {
                     if (tempValue.equals("NOVALUE")) {
                         theColumns.get(i).floatColumn.add(666.0f);
@@ -148,11 +145,20 @@ public class Database {
                         } catch (NumberFormatException e) {
                             return "ERROR: yo this shit ain't an float";
                         }
+                        String[] hi = tempValue.split("\\.");
+                        if (hi[1].length() >= 3) {
+                            hi[1] = hi[1].substring(0, 2);
+                            tempValue = hi[0] + hi[1];
+                        }
+                        if (hi[1].length() == 2) {
+                            hi[1] = hi[1] + "0";
+                            tempValue = hi[0] + hi[1];
+                        } else {
+                            tempValue = tempValue + "00";
+                        }
                         Float hiNeil = Float.parseFloat(tempValue);
                         theColumns.get(i).floatColumn.add(hiNeil);
                     }
-                    //System.out.println(theColumns.get(i).floatColumn);
-
                 } else if (tempType.equals("string")) {
                     if (tempValue.equals("NOVALUE")) {
                         theColumns.get(i).stringColumn.add("you motherfucker");
@@ -176,11 +182,8 @@ public class Database {
         } catch (IllegalFormatConversionException e) {
             return "ERROR: pls work here";
         }
-        //print(tablename);
         Table newTable = new Table(tablename, table.columnNames, columnType, theColumns);
-        //print(tablename);
         databaseOfTables.put(tablename, newTable);
-        //System.out.println("WHY AREN'T YOU WORKING");
         return "";
     }
 
@@ -196,7 +199,7 @@ public class Database {
             ArrayList<Columns> columns = table.columns;
             int tableDepth = table.depth;
             int tableWidth = table.counter;
-            File filename = new File(tablename + ".tbl");
+            File filename = new File("examples/" + tablename + ".tbl");
 
             FileWriter writer = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(writer);
@@ -222,15 +225,17 @@ public class Database {
                             if (!input.contains(".")) {
                                 return "ERROR: yo man that aibt a flot eheh";
                             }
-                            String[] hi = input.split(".");
+
+                            String[] hi = input.split("\\.");
                             if (hi[1].length() >= 3) {
                                 hi[1] = hi[1].substring(0, 2);
                                 input = hi[0] + hi[1];
                             }
                             if (hi[1].length() == 2) {
                                 rowToAdd.add(input + "0");
+                            } else {
+                                rowToAdd.add(input + "00");
                             }
-                            rowToAdd.add(input + "00");
                         } catch (IllegalFormatConversionException e) {
                             return "ERROR: yo man this shit ain't a float";
                         }
@@ -341,7 +346,7 @@ public class Database {
         HashMap<String, String> columnMap = new HashMap<>();
         int numColumns, numRows = 0;
         Table newTable;
-        String filename = tablename + ".tbl";
+        String filename = "examples/" + tablename + ".tbl";
         try {
             BufferedReader columnReader = new BufferedReader(new FileReader(filename));
             ArrayList<String> initialColumns = new ArrayList<>();
@@ -648,7 +653,6 @@ public class Database {
         String tableName = m.group(1);
         for (int a = 0; a < splitValues.length; a++) {
             values.add(splitValues[a].trim());
-            System.out.println(values);
         }
         pls = insertInto(tableName.trim(), values);
     }

@@ -1,2 +1,3 @@
-x int, y string, x float
-1, 'hi', 4.000
+x int,y string,x float
+1, hi',4.000
+1,'lol',9.000
