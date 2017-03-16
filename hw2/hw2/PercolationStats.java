@@ -20,8 +20,8 @@ public class PercolationStats {
             Percolation world = new Percolation(n);
             double count = 0;
             while (!world.percolates()) {
-                int x = StdRandom.uniform(1, n + 1);
-                int y = StdRandom.uniform(1, n + 1);
+                int x = StdRandom.uniform(0, n);
+                int y = StdRandom.uniform(0, n);
                 if (!world.isOpen(x, y)) {
                     world.open(x, y);
                     count++;
