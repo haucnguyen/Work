@@ -4,10 +4,10 @@ import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-    private double mean;
-    private double stddev;
-    private double confidenceLow;
-    private double confidenceHigh;
+    private double means;
+    private double stddevs;
+    private double confidenceLows;
+    private double confidenceHighs;
     private double[] num;
 
     public PercolationStats(int n, int trials) {
@@ -29,25 +29,25 @@ public class PercolationStats {
             }
             num[i] = (count / (n * n));
         }
-        stddev = StdStats.stddev(num);
-        mean = StdStats.mean(num);
-        confidenceLow = mean - (1.96 * stddev) / Math.sqrt(trials);
-        confidenceHigh = mean + (1.96 * stddev) / Math.sqrt(trials);
+        stddevs = StdStats.stddev(num);
+        means = StdStats.mean(num);
+        confidenceLows = means - (1.96 * stddevs) / Math.sqrt(trials);
+        confidenceHighs = means + (1.96 * stddevs) / Math.sqrt(trials);
     }
 
     public double mean() {
-        return mean;
+        return means;
     }
 
     public double stddev() {
-        return stddev;
+        return stddevs;
     }
 
     public double confidenceLow() {
-        return confidenceLow;
+        return confidenceLows;
     }
 
     public double confidenceHigh() {
-        return confidenceHigh;
+        return confidenceHighs;
     }
 }
