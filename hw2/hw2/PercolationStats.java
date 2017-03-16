@@ -1,30 +1,53 @@
 package hw2;
 
+import edu.princeton.cs.algs4.StdRandom;
+import edu.princeton.cs.algs4.StdStats;
+
 public class PercolationStats {
+    private double mean;
+    private double stddev;
+    private double confidenceLow;
+    private double confidenceHigh;
+    private double[] num;
 
-    // perform T independent experiments on an N-by-N grid
-    public PercolationStats(int N, int T) {
+    public PercolationStats(int n, int trials) {
+        if (n <= 0 || trials <= 0) {
+            throw new IllegalArgumentException();
+        }
 
+        num = new double[trials];
+        for (int i = 0; i < trials; i++) {
+            Percolation world = new Percolation(n);
+            double count = 0;
+            while (!world.percolates()) {
+                int x = StdRandom.uniform(1, n + 1);
+                int y = StdRandom.uniform(1, n + 1);
+                if (!world.isOpen(x, y)) {
+                    world.open(x, y);
+                    count++;
+                }
+            }
+            num[i] = (count / (n * n));
+        }
+        stddev = StdStats.stddev(num);
+        mean = StdStats.mean(num);
+        confidenceLow = mean - (1.96 * stddev) / Math.sqrt(trials);
+        confidenceHigh = mean + (1.96 * stddev) / Math.sqrt(trials);
     }
 
-    // sample mean of percolation threshold
     public double mean() {
-        return 0.0;
+        return mean;
     }
 
-    // sample standard deviation of percolation threshold
     public double stddev() {
-        return 0.0;
+        return stddev;
     }
 
-    // low  endpoint of 95% confidence interval
     public double confidenceLow() {
-        return 0.0;
+        return confidenceLow;
     }
 
-    // high endpoint of 95% confidence interval
     public double confidenceHigh() {
-        return 0.0;
+        return confidenceHigh;
     }
-
 }
