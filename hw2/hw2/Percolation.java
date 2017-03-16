@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     int openSites;
-    boolean world;
+    boolean world[][];
     int worldSize;
     int topSite;
     int bottomSite;
