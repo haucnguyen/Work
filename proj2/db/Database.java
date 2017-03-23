@@ -151,7 +151,7 @@ public class Database {
                             return "ERROR: yo this shit ain't an float";
                         }
                         String[] hi = tempValue.split("\\.");
-                        if (hi[1].length() >= 3) {
+                        if (hi[1].length() > 3) {
                             hi[1] = hi[1].substring(0, 2);
                             tempValue = hi[0] +  "." + hi[1];
                         } else if (hi[1].length() == 2) {
@@ -232,7 +232,7 @@ public class Database {
                             }
 
                             String[] hi = input.split("\\.");
-                            if (hi[1].length() >= 3) {
+                            if (hi[1].length() > 3) {
                                 hi[1] = hi[1].substring(0, 2);
                                 input = hi[0] + hi[1];
                             }
