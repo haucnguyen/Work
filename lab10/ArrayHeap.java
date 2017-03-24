@@ -27,24 +27,21 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * Returns the index of the node to the left of the node at i.
      */
     private static int leftIndex(int i) {
-        /* TODO: Your code here! */
-        return 0;
+        return 2 * i;
     }
 
     /**
      * Returns the index of the node to the right of the node at i.
      */
     private static int rightIndex(int i) {
-        /* TODO: Your code here! */
-        return 0;
+        return (2 * i) + 1;
     }
 
     /**
      * Returns the index of the node that is the parent of the node at i.
      */
     private static int parentIndex(int i) {
-        /* TODO: Your code here! */
-        return 0;
+        return 2 / i;
     }
 
     /**
@@ -106,9 +103,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void swim(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
-        /** TODO: Your code here. */
-        return;
+        while (index > 1 && contents[index/2].myPriority > contents[index].myPriority) {
+            swap(index, index/2);
+            index = index/2;
+        }
     }
 
     /**
@@ -118,10 +116,33 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        /** TODO: Your code here. */
-        return;
+        while (2 * index <= size) {
+            int lol = 2 * index;
+            if (lol < size && contents[lol].myPriority > contents[lol + 1].myPriority) {
+                lol++;
+            }
+            if (!(contents[index].myPriority > contents[lol].myPriority)) {
+                break;
+            }
+            swap(index, lol);
+            index = lol;
+        }
     }
 
+    private boolean isMinHeap() {
+        return isMinHeap(1);
+    }
+
+    private boolean isMinHeap(int a) {
+        int left = 2 * a;
+        int right = (2 * a) + 1;
+        if (a > size) {
+            return true;
+        }
+        if (right <= size && contents[a].myPriority > contents[right].myPriority) return false;
+        if (left <= size && contents[a].myPriority > contents[left].myPriority) return false;
+        return isMinHeap(left) && isMinHeap(right);
+    }
     /**
      * Inserts an item with the given priority value. This is enqueue, or offer.
      * To implement this method, add it to the end of the ArrayList, then swim it.
@@ -132,8 +153,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         if (size + 1 == contents.length) {
             resize(contents.length * 2);
         }
-
-        /* TODO: Your code here! */
+        contents[++size] = new Node(item, priority);
+        swim(size);
+        assert isMinHeap();
     }
 
     /**
@@ -142,8 +164,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        /* TODO: Your code here! */
-        return null;
+        return contents[1].item();
     }
 
     /**
@@ -157,8 +178,17 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        /* TODO: Your code here! */
-        return null;
+        if (size == 0) {
+            throw new IllegalArgumentException("pq overflow");
+        }
+        swap(1, size);
+        Node poop = contents[size--];
+        sink(1);
+        contents[size + 1] = null;
+        size--;
+        if ((size > 0) && (size == (contents.length - 1) / 4)) resize(contents.length / 2);
+        assert isMinHeap();
+        return poop.item();
     }
 
     /**
@@ -261,6 +291,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         }
         contents = temp;
     }
+
 
     @Test
     public void testIndexing() {
