@@ -5,6 +5,7 @@ import java.util.List;
 public class OomageTestUtility {
     public static boolean haveNiceHashCodeSpread(List<Oomage> oomages, int M) {
 
+        int bucketNum = (oomages.hashCode() & 0x7FFFFFFF) % M;
 
         /* TODO: Write a utility function that returns true if the given oomages 
          * have hashCodes that would distribute them fairly evenly across
