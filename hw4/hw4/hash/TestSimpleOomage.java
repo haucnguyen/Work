@@ -27,7 +27,7 @@ public class TestSimpleOomage {
         SimpleOomage two = new SimpleOomage(10, 5, 15);
         HashSet<SimpleOomage> hashSet = new HashSet<>();
         hashSet.add(one);
-        assertTrue(hashSet.contains(two));
+        assertTrue(hashSet.contains(one));
         /* TODO: Write a test that ensures the hashCode is perfect,
           meaning no two SimpleOomages should EVER have the same
           hashCode!
