@@ -8,7 +8,7 @@ public class OomageTestUtility {
         int[] lol = new int[M];
         int bucketNum;
         for (Oomage s: oomages) {
-            bucketNum = (oomages.hashCode() & 0x7FFFFFFF) % M;
+            bucketNum = (s.hashCode() & 0x7FFFFFFF) % M;
             lol[bucketNum]++;
         }
         for (int i = 0; i < M; i++) {
