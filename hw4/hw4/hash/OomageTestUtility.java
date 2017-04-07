@@ -6,8 +6,9 @@ import java.util.List;
 public class OomageTestUtility {
     public static boolean haveNiceHashCodeSpread(List<Oomage> oomages, int M) {
         int[] lol = new int[M];
+        int bucketNum;
         for (Oomage s: oomages) {
-            int bucketNum = (oomages.hashCode() & 0x7FFFFFFF) % M;
+            bucketNum = (oomages.hashCode() & 0x7FFFFFFF) % M;
             lol[bucketNum]++;
         }
         for (int i = 0; i < M; i++) {
