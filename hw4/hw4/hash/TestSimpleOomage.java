@@ -23,11 +23,13 @@ public class TestSimpleOomage {
 
     @Test
     public void testHashCodePerfect() {
-        SimpleOomage so = SimpleOomage.randomSimpleOomage();
-        int hashCode = so.hashCode();
-        for (int i = 0; i < 100; i += 1) {
-            assertNotEquals(hashCode, so.hashCode());
-        }
+        SimpleOomage ooA = new SimpleOomage(0, 0, 5);
+        int poop = ooA.hashCode();
+        SimpleOomage[] ooB = new SimpleOomage[2];
+        ooB[0] = new SimpleOomage(0, 5, 0);
+        ooB[1] = new SimpleOomage(5, 0, 0);
+        HashSet<SimpleOomage> hashSet = new HashSet<>();
+        assertTrue(hashSet.contains(ooA));
         /* TODO: Write a test that ensures the hashCode is perfect,
           meaning no two SimpleOomages should EVER have the same
           hashCode!
