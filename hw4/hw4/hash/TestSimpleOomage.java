@@ -27,8 +27,8 @@ public class TestSimpleOomage {
         int counter = 0;
         int poop = ooA.hashCode();
         SimpleOomage[] ooB = new SimpleOomage[2];
-        ooB[0] = new SimpleOomage(0, 5, 0);
-        ooB[1] = new SimpleOomage(5, 0, 0);
+        ooB[0] = new SimpleOomage(5, 10, 20);
+        ooB[1] = new SimpleOomage(5, 20, 10);
         HashSet<SimpleOomage> hashSet = new HashSet<>();
         hashSet.add(ooA);
         for (int i = 0; i < 2; i++) {
