@@ -12,7 +12,7 @@ import java.util.Collections;
  */
 public class Rasterer {
     QuadTree bananas = new QuadTree();
-    LinkedList plswork  = new LinkedList<QuadTree.Node>();
+    LinkedList<QuadTree.Node> plswork;
     HashSet lat;
     HashSet lon;
     // Recommended: QuadTree instance variable. You'll need to make
@@ -236,33 +236,31 @@ public class Rasterer {
      * @see #REQUIRED_RASTER_REQUEST_PARAMS
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-
+        plswork = new LinkedList<>();
         checkIt(bananas.root, params);
         for (int i = 0; i < plswork.size(); i++) {
-            QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
+            QuadTree.Node lol = plswork.get(i);
             lol.filename = "img/" + lol.filename + ".png";
         }
         lat = new HashSet();
         lon = new HashSet();
         for (int i = 0; i < plswork.size(); i++) {
-            QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
+            QuadTree.Node lol = plswork.get(i);
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
         }
         Collections.sort(plswork);
-        QuadTree.Node first = (QuadTree.Node) plswork.peekFirst();
-        QuadTree.Node last = (QuadTree.Node) plswork.peekLast();
-        double who = last.getLrlon();
-        double what = last.getLrlat();
-        double when = first.getUllon();
-        double where = first.getUllat();
-        int depth = last.getDepth() - 8;
+        double who = plswork.peekLast().getLrlon();
+        double what = plswork.peekLast().getLrlat();
+        double when = plswork.getFirst().getUllon();
+        double where = plswork.getFirst().getUllat();
+        int depth = plswork.peekLast().getDepth() - 8;
         boolean why = true;
-        System.out.println(what);
-        System.out.println(who);
-        System.out.println(when);
-        System.out.println(where);
-        System.out.println(depth);
+//        System.out.println(what);
+//        System.out.println(who);
+//        System.out.println(when);
+//        System.out.println(where);
+//        System.out.println(depth);
         String[][] itsok = new String[lat.size()][lon.size()];
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
