@@ -123,6 +123,7 @@ public class Rasterer {
 
 
     public void checkIt(QuadTree.Node poo, Map<String, Double> params) {
+        QuadTree.Node[] dick = poo.getNode();
         double lrlon = params.get("lrlon");
         double ullon = params.get("ullon");
         double lrlat = params.get("lrlat");
@@ -142,24 +143,27 @@ public class Rasterer {
         else {
             if (poo.Filename.length() < 7) {
                 for (int i = 0; i < 4; i++) {
-                    QuadTree.Node[] dick = poo.getNode();
-                    if (dick[i].latintersect(ullat, lrlat)) {
-                        if (dick[i].lonintersect(ullon, lrlon)) {
-//                            System.out.println(dick[i].Filename);
-                            if ((dick[i].LonDPP()) <= ((lrlon - ullon) / w)) {
-//                                System.out.println("poop");
+                    if (poo.Filename.length() == 7) {
+                        if (dick[i].latintersect(ullat, lrlat)) {
+                            if (dick[i].lonintersect(ullon, lrlon)) {
                                 plswork.add(dick[i]);
-//                                System.out.println(plswork.size());
+                            }
+                        }
+                    }
+                    else if (dick[i].latintersect(ullat, lrlat)) {
+                        if (dick[i].lonintersect(ullon, lrlon)) {
+                            if ((dick[i].LonDPP()) <= ((lrlon - ullon) / w)) {
+                                plswork.add(dick[i]);
                             } else {
                                 QuadTree.Node poops = dick[i];
                                 checkIt(poops, params);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-    }
 
 
 
@@ -203,7 +207,6 @@ public class Rasterer {
      * @see #REQUIRED_RASTER_REQUEST_PARAMS
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
-//        System.out.println("pls work");
         checkIt(bananas.root, params);
         for (int i = 0; i < plswork.size(); i++) {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
@@ -216,11 +219,6 @@ public class Rasterer {
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
         }
-//        for (int i = 0; i < plswork.size(); i++) {
-//            QuadTree.Node kok = (QuadTree.Node) plswork.get(i);
-//            System.out.println(kok.Filename);
-//        }
-//        System.out.println(plswork.size());
 
         Collections.sort(plswork);
 
@@ -237,7 +235,7 @@ public class Rasterer {
             QuadTree.Node kok = (QuadTree.Node) plswork.get(i);
             System.out.println(kok.Filename);
         }
-        QuadTree.Node first = (QuadTree.Node) plswork.get(1);
+        QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
         double raster_ul_lon = first.upperLeftlong;
         double raster_ul_lat = first.upperLeftlat;
