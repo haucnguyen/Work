@@ -223,7 +223,16 @@ public class Rasterer {
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
         }
-
+        Collections.sort(plswork);
+        String[][] itsok = new String[lat.size()][lon.size()];
+        for (int i = 0; i < lon.size(); i++) {
+            for (int e = 0; e < lat.size(); e++) {
+                for (int a = 0; a < plswork.size(); a++) {
+                    QuadTree.Node grid = (QuadTree.Node) plswork.get(a);
+                    itsok[e][i] = grid.filename;
+                }
+            }
+        }
         QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
         double who = first.bottomRightlong;
@@ -237,17 +246,9 @@ public class Rasterer {
 //        System.out.println(raster_ul_lat);
 //        System.out.println(raster_ul_lon);
 //        System.out.println(params);
-        Collections.sort(plswork);
-        String[][] itsok = new String[lat.size()][lon.size()];
 
-        for (int i = 0; i < lon.size(); i++) {
-            for (int e = 0; e < lat.size(); e++) {
-                for (int a = 0; a < plswork.size(); a++) {
-                    QuadTree.Node grid = (QuadTree.Node) plswork.get(a);
-                    itsok[e][i] = grid.filename;
-                }
-            }
-        }
+
+
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
