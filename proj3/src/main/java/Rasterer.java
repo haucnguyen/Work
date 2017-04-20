@@ -1,4 +1,8 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * This class provides all code necessary to take a query box and produce
@@ -22,11 +26,12 @@ public class Rasterer {
             double upperLeftlat = MapServer.ROOT_ULLAT;
             double bottomRightlong = MapServer.ROOT_LRLON;
             double bottomRightlat = MapServer.ROOT_LRLAT;
-            root = new Node(upperLeftlong, upperLeftlat, bottomRightlong, bottomRightlat, 0, "root");
+            root = new Node(upperLeftlong, upperLeftlat, bottomRightlong, bottomRightlat,
+                    0, "root");
         }
 
 
-        public class Node implements Comparable<Node>{
+        public class Node implements Comparable<Node> {
             double upperLeftlong;
             double upperLeftlat;
             double bottomRightlong;
@@ -38,15 +43,16 @@ public class Rasterer {
             Node topRight;
             Node bottomLeft;
             Node bottomRight;
-            String Filename;
+            String filename;
 
 
-            public Node(double upperLeftlong, double upperLeftlat, double bottomRightlong, double bottomRightlat, double depth, String Filename) {
+            public Node(double upperLeftlong, double upperLeftlat, double bottomRightlong,
+                        double bottomRightlat, double depth, String filename) {
                 this.upperLeftlong = upperLeftlong;
                 this.upperLeftlat = upperLeftlat;
                 this.bottomRightlong = bottomRightlong;
                 this.bottomRightlat = bottomRightlat;
-                this.Filename = Filename;
+                this.filename = filename;
                 this.depth = depth;
                 childNode();
             }
@@ -58,17 +64,21 @@ public class Rasterer {
             }
 
             public void childNode() {
-                if (Filename.equals("root")) {
-                    Filename = "";
+                if (filename.equals("root")) {
+                    filename = "";
                 }
-                if (this.Filename.length() == 7) {
+                if (this.filename.length() == 7) {
                     return;
                 }
                 this.middleSpot();
-                topLeft = new Node(upperLeftlong, upperLeftlat, middleMidlong, middleMidlat, Filename.length(), Filename + "1");
-                topRight = new Node(middleMidlong, upperLeftlat, bottomRightlong, middleMidlat, Filename.length(), Filename + "2");
-                bottomLeft = new Node(upperLeftlong, middleMidlat, middleMidlong, bottomRightlat, Filename.length(), Filename + "3");
-                bottomRight = new Node(middleMidlong, middleMidlat, bottomRightlong, bottomRightlat, Filename.length(), Filename + "4");
+                topLeft = new Node(upperLeftlong, upperLeftlat, middleMidlong, middleMidlat,
+                        filename.length(), filename + "1");
+                topRight = new Node(middleMidlong, upperLeftlat, bottomRightlong, middleMidlat,
+                        filename.length(), filename + "2");
+                bottomLeft = new Node(upperLeftlong, middleMidlat, middleMidlong, bottomRightlat,
+                        filename.length(), filename + "3");
+                bottomRight = new Node(middleMidlong, middleMidlat, bottomRightlong, bottomRightlat,
+                        filename.length(), filename + "4");
 
             }
 
@@ -77,7 +87,7 @@ public class Rasterer {
                 return lol;
             }
 
-            public double LonDPP() {
+            public double lonDPP() {
                 return (this.bottomRightlong - this.upperLeftlong) / 256;
             }
 
@@ -85,25 +95,17 @@ public class Rasterer {
                 if (upperLeftlat >= ullat && ullat >= bottomRightlat) {
                     return true;
                 }
-                else if (upperLeftlat >= lrlat && lrlat >= bottomRightlat) {
+                if (upperLeftlat >= lrlat && lrlat >= bottomRightlat) {
                     return true;
                 }
-                else if (upperLeftlat <= ullat && lrlat <= bottomRightlat) {
-                    return true;
-                }
-                else {
-                    return false;
-                }
+                return upperLeftlat <= ullat && lrlat <= bottomRightlat;
             }
 
             public boolean lonintersect(double ullon, double lrlon) {
                 if (upperLeftlong >= ullon && ullon <= bottomRightlong) {
                     return true;
-                }
-                else if (upperLeftlong <= lrlon && lrlon >= bottomRightlong) {
-                    return true;
                 } else {
-                    return false;
+                    return upperLeftlong <= lrlon && lrlon >= bottomRightlong;
                 }
             }
 
@@ -114,8 +116,7 @@ public class Rasterer {
                 }
                 if (this.upperLeftlong == o.upperLeftlong) {
                     return 0;
-                }
-                else {
+                } else {
                     return 1;
                 }
             }
@@ -131,40 +132,39 @@ public class Rasterer {
         double lrlat = params.get("lrlat");
         double ullat = params.get("ullat");
         double w = params.get("w");
-        if (poo.Filename.length() == 7) {
+        if (poo.filename.length() == 7) {
             if (poo.latintersect(ullat, lrlat)) {
                 if (poo.lonintersect(ullon, lrlon)) {
                     plswork.add(poo);
                 }
             }
         }
-        if (poo.Filename == "root") {
+        if (poo.filename.equals("root")) {
             if (poo.latintersect(ullat, lrlat)) {
                 if (poo.lonintersect(ullon, lrlon)) {
-                    if (poo.LonDPP() <= (lrlon - ullon / w)) {
+                    if (poo.lonDPP() <= (lrlon - ullon / w)) {
                         plswork.add(poo);
                     }
 
                 }
             }
-        }
-        else {
-            if (poo.Filename.length() < 7) {
+        } else {
+            if (poo.filename.length() < 7) {
                 for (int i = 0; i < 4; i++) {
                     if (dick[i].latintersect(ullat, lrlat)) {
                         if (dick[i].lonintersect(ullon, lrlon)) {
-                            if ((dick[i].LonDPP()) <= ((lrlon - ullon) / w)) {
+                            if ((dick[i].lonDPP()) <= ((lrlon - ullon) / w)) {
                                 plswork.add(dick[i]);
                             } else {
                                 QuadTree.Node poops = dick[i];
                                 checkIt(poops, params);
-                                    }
-                                }
                             }
                         }
                     }
                 }
             }
+        }
+    }
 
 
 
@@ -211,11 +211,11 @@ public class Rasterer {
         checkIt(bananas.root, params);
         for (int i = 0; i < plswork.size(); i++) {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
-            lol.Filename = "img/" + lol.Filename + ".png";
+            lol.filename = "img/" + lol.filename + ".png";
         }
         lat = new HashSet();
         lon = new HashSet();
-        for (int i = 0; i < plswork.size(); i ++) {
+        for (int i = 0; i < plswork.size(); i++) {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
@@ -223,12 +223,12 @@ public class Rasterer {
 
         QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
-        double raster_ul_lon = first.upperLeftlong;
-        double raster_ul_lat = first.upperLeftlat;
-        double raster_lr_lon = last.bottomRightlong;
-        double raster_lr_lat = last.bottomRightlat;
-        double depth = last.Filename.length();
-        boolean query_success = true;
+        double who = first.upperLeftlong;
+        double what = first.upperLeftlat;
+        double when = last.bottomRightlong;
+        double where = last.bottomRightlat;
+        double depth = last.filename.length();
+        boolean why = true;
 //        System.out.println(raster_lr_lat);
 //        System.out.println(raster_lr_lon);
 //        System.out.println(raster_ul_lat);
@@ -239,19 +239,19 @@ public class Rasterer {
         int count = 0;
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node render_grid = (QuadTree.Node) plswork.get(count);
-                itsok[e][i] = render_grid.Filename;
+                QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
+                itsok[e][i] = grid.filename;
                 count++;
             }
         }
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
-        results.put("raster_lr_lon", raster_lr_lon);
-        results.put("raster_lr_lat", raster_lr_lat);
-        results.put("raster_ul_lon", raster_ul_lon);
-        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("raster_lr_lon", who);
+        results.put("raster_lr_lat", what);
+        results.put("raster_ul_lon", when);
+        results.put("raster_ul_lat", where);
         results.put("depth", depth);
-        results.put("query_success", query_success);
+        results.put("query_success", why);
 //
 //        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
 //                           + "your browser.");
