@@ -1,10 +1,14 @@
 package hw4.hash;
 
+<<<<<<< HEAD
 import java.lang.reflect.Array;
+=======
+>>>>>>> e5eb1deae982c391e100a8fe3837e97db9d60f20
 import java.util.List;
 
 public class OomageTestUtility {
     public static boolean haveNiceHashCodeSpread(List<Oomage> oomages, int M) {
+<<<<<<< HEAD
         int[] lol = new int[M];
         int bucketNum;
         for (Oomage s: oomages) {
@@ -18,6 +22,8 @@ public class OomageTestUtility {
         }
         return true;
 
+=======
+>>>>>>> e5eb1deae982c391e100a8fe3837e97db9d60f20
         /* TODO: Write a utility function that returns true if the given oomages 
          * have hashCodes that would distribute them fairly evenly across
          * M buckets. To do this, convert each oomage's hashcode in the
@@ -25,5 +31,9 @@ public class OomageTestUtility {
          * and ensure that no bucket has fewer than N / 50
          * Oomages and no bucket has more than N / 2.5 Oomages.
          */
+<<<<<<< HEAD
+=======
+        return false;
+>>>>>>> e5eb1deae982c391e100a8fe3837e97db9d60f20
     }
 }

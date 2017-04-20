@@ -1,6 +1,9 @@
 package hw4.hash;
 
+<<<<<<< HEAD
 import org.junit.Assert;
+=======
+>>>>>>> e5eb1deae982c391e100a8fe3837e97db9d60f20
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -23,6 +26,7 @@ public class TestSimpleOomage {
 
     @Test
     public void testHashCodePerfect() {
+<<<<<<< HEAD
         SimpleOomage ooA = new SimpleOomage(0, 0, 5);
         int counter = 0;
         int poop = ooA.hashCode();
@@ -37,6 +41,8 @@ public class TestSimpleOomage {
             }
         }
         assertEquals(1, counter);
+=======
+>>>>>>> e5eb1deae982c391e100a8fe3837e97db9d60f20
         /* TODO: Write a test that ensures the hashCode is perfect,
           meaning no two SimpleOomages should EVER have the same
           hashCode!
