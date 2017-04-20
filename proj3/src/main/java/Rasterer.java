@@ -104,7 +104,11 @@ public class Rasterer {
             public boolean lonintersect(double ullon, double lrlon) {
                 if (upperLeftlong >= ullon && ullon <= bottomRightlong) {
                     return true;
-                } else {
+                }
+                if (upperLeftlong <= lrlon && ullon <= bottomRightlong) {
+                    return true;
+                }
+                else {
                     return upperLeftlong <= lrlon && lrlon >= bottomRightlong;
                 }
             }
@@ -223,10 +227,10 @@ public class Rasterer {
 
         QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
-        double who = first.upperLeftlong;
-        double what = first.upperLeftlat;
-        double when = last.bottomRightlong;
-        double where = last.bottomRightlat;
+        double who = first.bottomRightlong;
+        double what = first.bottomRightlat;
+        double when = last.upperLeftlong;
+        double where = last.upperLeftlat;
         double depth = last.filename.length();
         boolean why = true;
 //        System.out.println(raster_lr_lat);
@@ -236,9 +240,9 @@ public class Rasterer {
 //        System.out.println(params);
         Collections.sort(plswork);
         String[][] itsok = new String[lat.size()][lon.size()];
+        int count = 0;
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
-                int count = 0;
                 QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
                 itsok[e][i] = grid.filename;
                 count++;
