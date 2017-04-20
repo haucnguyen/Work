@@ -132,6 +132,10 @@ public class Rasterer {
                 return this.filename;
             }
 
+            public int getDepth() {
+                return this.filename.length();
+            }
+
 
             @Override
             public int compareTo(Node o) {
@@ -251,7 +255,7 @@ public class Rasterer {
         double what = last.getLrlat();
         double when = first.getUllon();
         double where = first.getUllat();
-        int depth = last.filename.length() - 8;
+        int depth = last.getDepth() - 8;
         boolean why = true;
         System.out.println(what);
         System.out.println(who);
