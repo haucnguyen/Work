@@ -128,6 +128,10 @@ public class Rasterer {
                 return this.bottomRightlat;
             }
 
+            public String getFilename() {
+                return this.filename;
+            }
+
 
             @Override
             public int compareTo(Node o) {
@@ -241,27 +245,26 @@ public class Rasterer {
             lon.add(lol.upperLeftlong);
         }
         Collections.sort(plswork);
-        String[][] itsok = new String[lat.size()][lon.size()];
-        int count = 0;
-        for (int i = 0; i < lon.size(); i++) {
-            for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
-                itsok[e][i] = grid.filename;
-                count++;
-            }
-        }
         QuadTree.Node first = (QuadTree.Node) plswork.peekFirst();
         QuadTree.Node last = (QuadTree.Node) plswork.peekLast();
         double who = last.getLrlon();
         double what = last.getLrlat();
         double when = first.getUllon();
         double where = first.getUllat();
-        double depth = last.filename.length();
+        double depth = last.filename.length() - 8;
         boolean why = true;
         System.out.println(what);
         System.out.println(who);
         System.out.println(when);
         System.out.println(where);
+        System.out.println(depth);
+        String[][] itsok = new String[lat.size()][lon.size()];
+        for (int i = 0; i < lon.size(); i++) {
+            for (int e = 0; e < lat.size(); e++) {
+                QuadTree.Node lol = (QuadTree.Node) plswork.removeFirst();
+                itsok[e][i] = lol.getFilename();
+            }
+        }
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
