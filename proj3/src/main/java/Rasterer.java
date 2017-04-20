@@ -102,7 +102,7 @@ public class Rasterer {
             }
 
             public boolean lonintersect(double ullon, double lrlon) {
-                if (upperLeftlong >= ullon && ullon <= bottomRightlong) {
+                if (upperLeftlong <= ullon && ullon <= bottomRightlong) {
                     return true;
                 }
                 if (upperLeftlong <= lrlon && ullon <= bottomRightlong) {
