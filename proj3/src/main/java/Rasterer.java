@@ -17,6 +17,12 @@ public class Rasterer {
     HashSet lon;
     String[][] itsok;
     Map<String, Object> results;
+    double who;
+    double what;
+    double when;
+    double where;
+    int depthh;
+
     // Recommended: QuadTree instance variable. You'll need to make
     //              your own QuadTree since there is no built-in quadtree in Java.
 
@@ -252,11 +258,11 @@ public class Rasterer {
             lon.add(lol.upperLeftlong);
         }
         Collections.sort(plswork);
-        double who = plswork.peekLast().getLrlon();
-        double what = plswork.peekLast().getLrlat();
-        double when = plswork.getFirst().getUllon();
-        double where = plswork.getFirst().getUllat();
-        int depth = plswork.peekLast().getDepth() - 8;
+        who = plswork.peekLast().getLrlon();
+        what = plswork.peekLast().getLrlat();
+        when = plswork.getFirst().getUllon();
+        where = plswork.getFirst().getUllat();
+        depthh = plswork.peekLast().getDepth() - 8;
         boolean why = true;
 //        System.out.println(what);
 //        System.out.println(who);
@@ -270,7 +276,7 @@ public class Rasterer {
         results.put("raster_lr_lat", what);
         results.put("raster_ul_lon", when);
         results.put("raster_ul_lat", where);
-        results.put("depth", depth);
+        results.put("depth", depthh);
         results.put("query_success", why);
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
