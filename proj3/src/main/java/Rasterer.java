@@ -236,9 +236,9 @@ public class Rasterer {
 //        System.out.println(params);
         Collections.sort(plswork);
         String[][] itsok = new String[lat.size()][lon.size()];
-        int count = 0;
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
+                int count = 0;
                 QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
                 itsok[e][i] = grid.filename;
                 count++;
