@@ -236,6 +236,7 @@ public class Rasterer {
      * @see #REQUIRED_RASTER_REQUEST_PARAMS
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
+
         checkIt(bananas.root, params);
         for (int i = 0; i < plswork.size(); i++) {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
@@ -263,12 +264,6 @@ public class Rasterer {
         System.out.println(where);
         System.out.println(depth);
         String[][] itsok = new String[lat.size()][lon.size()];
-        for (int i = 0; i < lon.size(); i++) {
-            for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node lol = (QuadTree.Node) plswork.removeFirst();
-                itsok[e][i] = lol.getFilename();
-            }
-        }
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
@@ -277,6 +272,12 @@ public class Rasterer {
         results.put("raster_ul_lat", where);
         results.put("depth", depth);
         results.put("query_success", why);
+        for (int i = 0; i < lon.size(); i++) {
+            for (int e = 0; e < lat.size(); e++) {
+                QuadTree.Node lol = (QuadTree.Node) plswork.removeFirst();
+                itsok[e][i] = lol.getFilename();
+            }
+        }
 //
 //        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
 //                           + "your browser.");
