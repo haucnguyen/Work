@@ -231,6 +231,9 @@ public class Rasterer {
                 QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
                 itsok[e][i] = grid.filename;
                 count++;
+                if (count == plswork.size()) {
+                    break;
+                }
             }
         }
         QuadTree.Node first = (QuadTree.Node) this.plswork.get(0);
