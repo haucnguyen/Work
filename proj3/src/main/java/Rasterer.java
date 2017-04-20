@@ -108,9 +108,26 @@ public class Rasterer {
                 if (upperLeftlong <= lrlon && ullon <= bottomRightlong) {
                     return true;
                 } else {
-                    return upperLeftlong <= lrlon && lrlon >= bottomRightlong;
+                    return upperLeftlong <= lrlon && lrlon <= bottomRightlong;
                 }
             }
+
+            public double getUllon() {
+                return this.upperLeftlong;
+            }
+
+            public double getUllat() {
+                return this.upperLeftlat;
+            }
+
+            public double getLrlon() {
+                return this.bottomRightlong;
+            }
+
+            public double getLrlat() {
+                return this.bottomRightlat;
+            }
+
 
             @Override
             public int compareTo(Node o) {
@@ -231,23 +248,20 @@ public class Rasterer {
                 QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
                 itsok[e][i] = grid.filename;
                 count++;
-                if (count == plswork.size()) {
-                    break;
-                }
             }
         }
-        QuadTree.Node first = (QuadTree.Node) this.plswork.get(0);
-        QuadTree.Node last = (QuadTree.Node) this.plswork.get(this.plswork.size() - 1);
-        double who = last.bottomRightlong;
-        double what = last.bottomRightlat;
-        double when = first.upperLeftlong;
-        double where = first.upperLeftlat;
+        QuadTree.Node first = (QuadTree.Node) plswork.peekFirst();
+        QuadTree.Node last = (QuadTree.Node) plswork.peekLast();
+        double who = last.getLrlon();
+        double what = last.getLrlat();
+        double when = first.getUllon();
+        double where = first.getUllat();
         double depth = last.filename.length();
         boolean why = true;
-//        System.out.println(what);
-//        System.out.println(who);
-//        System.out.println(where);
-//        System.out.println(when);
+        System.out.println(what);
+        System.out.println(who);
+        System.out.println(when);
+        System.out.println(where);
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
