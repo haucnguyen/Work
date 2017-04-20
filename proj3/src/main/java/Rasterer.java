@@ -38,7 +38,7 @@ public class Rasterer {
             double bottomRightlat;
             double middleMidlong;
             double middleMidlat;
-            double depth;
+            int depth;
             Node topLeft;
             Node topRight;
             Node bottomLeft;
@@ -47,7 +47,7 @@ public class Rasterer {
 
 
             public Node(double upperLeftlong, double upperLeftlat, double bottomRightlong,
-                        double bottomRightlat, double depth, String filename) {
+                        double bottomRightlat, int depth, String filename) {
                 this.upperLeftlong = upperLeftlong;
                 this.upperLeftlat = upperLeftlat;
                 this.bottomRightlong = bottomRightlong;
@@ -251,7 +251,7 @@ public class Rasterer {
         double what = last.getLrlat();
         double when = first.getUllon();
         double where = first.getUllat();
-        double depth = last.filename.length() - 8;
+        int depth = last.filename.length() - 8;
         boolean why = true;
         System.out.println(what);
         System.out.println(who);
