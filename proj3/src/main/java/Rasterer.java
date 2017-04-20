@@ -9,6 +9,8 @@ import java.util.*;
 public class Rasterer {
     QuadTree bananas = new QuadTree();
     LinkedList plswork  = new LinkedList<QuadTree.Node>();
+    HashSet lat;
+    HashSet lon;
     // Recommended: QuadTree instance variable. You'll need to make
     //              your own QuadTree since there is no built-in quadtree in Java.
 
@@ -129,11 +131,17 @@ public class Rasterer {
         double lrlat = params.get("lrlat");
         double ullat = params.get("ullat");
         double w = params.get("w");
+        if (poo.Filename.length() == 7) {
+            if (poo.latintersect(ullat, lrlat)) {
+                if (poo.lonintersect(ullon, lrlon)) {
+                    plswork.add(poo);
+                }
+            }
+        }
         if (poo.Filename == "root") {
             if (poo.latintersect(ullat, lrlat)) {
                 if (poo.lonintersect(ullon, lrlon)) {
                     if (poo.LonDPP() <= (lrlon - ullon / w)) {
-//                        System.out.println("pooooooop");
                         plswork.add(poo);
                     }
 
@@ -143,14 +151,7 @@ public class Rasterer {
         else {
             if (poo.Filename.length() < 7) {
                 for (int i = 0; i < 4; i++) {
-                    if (poo.Filename.length() == 7) {
-                        if (dick[i].latintersect(ullat, lrlat)) {
-                            if (dick[i].lonintersect(ullon, lrlon)) {
-                                plswork.add(dick[i]);
-                            }
-                        }
-                    }
-                    else if (dick[i].latintersect(ullat, lrlat)) {
+                    if (dick[i].latintersect(ullat, lrlat)) {
                         if (dick[i].lonintersect(ullon, lrlon)) {
                             if ((dick[i].LonDPP()) <= ((lrlon - ullon) / w)) {
                                 plswork.add(dick[i]);
@@ -212,29 +213,14 @@ public class Rasterer {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
             lol.Filename = "img/" + lol.Filename + ".png";
         }
-        HashSet lat = new HashSet();
-        HashSet lon = new HashSet();
+        lat = new HashSet();
+        lon = new HashSet();
         for (int i = 0; i < plswork.size(); i ++) {
             QuadTree.Node lol = (QuadTree.Node) plswork.get(i);
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
         }
 
-        Collections.sort(plswork);
-
-        String[][] itsok = new String[lat.size()][lon.size()];
-        int count = 0;
-        for (int i = 0; i < lon.size(); i++) {
-            for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node render_grid = (QuadTree.Node) plswork.get(count);
-                itsok[e][i] = render_grid.Filename;
-                count++;
-            }
-        }
-        for (int i = 0; i < plswork.size(); i++) {
-            QuadTree.Node kok = (QuadTree.Node) plswork.get(i);
-            System.out.println(kok.Filename);
-        }
         QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
         double raster_ul_lon = first.upperLeftlong;
@@ -248,6 +234,16 @@ public class Rasterer {
 //        System.out.println(raster_ul_lat);
 //        System.out.println(raster_ul_lon);
 //        System.out.println(params);
+        Collections.sort(plswork);
+        String[][] itsok = new String[lat.size()][lon.size()];
+        int count = 0;
+        for (int i = 0; i < lon.size(); i++) {
+            for (int e = 0; e < lat.size(); e++) {
+                QuadTree.Node render_grid = (QuadTree.Node) plswork.get(count);
+                itsok[e][i] = render_grid.Filename;
+                count++;
+            }
+        }
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", raster_lr_lon);
