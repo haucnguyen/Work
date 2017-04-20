@@ -107,8 +107,7 @@ public class Rasterer {
                 }
                 if (upperLeftlong <= lrlon && ullon <= bottomRightlong) {
                     return true;
-                }
-                else {
+                } else {
                     return upperLeftlong <= lrlon && lrlon >= bottomRightlong;
                 }
             }
@@ -240,12 +239,13 @@ public class Rasterer {
 //        System.out.println(params);
         Collections.sort(plswork);
         String[][] itsok = new String[lat.size()][lon.size()];
-        int count = 0;
+
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
-                itsok[e][i] = grid.filename;
-                count++;
+                for (int a = 0; a < plswork.size(); a++) {
+                    QuadTree.Node grid = (QuadTree.Node) plswork.get(a);
+                    itsok[e][i] = grid.filename;
+                }
             }
         }
         Map<String, Object> results = new HashMap<>();
