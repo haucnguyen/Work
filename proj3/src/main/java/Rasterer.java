@@ -15,6 +15,8 @@ public class Rasterer {
     LinkedList<QuadTree.Node> plswork;
     HashSet lat;
     HashSet lon;
+    String[][] itsok;
+    Map<String, Object> results;
     // Recommended: QuadTree instance variable. You'll need to make
     //              your own QuadTree since there is no built-in quadtree in Java.
 
@@ -261,8 +263,8 @@ public class Rasterer {
 //        System.out.println(when);
 //        System.out.println(where);
 //        System.out.println(depth);
-        String[][] itsok = new String[lat.size()][lon.size()];
-        Map<String, Object> results = new HashMap<>();
+        itsok = new String[lat.size()][lon.size()];
+        results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
         results.put("raster_lr_lat", what);
@@ -272,7 +274,7 @@ public class Rasterer {
         results.put("query_success", why);
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node lol = (QuadTree.Node) plswork.removeFirst();
+                QuadTree.Node lol = plswork.removeFirst();
                 itsok[e][i] = lol.getFilename();
             }
         }
