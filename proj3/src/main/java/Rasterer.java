@@ -225,30 +225,26 @@ public class Rasterer {
         }
         Collections.sort(plswork);
         String[][] itsok = new String[lat.size()][lon.size()];
+        int count = 0;
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
-                for (int a = 0; a < plswork.size(); a++) {
-                    QuadTree.Node grid = (QuadTree.Node) plswork.get(a);
-                    itsok[e][i] = grid.filename;
-                }
+                QuadTree.Node grid = (QuadTree.Node) plswork.get(count);
+                itsok[e][i] = grid.filename;
+                count++;
             }
         }
-        QuadTree.Node first = (QuadTree.Node) plswork.get(0);
-        QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
+        QuadTree.Node first = (QuadTree.Node) this.plswork.get(0);
+        QuadTree.Node last = (QuadTree.Node) this.plswork.get(this.plswork.size() - 1);
         double who = last.bottomRightlong;
         double what = last.bottomRightlat;
         double when = first.upperLeftlong;
         double where = first.upperLeftlat;
         double depth = last.filename.length();
         boolean why = true;
-//        System.out.println(raster_lr_lat);
-//        System.out.println(raster_lr_lon);
-//        System.out.println(raster_ul_lat);
-//        System.out.println(raster_ul_lon);
-//        System.out.println(params);
-
-
-
+//        System.out.println(what);
+//        System.out.println(who);
+//        System.out.println(where);
+//        System.out.println(when);
         Map<String, Object> results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
