@@ -235,10 +235,10 @@ public class Rasterer {
         }
         QuadTree.Node first = (QuadTree.Node) plswork.get(0);
         QuadTree.Node last = (QuadTree.Node) plswork.get(plswork.size() - 1);
-        double who = first.bottomRightlong;
-        double what = first.bottomRightlat;
-        double when = last.upperLeftlong;
-        double where = last.upperLeftlat;
+        double who = last.bottomRightlong;
+        double what = last.bottomRightlat;
+        double when = first.upperLeftlong;
+        double where = first.upperLeftlat;
         double depth = last.filename.length();
         boolean why = true;
 //        System.out.println(raster_lr_lat);
