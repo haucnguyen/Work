@@ -246,10 +246,6 @@ public class Rasterer {
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         plswork = new LinkedList<>();
         checkIt(bananas.root, params);
-        for (int i = 0; i < plswork.size(); i++) {
-            QuadTree.Node lol = plswork.get(i);
-            lol.filename = "img/" + lol.filename + ".png";
-        }
         lat = new HashSet();
         lon = new HashSet();
         for (int i = 0; i < plswork.size(); i++) {
@@ -257,19 +253,29 @@ public class Rasterer {
             lat.add(lol.upperLeftlat);
             lon.add(lol.upperLeftlong);
         }
+
         Collections.sort(plswork);
-        who = plswork.peekLast().getLrlon();
-        what = plswork.peekLast().getLrlat();
+
         when = plswork.getFirst().getUllon();
         where = plswork.getFirst().getUllat();
-        depthh = plswork.peekLast().getDepth() - 8;
+        who = plswork.peekLast().getLrlon();
+        what = plswork.peekLast().getLrlat();
         boolean why = true;
-//        System.out.println(what);
-//        System.out.println(who);
-//        System.out.println(when);
-//        System.out.println(where);
-//        System.out.println(depth);
+
+        System.out.println(what);
+        System.out.println(who);
+        System.out.println(when);
+        System.out.println(where);
+        System.out.println(depthh);
         itsok = new String[lat.size()][lon.size()];
+
+        for (int i = 0; i < plswork.size(); i++) {
+            QuadTree.Node lolp = plswork.get(i);
+            lolp.filename = "img/" + lolp.filename + ".png";
+        }
+
+        depthh = plswork.peekLast().getDepth() - 8;
+
         results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
