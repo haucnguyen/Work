@@ -255,11 +255,24 @@ public class Rasterer {
         }
 
         Collections.sort(plswork);
+        for (int i = 0; i < plswork.size(); i++) {
+            QuadTree.Node poo = plswork.get(i);
+            System.out.println(poo);
+        }
 
-        when = plswork.peekFirst().getUllon();
-        where = plswork.peekFirst().getUllat();
-        who = plswork.peekLast().getLrlon();
-        what = plswork.peekLast().getLrlat();
+        for (int i = 0; i < plswork.size(); i++) {
+            QuadTree.Node lolp = plswork.get(i);
+            lolp.filename = "img/" + lolp.filename + ".png";
+        }
+
+        if (plswork.peekFirst() != null) {
+            when = plswork.peekFirst().getUllon();
+            where = plswork.peekFirst().getUllat();
+            who = plswork.peekLast().getLrlon();
+            what = plswork.peekLast().getLrlat();
+            depthh = plswork.peekLast().getDepth() - 8;
+        }
+
         boolean why = true;
 
         System.out.println(what);
@@ -267,15 +280,8 @@ public class Rasterer {
         System.out.println(when);
         System.out.println(where);
         System.out.println(depthh);
+
         itsok = new String[lat.size()][lon.size()];
-
-        for (int i = 0; i < plswork.size(); i++) {
-            QuadTree.Node lolp = plswork.get(i);
-            lolp.filename = "img/" + lolp.filename + ".png";
-        }
-
-        depthh = plswork.peekLast().getDepth() - 8;
-
         for (int i = 0; i < lon.size(); i++) {
             for (int e = 0; e < lat.size(); e++) {
                 QuadTree.Node lol = plswork.removeFirst();
