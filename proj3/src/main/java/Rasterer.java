@@ -265,13 +265,7 @@ public class Rasterer {
             lolp.filename = "img/" + lolp.filename + ".png";
         }
 
-        if (plswork.peekFirst() != null) {
-            when = plswork.peekFirst().getUllon();
-            where = plswork.peekFirst().getUllat();
-            who = plswork.peekLast().getLrlon();
-            what = plswork.peekLast().getLrlat();
-            depthh = plswork.peekLast().getDepth() - 8;
-        }
+
 
         boolean why = true;
 
@@ -286,6 +280,15 @@ public class Rasterer {
             for (int e = 0; e < lat.size(); e++) {
                 QuadTree.Node lol = plswork.removeFirst();
                 itsok[e][i] = lol.getFilename();
+                if (e == 0 && i == 0) {
+                    when = lol.getUllon();
+                    where = lol.getUllat();
+                }
+                if (e == lat.size() - 1 && i == lon.size() - 1) {
+                    who = lol.getLrlon();
+                    what = lol.getLrlat();
+                    depthh = lol.getDepth() - 8;
+                }
             }
         }
 
