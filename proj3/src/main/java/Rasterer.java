@@ -256,8 +256,8 @@ public class Rasterer {
 
         Collections.sort(plswork);
 
-        when = plswork.getFirst().getUllon();
-        where = plswork.getFirst().getUllat();
+        when = plswork.peekFirst().getUllon();
+        where = plswork.peekFirst().getUllat();
         who = plswork.peekLast().getLrlon();
         what = plswork.peekLast().getLrlat();
         boolean why = true;
@@ -276,6 +276,13 @@ public class Rasterer {
 
         depthh = plswork.peekLast().getDepth() - 8;
 
+        for (int i = 0; i < lon.size(); i++) {
+            for (int e = 0; e < lat.size(); e++) {
+                QuadTree.Node lol = plswork.removeFirst();
+                itsok[e][i] = lol.getFilename();
+            }
+        }
+
         results = new HashMap<>();
         results.put("render_grid", itsok);
         results.put("raster_lr_lon", who);
@@ -284,15 +291,7 @@ public class Rasterer {
         results.put("raster_ul_lat", where);
         results.put("depth", depthh);
         results.put("query_success", why);
-        for (int i = 0; i < lon.size(); i++) {
-            for (int e = 0; e < lat.size(); e++) {
-                QuadTree.Node lol = plswork.removeFirst();
-                itsok[e][i] = lol.getFilename();
-            }
-        }
-//
-//        System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
-//                           + "your browser.");
+
         return results;
     }
 
