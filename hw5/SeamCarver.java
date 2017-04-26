@@ -1,6 +1,9 @@
 /**
  * Created by Hau on 4/25/17.
  */
+
+import edu.princeton.cs.algs4.Picture;
+
 public class SeamCarver {
     public Picture picture;
     public double[][] lol;
