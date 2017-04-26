@@ -283,6 +283,7 @@ public class Rasterer {
                 if (e == 0 && i == 0) {
                     when = lol.getUllon();
                     where = lol.getUllat();
+                    depthh = lol.getDepth() - 8;
                 }
                 if (e == lat.size() - 1 && i == lon.size() - 1) {
                     who = lol.getLrlon();
@@ -294,9 +295,9 @@ public class Rasterer {
 
         results = new HashMap<>();
         results.put("render_grid", itsok);
-        results.put("raster_lr_lon", who);
+        results.put("raster_lr_lon", when);
         results.put("raster_lr_lat", what);
-        results.put("raster_ul_lon", when);
+        results.put("raster_ul_lon", who);
         results.put("raster_ul_lat", where);
         results.put("depth", depthh);
         results.put("query_success", why);
