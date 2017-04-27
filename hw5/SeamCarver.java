@@ -60,8 +60,10 @@ public class SeamCarver {
         double ygreen = Math.abs(this.picture.get(x, ((y - 1) + height()) % height()).getGreen()
                 - this.picture.get(x, (y + 1) % height()).getGreen());
 
-        return (xred * xred) + (xblue * xblue) * (xgreen * xgreen)
+        double poop = (xred * xred) + (xblue * xblue) + (xgreen * xgreen)
                 + (yred * yred) + (yblue * yblue) + (ygreen * ygreen);
+
+        return poop;
     }
 
 
