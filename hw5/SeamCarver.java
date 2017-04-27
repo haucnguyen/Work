@@ -32,11 +32,9 @@ public class SeamCarver {
         if (x >= width() || x < 0) {
             throw new IndexOutOfBoundsException("u mess up here fam");
         }
-
-        if (x == 0 || x == width() - 1 || y == 0 || y == height() - 1) {
-            return 195075;
-        }
-
+//        if (x == 0 || x == width() - 1 || y == 0 || y == height() - 1) {
+//            return 195075;
+//        }
         if (y >= height() || y < 0) {
             throw new IndexOutOfBoundsException("u mess up here lol");
         } else {
