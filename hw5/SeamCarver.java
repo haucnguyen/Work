@@ -121,9 +121,9 @@ public class SeamCarver {
             }
         }
 
-        for (int i = 0; i < width(); i++) {
-            energys[i][0] = 255 * 255 * 3;
-        }
+//        for (int i = 0; i < width(); i++) {
+//            energys[i][0] = 255 * 255 * 3;
+//        }
 
         for (int i = 0; i < height() - 1; i++) {
             for (int l = 0; l < width(); l++) {
