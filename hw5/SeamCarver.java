@@ -34,11 +34,9 @@ public class SeamCarver {
         if (x >= width() || x < 0) {
             throw new IndexOutOfBoundsException("u mess up here fam");
         }
-
-//        if (x == 0 || x == width() - 1 || y == 0 || y == height() - 1) {
-//            return 195075;
-//        }
-
+        if (x == 0 || x == (width() - 1) || y == 0 || y == (height() - 1)) {
+            return 255 * 255 * 3;
+        }
         if (y >= height() || y < 0) {
             throw new IndexOutOfBoundsException("u mess up here lol");
         } else {
@@ -118,7 +116,7 @@ public class SeamCarver {
         }
 
         for (int i = 0; i < width(); i++) {
-            energys[i][0] = 195075;
+            energys[i][0] = 255 * 255 * 3;
         }
 
         for (int i = 0; i < height() - 1; i++) {
