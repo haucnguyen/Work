@@ -12,6 +12,7 @@ public class SeamCarver {
 
     public SeamCarver(Picture picture) {
         this.picture = new Picture(picture);
+        this.energys = new double[picture.height()][picture.width()];
     }
 
     // current picture
