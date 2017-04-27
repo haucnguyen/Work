@@ -10,11 +10,11 @@ public class SeamCarver {
     private int[][] poo;
 
     public SeamCarver(Picture picture) {
-        this.picture = picture;
+        this.picture = new Picture(picture);
     }
     // current picture
     public Picture picture() {
-        return new Picture(picture);
+        return picture;
     }
 
     // width of current picture
