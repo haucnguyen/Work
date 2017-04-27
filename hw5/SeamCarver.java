@@ -108,9 +108,9 @@ public class SeamCarver {
             }
         }
 
-//        for (int i = 0; i < width(); i++) {
-//            energys[i][0] = 255 * 255 * 3;
-//        }
+        for (int i = 0; i < width(); i++) {
+            energys[i][0] = 255 * 255 * 3;
+        }
 
         for (int i = 0; i < height() - 1; i++) {
             for (int l = 0; l < width(); l++) {
@@ -126,8 +126,9 @@ public class SeamCarver {
             }
         }
 
-        int ooo = -1;
+
         double minEn = Double.POSITIVE_INFINITY;
+        int ooo = -1;
         for (int i = 0; i < width(); i++) {
             if (energys[i][height() - 1] < minEn) {
                 ooo = i;
@@ -139,7 +140,7 @@ public class SeamCarver {
         int[] seam = new int[height()];
         seam[height() - 1] = ooo;
         System.out.println(ooo);
-        int pre = poo[0][height() - 1];
+        int pre = poo[ooo][height() - 1];
 
         for (int k = height() - 2; k >= 0; k--) {
             seam[k] = pre;
@@ -151,58 +152,58 @@ public class SeamCarver {
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
-        Picture original = picture;
-        Picture transpose = new Picture(original.height(), original.width());
-
-        for (int i = 0; i < transpose.width(); i++) {
-            for (int p = 0; p < transpose.height(); p++) {
-                transpose.set(i, p, original.get(p, i));
-            }
-        }
-
-        this.picture = transpose;
-        transpose = null;
-        original = null;
-
-        removeVerticalSeam(seam);
-
-        original = picture;
-        transpose = new Picture(original.height(), original.width());
-
-        for (int i = 0; i < transpose.width(); i++) {
-            for (int p = 0; p < transpose.height(); p++) {
-                transpose.set(i, p, original.get(p, i));
-            }
-        }
-
-        this.picture = transpose;
-        transpose = null;
-        original = null;
+//        Picture original = picture;
+//        Picture transpose = new Picture(original.height(), original.width());
+//
+//        for (int i = 0; i < transpose.width(); i++) {
+//            for (int p = 0; p < transpose.height(); p++) {
+//                transpose.set(i, p, original.get(p, i));
+//            }
+//        }
+//
+//        this.picture = transpose;
+//        transpose = null;
+//        original = null;
+//
+//        removeVerticalSeam(seam);
+//
+//        original = picture;
+//        transpose = new Picture(original.height(), original.width());
+//
+//        for (int i = 0; i < transpose.width(); i++) {
+//            for (int p = 0; p < transpose.height(); p++) {
+//                transpose.set(i, p, original.get(p, i));
+//            }
+//        }
+//
+//        this.picture = transpose;
+//        transpose = null;
+//        original = null;
     }
 
     // remove vertical seam from picture
     public void removeVerticalSeam(int[] seam) {
-        if (seam.length  != height()) {
-            throw new IllegalArgumentException("you messed up here pls");
-        }
-
-        if (seam == null) {
-            throw new NullPointerException();
-        }
-
-        Picture original = this.picture;
-        Picture newPic = new Picture(original.width() - 1, original.height());
-
-        for (int i = 0; i < newPic.width(); i++) {
-            for (int p = 0; p < newPic.height(); p++) {
-                newPic.set(i, p, original.get(p, i));
-            }
-
-            for (int p = seam[i]; p < newPic.width(); p++) {
-                newPic.set(p, i, original.get(p + 1, i));
-            }
-        }
-
-        this.picture = newPic;
+//        if (seam.length  != height()) {
+//            throw new IllegalArgumentException("you messed up here pls");
+//        }
+//
+//        if (seam == null) {
+//            throw new NullPointerException();
+//        }
+//
+//        Picture original = this.picture;
+//        Picture newPic = new Picture(original.width() - 1, original.height());
+//
+//        for (int i = 0; i < newPic.width(); i++) {
+//            for (int p = 0; p < newPic.height(); p++) {
+//                newPic.set(i, p, original.get(p, i));
+//            }
+//
+//            for (int p = seam[i]; p < newPic.width(); p++) {
+//                newPic.set(p, i, original.get(p + 1, i));
+//            }
+//        }
+//
+//        this.picture = newPic;
     }
 }
