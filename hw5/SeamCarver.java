@@ -95,7 +95,7 @@ public class SeamCarver {
             energys[i][0] = 195075;
         }
 
-        for (int i = 0; i < height(); i++) {
+        for (int i = 0; i < height() - 1; i++) {
             for (int l = 0; l < width(); l++) {
                 if (l > 0) {
                     shortestPath(l, i, l - 1, i + 1);
