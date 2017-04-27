@@ -21,12 +21,12 @@ public class SeamCarver {
 
     // width of current picture
     public int width() {
-        return picture.width();
+        return this.picture.width();
     }
 
     // height of current picture
     public int height() {
-        return picture.height();
+        return this.picture.height();
     }
 
     // energy of pixel at column x and row y
@@ -63,19 +63,19 @@ public class SeamCarver {
 //    }
 
     private double gradientColorX(int x, int y) {
-        Color one = picture.get(x - 1, y);
-        Color two = picture.get(x + 1, y);
-        return Math.pow(two.getRed() - one.getRed(), 2)
-                + Math.pow(two.getBlue() - one.getBlue(), 2)
-                + Math.pow(two.getGreen() - one.getGreen(), 2);
+        Color one = this.picture.get(x - 1, y);
+        Color two = this.picture.get(x + 1, y);
+        return Math.pow(one.getRed() - two.getRed(), 2)
+                + Math.pow(one.getBlue() - two.getBlue(), 2)
+                + Math.pow(one.getGreen() - two.getGreen(), 2);
     }
 
     private double gradientColorY(int x, int y) {
-        Color one = picture.get(x, y - 1);
-        Color two = picture.get(x, y + 1);
-        return Math.pow(two.getRed() - one.getRed(), 2)
-                + Math.pow(two.getBlue() - one.getBlue(), 2)
-                + Math.pow(two.getGreen() - one.getGreen(), 2);
+        Color one = this.picture.get(x, y - 1);
+        Color two = this.picture.get(x, y + 1);
+        return Math.pow(one.getRed() - two.getRed(), 2)
+                + Math.pow(one.getBlue() - two.getBlue(), 2)
+                + Math.pow(one.getGreen() - two.getGreen(), 2);
 
     }
 
