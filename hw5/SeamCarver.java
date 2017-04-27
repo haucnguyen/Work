@@ -44,15 +44,19 @@ public class SeamCarver {
     private double gradientColor(int x, int y) {
         double xred = Math.abs(this.picture.get(((x - 1) + width()) % width(), y).getRed()
                 - this.picture.get((x + 1) % width(), y).getRed());
+
         double xblue = Math.abs(this.picture.get(((x - 1) + width()) % width(), y).getBlue()
                 - this.picture.get((x + 1) % width(), y).getBlue());
-        double xgreen = Math.abs(picture.get(((x - 1) + width()) % width(), y).getGreen()
+
+        double xgreen = Math.abs(this.picture.get(((x - 1) + width()) % width(), y).getGreen()
                 - this.picture.get((x + 1) % width(), y).getGreen());
 
         double yred = Math.abs(this.picture.get(x, ((y - 1) + height()) % height()).getRed()
                 - this.picture.get(x, (y + 1) % height()).getRed());
+
         double yblue = Math.abs(this.picture.get(x, ((y - 1) + height()) % height()).getBlue()
                 - this.picture.get(x, (y + 1) % height()).getBlue());
+
         double ygreen = Math.abs(this.picture.get(x, ((y - 1) + height()) % height()).getGreen()
                 - this.picture.get(x, (y + 1) % height()).getGreen());
 
@@ -132,6 +136,7 @@ public class SeamCarver {
 
         assert ooo != -1;
         int[] seam = new int[height()];
+        System.out.println(height());
         seam[height() - 1] = ooo;
         int pre = poo[ooo][height() - 1];
 
