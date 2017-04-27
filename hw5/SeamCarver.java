@@ -138,9 +138,9 @@ public class SeamCarver {
 
         assert ooo != -1;
         int[] seam = new int[height()];
-        System.out.println(height());
         seam[height() - 1] = ooo;
-        int pre = poo[ooo][height() - 1];
+        System.out.println(ooo);
+        int pre = poo[0][height() - 1];
 
         for (int k = height() - 2; k >= 0; k--) {
             seam[k] = pre;
