@@ -109,8 +109,8 @@ public class SeamCarver {
             }
         }
 
-        double minEn = Double.POSITIVE_INFINITY;
         int ooo = -1;
+        double minEn = Double.POSITIVE_INFINITY;
         for (int i = 0; i < width(); i++) {
             if (energys[i][height() - 1] < minEn) {
                 ooo = i;
