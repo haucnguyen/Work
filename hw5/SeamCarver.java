@@ -74,8 +74,8 @@ public class SeamCarver {
 //        }
 //    }
     private void shortestPath(int x1, int y1, int x2, int y2) {
-        if (energys[x2][y2] > energy(x2, y2) + energys[x1][y1]) {
-            energys[x2][y2] = energy(x2, y2) + energys[x1][y1];
+        if (energys[x2][y2] > energys[x1][y1] + energy(x2, y2)) {
+            energys[x2][y2] =  energys[x1][y1] + energy(x2, y2) ;
             poo[x2][y2] = x1;
         }
     }
@@ -92,6 +92,7 @@ public class SeamCarver {
         this.picture = transpose;
         int[] seam = findVerticalSeam();
         this.picture = original;
+
         return seam;
     }
 
