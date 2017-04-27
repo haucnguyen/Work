@@ -35,17 +35,23 @@ public class SeamCarver {
 
         if (y >= height() || y < 0) {
             throw new IndexOutOfBoundsException("u mess up here lol");
-        }
-        else {
-            double Xred = Math.abs(picture.get(x - 1, y).getRed() - picture.get(x + 1, y).getRed());
-            double Xblue = Math.abs(picture.get(x - 1, y).getBlue() - picture.get(x + 1, y).getBlue());
-            double Xgreen = Math.abs(picture.get(x - 1, y).getGreen() - picture.get(x + 1, y).getGreen());
+        } else {
+            double xred = Math.abs(picture.get(x - 1, y).getRed()
+                    - picture.get(x + 1, y).getRed());
+            double xblue = Math.abs(picture.get(x - 1, y).getBlue()
+                    - picture.get(x + 1, y).getBlue());
+            double xgreen = Math.abs(picture.get(x - 1, y).getGreen()
+                    - picture.get(x + 1, y).getGreen());
 
-            double Yred = Math.abs(picture.get(x, y - 1).getRed() - picture.get(x, y + 1).getRed());
-            double Yblue = Math.abs(picture.get(x, y - 1).getBlue() - picture.get(x, y + 1).getBlue());
-            double Ygreen = Math.abs(picture.get(x, y - 1).getGreen() - picture.get(x, y + 1).getGreen());
+            double yred = Math.abs(picture.get(x, y - 1).getRed()
+                    - picture.get(x, y + 1).getRed());
+            double yblue = Math.abs(picture.get(x, y - 1).getBlue()
+                    - picture.get(x, y + 1).getBlue());
+            double ygreen = Math.abs(picture.get(x, y - 1).getGreen()
+                    - picture.get(x, y + 1).getGreen());
 
-            return (Xred * Xred) + (Xblue * Xblue) * (Xgreen * Xgreen) + (Yred * Yred) + (Yblue * Yblue) + (Ygreen * Ygreen);
+            return (xred * xred) + (xblue * xblue) * (xgreen * xgreen)
+                    + (yred * yred) + (yblue * yblue) + (ygreen * ygreen);
         }
     }
     private void shortestPath(int x1, int y1, int x2, int y2) {
@@ -59,15 +65,15 @@ public class SeamCarver {
         Picture original = picture;
         Picture transpose = new Picture(original.height(), original.width());
 
-        for (int i = 0; i < transpose.height(); i++) {
-            for (int p = 0; p < transpose.width(); p++) {
+        for (int i = 0; i < transpose.width(); i++) {
+            for (int p = 0; p < transpose.height(); p++) {
                 transpose.set(i, p, original.get(p, i));
             }
         }
         this.picture = transpose;
-        int[] lol = findVerticalSeam();
+        int[] seam = findVerticalSeam();
         this.picture = original;
-        return lol;
+        return seam;
     }
 
 
