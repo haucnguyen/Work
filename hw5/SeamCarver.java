@@ -37,55 +37,36 @@ public class SeamCarver {
         if (y < 0 || y >= this.height()) {
             throw new IndexOutOfBoundsException("u mess up here lol");
         }
-        if (x == 0 || x == (this.width() - 1) || y == 0 || y == (this.height() - 1)) {
-            return 255 * 255 * 3;
-        }
-        return gradientColorX(x, y) + gradientColorY(x, y);
+        return gradientColor(x, y);
     }
 
-//    private double gradientColor(int x, int y) {
-//        double xred = Math.abs(picture.get(x - 1, y).getRed()
-//                - picture.get(x + 1, y).getRed());
-//        double xblue = Math.abs(picture.get(x - 1, y).getBlue()
-//                - picture.get(x + 1, y).getBlue());
-//        double xgreen = Math.abs(picture.get(x - 1, y).getGreen()
-//                - picture.get(x + 1, y).getGreen());
-//
-//        double yred = Math.abs(picture.get(x, y - 1).getRed()
-//                - picture.get(x, y + 1).getRed());
-//        double yblue = Math.abs(picture.get(x, y - 1).getBlue()
-//                - picture.get(x, y + 1).getBlue());
-//        double ygreen = Math.abs(picture.get(x, y - 1).getGreen()
-//                - picture.get(x, y + 1).getGreen());
-//
-//        return (xred * xred) + (xblue * xblue) * (xgreen * xgreen)
-//                + (yred * yred) + (yblue * yblue) + (ygreen * ygreen);
+    private double gradientColor(int x, int y) {
+        double xred = Math.abs(picture.get(((x - 1) + width()) % width(), y).getRed()
+                - picture.get((x + 1) % width(), y).getRed());
+        double xblue = Math.abs(picture.get(((x - 1) + width()) % width(), y).getBlue()
+                - picture.get((x + 1) % width(), y).getBlue());
+        double xgreen = Math.abs(picture.get(((x - 1) + width()) % width(), y).getGreen()
+                - picture.get((x + 1) % width(), y).getGreen());
+
+        double yred = Math.abs(picture.get(x, ((y - 1) + height() % height())).getRed()
+                - picture.get(x, (y + 1) % height()).getRed());
+        double yblue = Math.abs(picture.get(x, ((y - 1) + height() % height())).getBlue()
+                - picture.get(x, (y + 1) % height()).getBlue());
+        double ygreen = Math.abs(picture.get(x, ((y - 1) + height() % height())).getGreen()
+                - picture.get(x, (y + 1) % height()).getGreen());
+
+        return (xred * xred) + (xblue * xblue) * (xgreen * xgreen)
+                + (yred * yred) + (yblue * yblue) + (ygreen * ygreen);
+    }
+
+
+//    private void getEnergy() {
+//        for (int r = 0; r < this.energys.length; r++) {
+//            for (int c = 0; c < this.energys[r].length; c++) {
+//                this.energys[r][c] = this.energy(c, r);
+//            }
+//        }
 //    }
-
-    private double gradientColorX(int x, int y) {
-        Color one = this.picture.get(x - 1, y);
-        Color two = this.picture.get(x + 1, y);
-        return Math.pow(one.getRed() - two.getRed(), 2)
-                + Math.pow(one.getBlue() - two.getBlue(), 2)
-                + Math.pow(one.getGreen() - two.getGreen(), 2);
-    }
-
-    private double gradientColorY(int x, int y) {
-        Color one = this.picture.get(x, y - 1);
-        Color two = this.picture.get(x, y + 1);
-        return Math.pow(one.getRed() - two.getRed(), 2)
-                + Math.pow(one.getBlue() - two.getBlue(), 2)
-                + Math.pow(one.getGreen() - two.getGreen(), 2);
-
-    }
-
-    private void getEnergy() {
-        for (int r = 0; r < this.energys.length; r++) {
-            for (int c = 0; c < this.energys[r].length; c++) {
-                this.energys[r][c] = this.energy(c, r);
-            }
-        }
-    }
     private void shortestPath(int x1, int y1, int x2, int y2) {
         if (energys[x2][y2] > energy(x2, y2) + energys[x1][y1]) {
             energys[x2][y2] = energy(x2, y2) + energys[x1][y1];
