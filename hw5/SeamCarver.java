@@ -33,6 +33,10 @@ public class SeamCarver {
             throw new IndexOutOfBoundsException("u mess up here fam");
         }
 
+        if (x == 0 || x == width() - 1 || y == 0 || y == height() - 1) {
+            return 195075;
+        }
+
         if (y >= height() || y < 0) {
             throw new IndexOutOfBoundsException("u mess up here lol");
         } else {
@@ -80,13 +84,17 @@ public class SeamCarver {
 
     // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
-        energys  = new double[width()][height()];
+        energys = new double[width()][height()];
         poo = new int[width()][height()];
 
         for (int i = 0; i < width(); i++) {
             for (int o = 0; i < height(); o++) {
                 energys[i][o] = Double.POSITIVE_INFINITY;
             }
+        }
+
+        for (int i = 0; i < width(); i++) {
+            energys[i][0] = 195075;
         }
 
         for (int i = 0; i < height(); i++) {
@@ -127,11 +135,58 @@ public class SeamCarver {
 
     // remove horizontal seam from picture
     public void removeHorizontalSeam(int[] seam) {
+        Picture original = picture;
+        Picture transpose = new Picture(original.height(), original.width());
 
+        for (int i = 0; i < transpose.width(); i++) {
+            for (int p = 0; p < transpose.height(); p++) {
+                transpose.set(i, p, original.get(p, i));
+            }
+        }
+
+        this.picture = transpose;
+        transpose = null;
+        original = null;
+
+        removeVerticalSeam(seam);
+
+        original = picture;
+        transpose = new Picture(original.height(), original.width());
+
+        for (int i = 0; i < transpose.width(); i++) {
+            for (int p = 0; p < transpose.height(); p++) {
+                transpose.set(i, p, original.get(p, i));
+            }
+        }
+
+        this.picture = transpose;
+        transpose = null;
+        original = null;
     }
 
     // remove vertical seam from picture
     public void removeVerticalSeam(int[] seam) {
+        if (seam.length  != height()) {
+            throw new IllegalArgumentException("you messed up here pls");
+        }
 
+        if (seam == null) {
+            throw new NullPointerException();
+        }
+
+        Picture original = this.picture;
+        Picture newPic = new Picture(original.width() - 1, original.height());
+
+        for (int i = 0; i < newPic.width(); i++) {
+            for (int p = 0; p < newPic.height(); p++) {
+                newPic.set(i, p, original.get(p, i));
+            }
+
+            for (int p = seam[i]; p < newPic.width(); p++) {
+                newPic.set(p, i, original.get(p + 1, i));
+            }
+        }
+
+        this.picture = newPic;
     }
 }
