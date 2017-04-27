@@ -75,7 +75,7 @@ public class SeamCarver {
 //    }
     private void shortestPath(int x1, int y1, int x2, int y2) {
         if (energys[x2][y2] > energys[x1][y1] + energy(x2, y2)) {
-            energys[x2][y2] =  energys[x1][y1] + energy(x2, y2) ;
+            energys[x2][y2] = energys[x1][y1] + energy(x2, y2);
             poo[x2][y2] = x1;
         }
     }
@@ -115,13 +115,13 @@ public class SeamCarver {
 
         for (int i = 0; i < height() - 1; i++) {
             for (int l = 0; l < width(); l++) {
-                if (l > 0) {
+                if (l - 1 >= 0) {
                     shortestPath(l, i, l - 1, i + 1);
                 }
 
                 shortestPath(l, i, l, i + 1);
 
-                if (l < width() -  1) {
+                if (l + 1 < width()) {
                     shortestPath(l, i, l + 1, i + 1);
                 }
             }
@@ -149,6 +149,10 @@ public class SeamCarver {
         }
 
         return seam;
+    }
+
+    private int position(int col, int row) {
+        return width() * row + col;
     }
 
     // remove horizontal seam from picture
