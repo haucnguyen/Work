@@ -85,8 +85,8 @@ public class SeamCarver {
         energys = new double[width()][height()];
         poo = new int[width()][height()];
 
-        for (int i = 0; i < width() - 1; i++) {
-            for (int o = 0; i < height(); o++) {
+        for (int i = 0; i < width(); i++) {
+            for (int o = 0; o < height(); o++) {
                 energys[i][o] = Double.POSITIVE_INFINITY;
             }
         }
