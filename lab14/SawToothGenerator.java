@@ -12,7 +12,7 @@ public class SawToothGenerator implements Generator{
         state = 0;
     }
 
-    public double normalize(int lol) {
+    public double normalize(int state) {
         double turn = period / 2;
         return (state - turn) / turn;
     }
