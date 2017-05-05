@@ -31,7 +31,6 @@ public class Clorus extends Creature {
     }
 
     public Color color() {
-
         return color(r, g, b);
     }
 
