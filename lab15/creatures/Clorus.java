@@ -62,8 +62,10 @@ public class Clorus extends Creature {
         if (empts.size() == 0) {
             return new Action(Action.ActionType.STAY);
         }
-        Direction attDir = HugLifeUtils.randomEntry(plips);
+
+
         if (plips.size() >= 1) {
+            Direction attDir = HugLifeUtils.randomEntry(plips);
             return new Action(Action.ActionType.ATTACK, attDir);
         }
 
