@@ -57,14 +57,14 @@ public class Clorus extends Creature {
 
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
         List<Direction> empts = getNeighborsOfType(neighbors, "empty");
-        List<Direction> plips = getNeighborsOfType(neighbors, "plips");
+        List<Direction> plips = getNeighborsOfType(neighbors, "plip");
 
         if (empts.size() == 0) {
             return new Action(Action.ActionType.STAY);
         }
 
 
-        if (plips.size() > 1) {
+        if (plips.size() >= 1) {
             Direction attDir = HugLifeUtils.randomEntry(plips);
             return new Action(Action.ActionType.ATTACK, attDir);
         }
