@@ -73,7 +73,7 @@ public class BinaryTrie implements Serializable {
         public trieNode childNode(int index) {
             if (index == 0) {
                 return leftTree;
-            } else return rightTree;
+            } return rightTree;
         }
 
         public boolean isLeaf() {
