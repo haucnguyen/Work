@@ -7,16 +7,18 @@ import java.util.PriorityQueue;
 /**
  * Created by Hau on 5/6/17.
  */
+
 public class BinaryTrie implements Serializable {
-    private trieNode root;
+    private trieNode root, lol;
     private int length;
+    PriorityQueue<trieNode> hi;
+    StringBuilder pop;
 
     public BinaryTrie(Map<Character, Integer> frequencyTable) {
-        PriorityQueue<trieNode> hi = new PriorityQueue<>(
-                Comparator.comparingInt(o -> o.frequency));
+         hi = new PriorityQueue<>(Comparator.comparingInt(o -> o.frequency));
 
         for (Map.Entry<Character, Integer> a : frequencyTable.entrySet()) {
-            trieNode lol = new trieNode(a.getValue(), a.getKey());
+            lol = new trieNode(a.getValue(), a.getKey());
             hi.add(lol);
         }
 
@@ -34,7 +36,7 @@ public class BinaryTrie implements Serializable {
     public Match longestPrefixMatch(BitSequence querySequence) {
         trieNode node = root;
         length = querySequence.length();
-        StringBuilder pop = new StringBuilder();
+        pop = new StringBuilder();
 
         for (int i = 0; i <= length; i++) {
             if (node.isLeaf()) {
