@@ -61,8 +61,10 @@ public class BinaryTrie implements Serializable {
             this.character = character;
             this.leftTree = leftTree;
             this.rightTree = rightTree;
-            leftTree = null;
-            rightTree = null;
+        }
+
+        public trieNode(int frequency, char character) {
+            this(frequency, character, null, null);
         }
 
         public trieNode childNode(int index) {
