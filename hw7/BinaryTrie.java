@@ -1,3 +1,4 @@
+import java.io.CharArrayReader;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Map;
@@ -31,8 +32,8 @@ public class BinaryTrie implements Serializable {
     }
 
     public Match longestPrefixMatch(BitSequence querySequence) {
-        length = querySequence.length();
         trieNode node = root;
+        length = querySequence.length();
         StringBuilder pop = new StringBuilder();
 
         for (int i = 0; i <= length; i++) {
@@ -47,7 +48,7 @@ public class BinaryTrie implements Serializable {
     }
 
     public Map<Character, BitSequence> buildLookupTable() {
-        return null;
+       return null;
     }
 
 
