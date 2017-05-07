@@ -54,7 +54,7 @@ public class BinaryTrie implements Serializable {
     }
 
 
-    private class trieNode implements Serializable{
+    private class trieNode {
         private char character;
         private int frequency;
         private trieNode leftTree, rightTree;
