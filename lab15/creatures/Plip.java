@@ -23,9 +23,15 @@ public class Plip extends Creature {
     /** creates plip with energy equal to E. */
     public Plip(double e) {
         super("plip");
+<<<<<<< HEAD
         r = 99;
         g = 0;
         b = 76;
+=======
+        r = 0;
+        g = 0;
+        b = 0;
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
         energy = e;
     }
 
@@ -42,8 +48,13 @@ public class Plip extends Creature {
      *  that you get this exactly correct.
      */
     public Color color() {
+<<<<<<< HEAD
         double g = 63 + (energy / 2) * (192);
         return color(r, (int) g, b);
+=======
+        g = 63;
+        return color(r, g, b);
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
     }
 
     /** Do nothing with C, Plips are pacifists. */
@@ -55,16 +66,22 @@ public class Plip extends Creature {
      *  private static final variable. This is not required for this lab.
      */
     public void move() {
+<<<<<<< HEAD
         energy -= 0.15;
+=======
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
     }
 
 
     /** Plips gain 0.2 energy when staying due to photosynthesis. */
     public void stay() {
+<<<<<<< HEAD
         energy += 0.2;
         if (energy > 2) {
             energy = 2;
         }
+=======
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
     }
 
     /** Plips and their offspring each get 50% of the energy, with none
@@ -72,8 +89,12 @@ public class Plip extends Creature {
      *  Plip.
      */
     public Plip replicate() {
+<<<<<<< HEAD
         energy /= 2;
         return new Plip(energy);
+=======
+        return this;
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
     }
 
     /** Plips take exactly the following actions based on NEIGHBORS:
@@ -87,6 +108,7 @@ public class Plip extends Creature {
      *  for an example to follow.
      */
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
+<<<<<<< HEAD
         List<Direction> empts = getNeighborsOfType(neighbors, "empty");
         if (empts.size() == 0) {
             return new Action(Action.ActionType.STAY);
@@ -102,6 +124,8 @@ public class Plip extends Creature {
             return new Action(Action.ActionType.MOVE, direction);
         }
 
+=======
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
         return new Action(Action.ActionType.STAY);
     }
 

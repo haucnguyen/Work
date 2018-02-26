@@ -39,7 +39,11 @@ public class TestPlip {
 
     }
 
+<<<<<<< HEAD
     @Test
+=======
+    //@Test
+>>>>>>> a7612cbf1bf84379faedce81db2792a735c3d97f
     public void testChoose() {
         Plip p = new Plip(1.2);
         HashMap<Direction, Occupant> surrounded = new HashMap<Direction, Occupant>();
