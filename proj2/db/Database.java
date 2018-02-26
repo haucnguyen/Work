@@ -18,6 +18,7 @@ public class Database {
     HashMap<String, Table> databaseOfTables;
     String pls;
 
+
     public Database() {
         databaseOfTables = new HashMap<>();
         //hashmap all the tables to their corresponding strings
